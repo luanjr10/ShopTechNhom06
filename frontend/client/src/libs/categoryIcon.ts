@@ -1,0 +1,83 @@
+import {
+  Aperture,
+  Backpack,
+  BatteryCharging,
+  Cable,
+  Camera,
+  CreditCard,
+  Cpu,
+  Gamepad2,
+  Headphones,
+  HouseWifi,
+  Keyboard,
+  LaptopMinimal,
+  Monitor,
+  Mouse,
+  Newspaper,
+  Package,
+  Percent,
+  Plane,
+  PlayingCardsFan,
+  Printer,
+  Refrigerator,
+  Repeat,
+  Router,
+  ScanLine,
+  ShieldCheck,
+  Smartphone,
+  Speaker,
+  Tablet,
+  Tv,
+  Usb,
+  Watch,
+  WashingMachine,
+  Zap,
+  type LucideIcon,
+} from "lucide-react";
+
+/**
+ * Ánh xạ tên icon (lưu trong cột `icon` của bảng categories) sang component
+ * lucide. Có fallback để không bao giờ vỡ UI khi gặp tên lạ.
+ */
+const ICON_MAP: Record<string, LucideIcon> = {
+  Smartphone,
+  Tablet,
+  Laptop: LaptopMinimal,
+  LaptopMinimal,
+  Headphones,
+  Speaker,
+  Watch,
+  Camera,
+  HouseWifi,
+  Usb,
+  Monitor,
+  Printer,
+  Mouse,
+  Keyboard,
+  Cpu,
+  Tv,
+  Refrigerator,
+  WashingMachine,
+  Gamepad2,
+  Repeat,
+  PlayingCardsFan,
+  Percent,
+  Newspaper,
+  Zap,
+  BatteryCharging,
+  ShieldCheck,
+  ScanLine,
+  CreditCard,
+  Router,
+  Aperture,
+  Plane,
+  Backpack,
+  Cable,
+};
+
+export function resolveCategoryIcon(name?: string | null): LucideIcon {
+  if (name && ICON_MAP[name]) {
+    return ICON_MAP[name];
+  }
+  return Package;
+}

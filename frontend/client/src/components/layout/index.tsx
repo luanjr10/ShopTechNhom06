@@ -1,0 +1,17 @@
+import Footer from "./footer";
+import Header from "./header";
+import Main from "./main";
+
+function Layout() {
+  return (
+    <>
+      <div className="layout">
+        <Header />
+        <Main />
+        <Footer />
+      </div>
+    </>
+  );
+}
+
+export default Layout;
