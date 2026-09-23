@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Account;
 
 use App\Http\Requests\ApiFormRequest;
+use App\Rules\VietnamesePhone;
 use Illuminate\Validation\Rule;
 
 class UpdateProfileRequest extends ApiFormRequest
@@ -14,6 +15,11 @@ class UpdateProfileRequest extends ApiFormRequest
     {
         $userId = $this->user()->id;
 
+        // Chỉ tra DNS (kiểm tra domain có thật, MX/A record tồn tại) khi email
+        // THAY ĐỔI so với hiện tại — tránh chặn việc lưu hồ sơ của user cũ nếu
+        // email cũ trót không còn resolve được; email mới nhập luôn bị soi kỹ.
+        $emailChanged = $this->input('email') !== $this->user()->email;
+
         return [
             'name' => 'required|string|max:150',
             'username' => [
@@ -21,10 +27,10 @@ class UpdateProfileRequest extends ApiFormRequest
                 Rule::unique('users', 'username')->ignore($userId),
             ],
             'email' => [
-                'required', 'email', 'max:190',
+                'required', $emailChanged ? 'email:rfc,dns' : 'email:rfc', 'max:190',
                 Rule::unique('users', 'email')->ignore($userId),
             ],
-            'phone' => 'nullable|string|max:20',
+            'phone' => ['nullable', 'string', new VietnamesePhone],
         ];
     }
 
@@ -39,7 +45,7 @@ class UpdateProfileRequest extends ApiFormRequest
             'username.alpha_dash' => 'Tên đăng nhập chỉ gồm chữ, số, gạch ngang/dưới',
             'username.unique' => 'Tên đăng nhập đã tồn tại',
             'email.required' => 'Vui lòng nhập email',
-            'email.email' => 'Email không hợp lệ',
+            'email.email' => 'Email không hợp lệ hoặc tên miền không tồn tại',
             'email.unique' => 'Email đã tồn tại',
         ];
     }

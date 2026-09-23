@@ -17,3 +17,4 @@ require __DIR__.'/api/shipping.php';
 require __DIR__.'/api/coupons.php';
 require __DIR__.'/api/payments.php';
 require __DIR__.'/api/settings.php';
+require __DIR__.'/api/ai.php';

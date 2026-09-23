@@ -267,9 +267,14 @@ export default function EmployeeList() {
                   </div>
                   <TextInput
                     id="emp-phone"
+                    type="tel"
+                    inputMode="numeric"
+                    maxLength={10}
                     placeholder="09xxxxxxxx"
                     value={form.phone}
-                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, phone: e.target.value.replace(/\D/g, "").slice(0, 10) })
+                    }
                   />
                 </div>
               </div>

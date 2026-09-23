@@ -37,8 +37,11 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 
     /**
      * URL avatar hiển thị: ưu tiên ảnh tự upload, rồi tới avatar Google.
+     * `has_password`: false với tài khoản tạo qua Google (password null) — FE
+     * dùng để ẩn luồng "đổi mật khẩu bằng mật khẩu hiện tại" (không có gì để
+     * đối chiếu) và chỉ cho đặt mật khẩu lần đầu qua mã xác minh email.
      */
-    protected $appends = ['avatar_url'];
+    protected $appends = ['avatar_url', 'has_password'];
 
     /**
      * Get the attributes that should be cast.
@@ -128,6 +131,11 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 
             return $this->google_avatar ?: null;
         });
+    }
+
+    protected function hasPassword(): Attribute
+    {
+        return Attribute::get(fn (): bool => ! is_null($this->password));
     }
 
     /**

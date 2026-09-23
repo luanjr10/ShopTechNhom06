@@ -22,6 +22,8 @@ export interface AuthUser {
   phone?: string | null;
   avatar_url?: string | null;
   email_verified_at?: string | null;
+  /** false với tài khoản tạo qua Google (chưa từng đặt mật khẩu). */
+  has_password?: boolean;
   role: "customer" | "seller" | "admin";
   seller_profile?: SellerProfile | null;
   sellerProfile?: SellerProfile | null;

@@ -162,7 +162,7 @@ class SellerOrderController extends Controller
             return response()->json(['success' => false, 'message' => 'Đơn không thuộc gian hàng này'], 404);
         }
 
-        $validated = $request->validate(['email' => 'nullable|email']);
+        $validated = $request->validate(['email' => 'nullable|email:rfc,dns']);
 
         $invoice = $this->invoiceService->buildFromSellerOrder($sellerOrder);
         $this->invoiceService->email($invoice, $validated['email'] ?? $sellerOrder->order->user->email);

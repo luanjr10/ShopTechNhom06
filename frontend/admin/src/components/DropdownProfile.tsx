@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { Settings } from 'lucide-react';
 import Transition from '../utils/Transition';
 import { useAuth } from '../context/AuthContext';
 
@@ -58,7 +59,11 @@ function DropdownProfile({
         onClick={() => setDropdownOpen(!dropdownOpen)}
         aria-expanded={dropdownOpen}
       >
-        <img className="w-8 h-8 rounded-full" src={UserAvatar} width="32" height="32" alt="User" />
+        {user?.avatar_url ? (
+          <img className="w-8 h-8 rounded-full object-cover" src={user.avatar_url} width="32" height="32" alt="User" />
+        ) : (
+          <img className="w-8 h-8 rounded-full" src={UserAvatar} width="32" height="32" alt="User" />
+        )}
         <div className="flex items-center truncate">
           <span className="truncate ml-2 text-sm font-medium text-gray-600 dark:text-gray-100 group-hover:text-gray-800 dark:group-hover:text-white">
             {user?.name ?? 'Tài khoản'}
@@ -92,9 +97,18 @@ function DropdownProfile({
           </div>
           <ul>
             <li>
+              <Link
+                to="/settings"
+                onClick={() => setDropdownOpen(false)}
+                className="w-full text-left font-medium text-sm text-gray-600 hover:text-violet-500 dark:text-gray-300 dark:hover:text-violet-400 flex items-center gap-2 py-1.5 px-3"
+              >
+                <Settings className="w-4 h-4" /> Cài đặt
+              </Link>
+            </li>
+            <li>
               <button
                 type="button"
-                className="w-full text-left font-medium text-sm text-violet-500 hover:text-violet-600 dark:hover:text-violet-400 flex items-center py-1 px-3 cursor-pointer"
+                className="w-full text-left font-medium text-sm text-violet-500 hover:text-violet-600 dark:hover:text-violet-400 flex items-center py-1.5 px-3 cursor-pointer"
                 onClick={handleLogout}
               >
                 Đăng xuất

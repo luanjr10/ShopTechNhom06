@@ -1,14 +1,37 @@
 import { useEffect, useState } from "react";
+import { Loader2, Package, Percent, Receipt, Wallet } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { getStoreRevenue } from "../../services/seller.services";
 import { formatMoneyVietNam } from "../../helpers/formatMoney";
 import { RevenueSummary } from "../../types/seller.types";
+import DailyRevenueChart from "../../partials/dashboard/DailyRevenueChart";
 
-function StatCard({ label, value }: { label: string; value: string }) {
+const DAY_OPTIONS = [7, 30, 90];
+
+interface StatCardProps {
+  icon: typeof Wallet;
+  iconColor: string;
+  label: string;
+  value: string;
+  highlight?: boolean;
+}
+
+function StatCard({ icon: Icon, iconColor, label, value, highlight }: StatCardProps) {
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
-      <div className="text-xs text-gray-500 dark:text-gray-400">{label}</div>
-      <div className="mt-1 text-xl font-semibold text-gray-800 dark:text-white/90">{value}</div>
+    <div
+      className={`flex flex-col col-span-full sm:col-span-6 xl:col-span-3 rounded-xl bg-white shadow-xs dark:bg-gray-800 ${
+        highlight ? "ring-1 ring-violet-500/30" : ""
+      }`}
+    >
+      <div className="flex items-center gap-3 p-5">
+        <div className={`flex size-10 shrink-0 items-center justify-center rounded-full ${iconColor}`}>
+          <Icon className="size-5" />
+        </div>
+        <div className="min-w-0">
+          <div className="truncate text-xs font-medium text-gray-500 dark:text-gray-400">{label}</div>
+          <div className="truncate text-xl font-bold text-gray-800 dark:text-gray-100">{value}</div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -17,10 +40,18 @@ export default function SellerRevenue() {
   const { activeStore } = useAuth();
   const [days, setDays] = useState(30);
   const [summary, setSummary] = useState<RevenueSummary | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!activeStore) return;
-    getStoreRevenue(activeStore.id, days).then(setSummary);
+    if (!activeStore) {
+      setSummary(null);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    getStoreRevenue(activeStore.id, days)
+      .then(setSummary)
+      .finally(() => setLoading(false));
   }, [activeStore, days]);
 
   if (!activeStore) {
@@ -34,21 +65,29 @@ export default function SellerRevenue() {
     );
   }
 
-  const maxRevenue = Math.max(1, ...(summary?.series.map((s) => Number(s.revenue)) ?? [0]));
+  const chartData = {
+    labels: summary?.series.map((s) => s.date) ?? [],
+    values: summary?.series.map((s) => Number(s.revenue)) ?? [],
+  };
 
   return (
     <div className="flex flex-col gap-8 px-10 py-10">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Doanh thu</h2>
-        <div className="flex gap-2">
-          {[7, 30, 90].map((d) => (
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Doanh thu</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Gian hàng đang chọn: {activeStore.name}
+          </p>
+        </div>
+        <div className="flex gap-2 rounded-lg border border-gray-200 p-1 dark:border-gray-700">
+          {DAY_OPTIONS.map((d) => (
             <button
               key={d}
               onClick={() => setDays(d)}
-              className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
+              className={`rounded-md px-3.5 py-1.5 text-sm font-medium transition-colors ${
                 days === d
                   ? "bg-violet-600 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                  : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
               }`}
             >
               {d} ngày
@@ -57,33 +96,54 @@ export default function SellerRevenue() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Số đơn hoàn tất" value={String(summary?.orders_count ?? 0)} />
-        <StatCard label="Tổng giá trị đơn" value={formatMoneyVietNam(summary?.gross_revenue ?? 0)} />
-        <StatCard label="Hoa hồng sàn" value={formatMoneyVietNam(summary?.commission_paid ?? 0)} />
-        <StatCard label="Doanh thu thực nhận" value={formatMoneyVietNam(summary?.net_revenue ?? 0)} />
-      </div>
+      {loading ? (
+        <div className="flex items-center justify-center gap-2 py-24 text-gray-400">
+          <Loader2 className="size-6 animate-spin" />
+          <span>Đang tải dữ liệu...</span>
+        </div>
+      ) : (
+        <div className="grid grid-cols-12 gap-6">
+          <StatCard
+            icon={Package}
+            iconColor="bg-blue-500/15 text-blue-500"
+            label="Số đơn hoàn tất"
+            value={String(summary?.orders_count ?? 0)}
+          />
+          <StatCard
+            icon={Receipt}
+            iconColor="bg-slate-500/15 text-slate-500"
+            label="Tổng giá trị đơn"
+            value={formatMoneyVietNam(summary?.gross_revenue ?? 0)}
+          />
+          <StatCard
+            icon={Percent}
+            iconColor="bg-amber-500/15 text-amber-500"
+            label="Hoa hồng sàn"
+            value={formatMoneyVietNam(summary?.commission_paid ?? 0)}
+          />
+          <StatCard
+            icon={Wallet}
+            iconColor="bg-violet-500/15 text-violet-500"
+            label="Doanh thu thực nhận"
+            value={formatMoneyVietNam(summary?.net_revenue ?? 0)}
+            highlight
+          />
 
-      <div className="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
-        <h3 className="mb-4 text-sm font-semibold text-gray-800 dark:text-white/90">
-          Doanh thu theo ngày ({days} ngày gần nhất)
-        </h3>
-        {!summary || summary.series.length === 0 ? (
-          <p className="text-sm text-gray-400">Chưa có đơn hoàn tất trong khoảng thời gian này.</p>
-        ) : (
-          <div className="flex items-end gap-1 overflow-x-auto pb-2">
-            {summary.series.map((point) => (
-              <div key={point.date} className="flex min-w-[28px] flex-col items-center gap-1" title={`${point.date}: ${formatMoneyVietNam(point.revenue)}`}>
-                <div
-                  className="w-4 rounded-t bg-violet-500"
-                  style={{ height: `${Math.max(4, (Number(point.revenue) / maxRevenue) * 120)}px` }}
-                />
-                <span className="rotate-0 text-[10px] text-gray-400">{point.date.slice(5)}</span>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+          {!summary || summary.series.length === 0 ? (
+            <div className="col-span-full rounded-xl bg-white p-10 text-center text-sm text-gray-400 shadow-xs dark:bg-gray-800">
+              Chưa có đơn hoàn tất trong khoảng thời gian này.
+            </div>
+          ) : (
+            <div className="col-span-full">
+              <DailyRevenueChart
+                data={chartData}
+                title={`Doanh thu theo ngày (${days} ngày gần nhất)`}
+                subtitle="Doanh thu thực nhận sau khi trừ hoa hồng sàn"
+              />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

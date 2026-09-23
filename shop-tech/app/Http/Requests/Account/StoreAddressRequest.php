@@ -3,17 +3,18 @@
 namespace App\Http\Requests\Account;
 
 use App\Http\Requests\ApiFormRequest;
+use App\Rules\VietnamesePhone;
 
 class StoreAddressRequest extends ApiFormRequest
 {
     /**
-     * @return array<string, string>
+     * @return array<string, mixed>
      */
     public function rules(): array
     {
         return [
             'recipient_name' => 'required|string|max:150',
-            'phone' => 'required|string|max:20',
+            'phone' => ['required', 'string', new VietnamesePhone],
             // Mã GHN (hệ cũ, có quận/huyện) — bắt buộc để tính phí/tạo vận đơn thật.
             'province_id' => 'required|integer',
             'district_id' => 'required|integer',

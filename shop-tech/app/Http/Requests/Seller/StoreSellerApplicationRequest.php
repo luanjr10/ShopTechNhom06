@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Seller;
 
 use App\Http\Requests\ApiFormRequest;
+use App\Rules\VietnamesePhone;
 
 class StoreSellerApplicationRequest extends ApiFormRequest
 {
@@ -10,7 +11,7 @@ class StoreSellerApplicationRequest extends ApiFormRequest
     {
         return [
             'shop_name' => 'required|string|max:150',
-            'phone' => 'nullable|string|max:20',
+            'phone' => ['nullable', 'string', new VietnamesePhone],
             'address' => 'nullable|string|max:255',
             'category_ids' => 'required|array|min:1',
             'category_ids.*' => 'integer|exists:categories,id',

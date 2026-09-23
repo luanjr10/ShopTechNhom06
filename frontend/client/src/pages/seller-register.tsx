@@ -232,12 +232,21 @@ function SellerRegister() {
               Số điện thoại
             </label>
             <input
-              type="text"
+              type="tel"
+              inputMode="numeric"
+              maxLength={10}
               value={form.phone}
-              onChange={(e) => setForm({ ...form, phone: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, phone: e.target.value.replace(/\D/g, "").slice(0, 10) })
+              }
               placeholder="09xxxxxxxx"
-              className="w-full rounded-lg border border-gray-200 px-3 py-2.5 font-sans text-[14px] outline-none focus:border-primary500"
+              className={`w-full rounded-lg border px-3 py-2.5 font-sans text-[14px] outline-none focus:border-primary500 ${
+                errors.phone ? "border-primary500" : "border-gray-200"
+              }`}
             />
+            {errors.phone && (
+              <p className="mt-1 font-sans text-[12px] text-primary500">{errors.phone[0]}</p>
+            )}
           </div>
 
           <div>
@@ -313,7 +322,7 @@ function SellerRegister() {
       {/* Giới thiệu */}
       <div className="flex flex-col justify-center gap-4 rounded-2xl bg-linear-to-br from-primary500 to-primary300 p-8 text-white">
         <Store className="size-10" />
-        <h1 className="font-sans text-[26px] font-bold leading-tight">
+        <h1 className="font-sans text-[26px] font-bold leading-tight !text-[#ffffff]">
           Trở thành người bán trên ShopTech
         </h1>
         <p className="font-sans text-[14px] text-white/90">

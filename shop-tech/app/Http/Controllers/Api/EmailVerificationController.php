@@ -20,7 +20,7 @@ class EmailVerificationController extends Controller
         $user = User::find($id);
 
         if (! $user || ! hash_equals(sha1($user->getEmailForVerification()), $hash)) {
-            return redirect($this->frontendUrl('/tai-khoan?verified=invalid'));
+            return redirect($this->targetUrl($user).'?verified=invalid');
         }
 
         if (! $user->hasVerifiedEmail()) {
@@ -28,7 +28,20 @@ class EmailVerificationController extends Controller
             event(new Verified($user));
         }
 
-        return redirect($this->frontendUrl('/tai-khoan?verified=1'));
+        return redirect($this->targetUrl($user).'?verified=1');
+    }
+
+    /**
+     * Admin/seller/employee xác thực email được đưa về Dashboard (/settings),
+     * còn lại (customer) vẫn về client như trước (/tai-khoan).
+     */
+    private function targetUrl(?User $user): string
+    {
+        if ($user && in_array($user->role, ['admin', 'seller', 'employee'], true)) {
+            return $this->frontendUrl('/settings', (string) config('app.admin_url'));
+        }
+
+        return $this->frontendUrl('/tai-khoan');
     }
 
     /**
@@ -53,8 +66,8 @@ class EmailVerificationController extends Controller
         ]);
     }
 
-    private function frontendUrl(string $path = '/'): string
+    private function frontendUrl(string $path = '/', ?string $base = null): string
     {
-        return rtrim((string) config('app.frontend_url'), '/').$path;
+        return rtrim($base ?? (string) config('app.frontend_url'), '/').$path;
     }
 }
