@@ -1,0 +1,101 @@
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
+import * as authService from "../services/auth.services";
+import type { AuthUser } from "../services/auth.services";
+import * as sellerService from "../services/seller.services";
+import type { SellerStore } from "../types/seller.types";
+
+const ACTIVE_STORE_KEY = "active_store_id";
+
+interface AuthState {
+  user: AuthUser | null;
+  loading: boolean;
+  login: (loginId: string, password: string) => Promise<AuthUser>;
+  logout: () => Promise<void>;
+  // Chỉ có ý nghĩa với role seller — danh sách + gian hàng đang chọn.
+  stores: SellerStore[];
+  activeStore: SellerStore | null;
+  setActiveStore: (store: SellerStore) => void;
+  refreshStores: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthState | undefined>(undefined);
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [stores, setStores] = useState<SellerStore[]>([]);
+  const [activeStore, setActiveStoreState] = useState<SellerStore | null>(null);
+
+  const applyStores = useCallback((list: SellerStore[]) => {
+    setStores(list);
+    const savedId = Number(localStorage.getItem(ACTIVE_STORE_KEY));
+    const found = list.find((s) => s.id === savedId) ?? list[0] ?? null;
+    setActiveStoreState(found);
+    if (found) localStorage.setItem(ACTIVE_STORE_KEY, String(found.id));
+  }, []);
+
+  const setActiveStore = useCallback((store: SellerStore) => {
+    setActiveStoreState(store);
+    localStorage.setItem(ACTIVE_STORE_KEY, String(store.id));
+  }, []);
+
+  const refreshStores = useCallback(async () => {
+    const list = await sellerService.getMyStores();
+    applyStores(list);
+  }, [applyStores]);
+
+  useEffect(() => {
+    authService
+      .me()
+      .then((u) => {
+        setUser(u);
+        applyStores(u.seller_profile?.stores ?? []);
+      })
+      .catch(() => setUser(null))
+      .finally(() => setLoading(false));
+  }, [applyStores]);
+
+  const login = async (loginId: string, password: string) => {
+    const u = await authService.login(loginId, password);
+    setUser(u);
+    applyStores(u.seller_profile?.stores ?? []);
+    return u;
+  };
+
+  const logout = async () => {
+    await authService.logout();
+    setUser(null);
+    setStores([]);
+    setActiveStoreState(null);
+  };
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        login,
+        logout,
+        stores,
+        activeStore,
+        setActiveStore,
+        refreshStores,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export function useAuth(): AuthState {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth phải dùng trong AuthProvider");
+  return ctx;
+}

@@ -1,0 +1,49 @@
+*.log
+.DS_Store
+
+# Environment
+.env
+.env.backup
+.env.production
+
+# PHP / Laravel
+.phpactor.json
+.phpunit.result.cache
+.phpunit.cache
+/vendor
+/storage/*.key
+/storage/pail
+
+# Laravel generated
+/public/build
+/public/fonts-manifest.dev.json
+/public/hot
+/public/storage
+
+# Node
+/node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDE / Editors
+/.codex
+/.cursor/
+/.idea
+/.nova
+/.vscode
+/.zed
+
+# Composer
+/auth.json
+
+# Laravel helpers
+_ide_helper.php
+
+# Homestead
+Homestead.json
+Homestead.yaml
+
+# OS
+Thumbs.db

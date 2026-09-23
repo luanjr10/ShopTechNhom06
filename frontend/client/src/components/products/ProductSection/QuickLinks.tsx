@@ -1,0 +1,59 @@
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "../../ui/carousel";
+import { type UseCase } from "../../../types/product";
+
+interface QuickLinksProps {
+  links: UseCase[];
+  /** Slug Quick Link đang được chọn (để tô sáng). */
+  activeSlug?: string | null;
+  /** Bấm 1 Quick Link -> lọc sản phẩm; bấm lại chính nó -> bỏ lọc. */
+  onSelect?: (slug: string) => void;
+}
+
+/**
+ * Các Quick Link của danh mục (lấy từ API): hiển thị ảnh + tên, bấm để lọc
+ * sản phẩm. Dùng chung `Carousel` (embla) với BrandChips/TabAds thay vì
+ * `overflow-x-auto` thô — kéo mượt bằng chuột/chạm, không lộ thanh cuộn
+ * ngang mặc định của trình duyệt, có nút mũi tên khi tràn.
+ */
+export function QuickLinks({ links, activeSlug, onSelect }: QuickLinksProps) {
+  if (links.length === 0) return null;
+
+  return (
+    <div className="relative mt-3">
+      <Carousel opts={{ align: "start", dragFree: true }} className="w-full">
+        <CarouselContent className="ml-0 gap-2">
+          {links.map((link) => {
+            const active = activeSlug === link.slug;
+
+            return (
+              <CarouselItem key={link.id} className="basis-auto pl-0">
+                <button
+                  type="button"
+                  onClick={() => onSelect?.(link.slug)}
+                  className={`flex min-w-[140px] cursor-pointer flex-row items-center rounded-lg p-1 transition-colors ${
+                    active
+                      ? "bg-primary300/30 ring-2 ring-primary300"
+                      : "bg-primary200 hover:bg-primary300/20"
+                  }`}
+                >
+                  <img className="w-10 shrink-0" src={link.image} alt={link.name} />
+                  <p className="whitespace-pre-line text-left font-sans text-[13px] font-bold">
+                    {link.name}
+                  </p>
+                </button>
+              </CarouselItem>
+            );
+          })}
+        </CarouselContent>
+        <CarouselPrevious className="left-0 size-7 -translate-x-1/2 border-gray-200 bg-white shadow-md" />
+        <CarouselNext className="right-0 size-7 translate-x-1/2 border-gray-200 bg-white shadow-md" />
+      </Carousel>
+    </div>
+  );
+}
