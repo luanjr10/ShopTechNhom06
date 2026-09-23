@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\ReturnRequest;
 use App\Models\SellerOrder;
+use App\Rules\VietnamesePhone;
 use App\Services\OrderService;
 use App\Services\SellerOrderService;
 use App\Services\WarrantyService;
@@ -33,7 +34,7 @@ class OrderController extends Controller
             'items.*.sku' => 'nullable|string',
             'items.*.quantity' => 'required|integer|min:1',
             'receiver_name' => 'required|string|max:150',
-            'receiver_phone' => 'required|string|max:20',
+            'receiver_phone' => ['required', 'string', new VietnamesePhone],
             'shipping_address' => 'required|string|max:255',
             // Mã GHN (hệ cũ, có quận/huyện) — bắt buộc để tính phí/tạo vận đơn thật.
             'province_id' => 'required|integer',

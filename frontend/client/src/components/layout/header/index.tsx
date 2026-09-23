@@ -19,6 +19,7 @@ import { useAuth } from "../../../context/AuthContext";
 import { useCart } from "../../../context/CartContext";
 import { CategoryMenu } from "./CategoryMenu";
 import { LocationMenu } from "./LocationMenu";
+import logo from "../../../assets/logo.png";
 
 const marqueeText = "Thu cũ giá ngon - Lên đời tiết kiệm";
 
@@ -115,7 +116,7 @@ function Header() {
         <div className="flex flex-row items-center gap-3 py-3">
           <Link to="/" title="ShopTech" className="shrink-0">
             <img
-              src="https://res.cloudinary.com/dirnxnena/image/upload/v1790158329/Screenshot_2026-09-23_171157_jn666t.png"
+              src={logo}
               alt="ShopTechLogo"
               className="w-[170px] cursor-pointer transition-transform duration-300 hover:scale-95"
             />

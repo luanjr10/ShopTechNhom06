@@ -20,13 +20,18 @@ class RevenueController extends Controller
 
         $completed = SellerOrder::where('store_id', $store->id)->where('status', 'completed');
 
-        $totals = (clone $completed)->selectRaw(
-            'COUNT(*) as orders_count, COALESCE(SUM(subtotal),0) as gross_revenue,
+        $since = now()->subDays($days - 1)->startOfDay();
+
+        // Thẻ tổng quan phải khớp đúng khoảng "$days" đang chọn — trước đây
+        // chỉ mỗi biểu đồ theo ngày lọc theo $since, còn 4 thẻ số phía trên
+        // luôn tính all-time, khiến đổi 7/30/90 ngày không đổi số liệu thẻ.
+        $totals = (clone $completed)
+            ->where('completed_at', '>=', $since)
+            ->selectRaw(
+                'COUNT(*) as orders_count, COALESCE(SUM(subtotal),0) as gross_revenue,
              COALESCE(SUM(commission_amount),0) as commission_paid,
              COALESCE(SUM(seller_amount),0) as net_revenue'
-        )->first();
-
-        $since = now()->subDays($days - 1)->startOfDay();
+            )->first();
 
         $series = (clone $completed)
             ->where('completed_at', '>=', $since)

@@ -50,7 +50,7 @@ class OrderController extends Controller
     // [POST] /api/admin/orders/{order}/invoice/email — gửi hóa đơn PDF về email khách hàng.
     public function emailInvoice(Request $request, Order $order)
     {
-        $validated = $request->validate(['email' => 'nullable|email']);
+        $validated = $request->validate(['email' => 'nullable|email:rfc,dns']);
 
         $invoice = $this->invoiceService->buildFromOrder($order);
         $this->invoiceService->email($invoice, $validated['email'] ?? $order->user->email);

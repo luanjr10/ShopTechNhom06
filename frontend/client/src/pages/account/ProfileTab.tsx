@@ -184,8 +184,18 @@ function ProfileTab() {
                 </label>
                 <input
                   type={f.type}
+                  inputMode={f.name === "phone" ? "numeric" : undefined}
+                  maxLength={f.name === "phone" ? 10 : undefined}
                   value={form[f.name] ?? ""}
-                  onChange={(e) => setForm({ ...form, [f.name]: e.target.value })}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      [f.name]:
+                        f.name === "phone"
+                          ? e.target.value.replace(/\D/g, "").slice(0, 10)
+                          : e.target.value,
+                    })
+                  }
                   placeholder={f.label}
                   className={`w-full rounded-lg border px-3 py-2.5 font-sans text-[14px] outline-none focus:border-primary500 ${
                     errors[f.name] ? "border-primary500" : "border-gray-200"

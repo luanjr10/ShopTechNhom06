@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Support\JwtCookie;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -16,20 +17,34 @@ class GoogleAuthController extends Controller
 {
     /**
      * Chuyển người dùng sang trang đăng nhập Google.
+     *
+     * `?app=admin` đánh dấu luồng bắt đầu từ Dashboard (admin/seller) thay vì
+     * app khách hàng — truyền qua Google bằng tham số OAuth chuẩn `state` (được
+     * Google echo lại y nguyên ở callback, kể cả khi dùng `stateless()`).
      */
-    public function redirect()
+    public function redirect(Request $request)
     {
+        $app = $request->query('app') === 'admin' ? 'admin' : 'client';
+
         return Socialite::driver('google')
             ->stateless()
+            ->with(['state' => $app])
             ->redirect();
     }
 
     /**
      * Google callback về Laravel: tạo/tìm user → cấp JWT → set HttpOnly cookie
      * → redirect về React. KHÔNG trả token trong JSON hay trên URL.
+     *
+     * Luồng `app=admin`: KHÔNG tự tạo tài khoản mới (tránh tự leo thang thành
+     * admin/seller qua Google) — chỉ đăng nhập vào tài khoản admin/seller/
+     * employee đã tồn tại sẵn, khớp qua email.
      */
-    public function callback(): RedirectResponse
+    public function callback(Request $request): RedirectResponse
     {
+        $app = $request->query('state') === 'admin' ? 'admin' : 'client';
+        $frontendBase = $app === 'admin' ? (string) config('app.admin_url') : null;
+
         try {
             $googleUser = Socialite::driver('google')
                 ->stateless()
@@ -37,7 +52,7 @@ class GoogleAuthController extends Controller
         } catch (Throwable $e) {
             Log::error('Google OAuth callback lỗi', ['exception' => $e->getMessage(), 'class' => get_class($e)]);
 
-            return redirect($this->frontendUrl('/login?error=google'));
+            return redirect($this->frontendUrl('/login?error=google', $frontendBase));
         }
 
         // 1. Tìm theo Google ID
@@ -56,7 +71,20 @@ class GoogleAuthController extends Controller
             }
         }
 
-        // 3. Nếu hoàn toàn chưa có tài khoản → tạo customer
+        // 3a. Luồng Dashboard (admin/seller): KHÔNG tự tạo tài khoản — chỉ được
+        // đăng nhập vào tài khoản admin/seller/employee có sẵn, tránh việc ai
+        // đó tự "đăng ký" thành admin/seller chỉ bằng cách bấm nút Google.
+        if ($app === 'admin') {
+            if (! $user) {
+                return redirect($this->frontendUrl('/login?error=google_not_registered', $frontendBase));
+            }
+
+            if (! in_array($user->role, ['admin', 'seller', 'employee'], true)) {
+                return redirect($this->frontendUrl('/login?error=google_no_access', $frontendBase));
+            }
+        }
+
+        // 3b. Luồng khách hàng: hoàn toàn chưa có tài khoản → tạo customer.
         if (! $user) {
             $email = $googleUser->getEmail();
 
@@ -81,15 +109,16 @@ class GoogleAuthController extends Controller
 
         // 5. Lưu JWT vào HttpOnly cookie rồi redirect về React (không đưa token
         //    lên URL). React sẽ tự gọi /api/me để biết trạng thái đăng nhập.
-        return redirect($this->frontendUrl('/'))
+        return redirect($this->frontendUrl('/', $frontendBase))
             ->withCookie(JwtCookie::make($token));
     }
 
     /**
-     * Ghép đường dẫn vào URL của client React (config app.frontend_url).
+     * Ghép đường dẫn vào URL React — mặc định app khách hàng (config
+     * app.frontend_url), hoặc $base nếu luồng đến từ Dashboard (app.admin_url).
      */
-    private function frontendUrl(string $path = '/'): string
+    private function frontendUrl(string $path = '/', ?string $base = null): string
     {
-        return rtrim((string) config('app.frontend_url'), '/').$path;
+        return rtrim($base ?? (string) config('app.frontend_url'), '/').$path;
     }
 }

@@ -113,7 +113,7 @@ const SELLER_SECTIONS: NavSection[] = [
   },
   {
     title: "Khác",
-    items: [{ to: "/seller/settings", label: "Cài đặt", icon: Settings }],
+    items: [{ to: "/settings", label: "Cài đặt", icon: Settings }],
   },
 ];
 

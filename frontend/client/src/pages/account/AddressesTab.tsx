@@ -268,9 +268,12 @@ function AddressesTab() {
                     Số điện thoại
                   </label>
                   <input
-                    type="text"
+                    type="tel"
+                    inputMode="numeric"
+                    maxLength={10}
+                    placeholder="09xxxxxxxx"
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
                     className={`w-full rounded-lg border px-3 py-2.5 font-sans text-[14px] outline-none focus:border-primary500 ${
                       errors.phone ? "border-primary500" : "border-gray-200"
                     }`}

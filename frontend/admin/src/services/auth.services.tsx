@@ -15,6 +15,12 @@ export interface AuthUser {
   name: string;
   username: string;
   email: string;
+  email_verified_at?: string | null;
+  phone?: string | null;
+  avatar?: string | null;
+  avatar_url?: string | null;
+  /** false với tài khoản tạo qua Google (chưa từng đặt mật khẩu). */
+  has_password?: boolean;
   role: "customer" | "seller" | "admin" | "employee";
   seller_profile?: SellerProfile | null;
   /** Chỉ có ý nghĩa với role=employee — admin thật luôn full quyền (không cần mảng này). */

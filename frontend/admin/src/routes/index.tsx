@@ -1,4 +1,7 @@
+import { Navigate } from "react-router-dom";
 import Home from "../pages/Home";
+import SettingsPage from "../pages/Settings";
+import ForgotPasswordPage from "../pages/ForgotPassword";
 import ManageBrandsPage from "../pages/ManageBrands";
 import ManageCategoriesPage from "../pages/ManageCategory";
 import ManageCustomerPage from "../pages/ManageCustomer";
@@ -24,7 +27,6 @@ import SellerInventory from "../pages/seller/SellerInventory";
 import SellerRevenue from "../pages/seller/SellerRevenue";
 import SellerWallet from "../pages/seller/SellerWallet";
 import SellerWithdrawals from "../pages/seller/SellerWithdrawals";
-import SellerSettings from "../pages/seller/SellerSettings";
 import SellerCustomers from "../pages/seller/SellerCustomers";
 import SellerReturns from "../pages/seller/SellerReturns";
 import SellerReviews from "../pages/seller/SellerReviews";
@@ -38,6 +40,10 @@ export const routes = [
   {
     path: "/login",
     element: <LoginPage />,
+  },
+  {
+    path: "/quen-mat-khau",
+    element: <ForgotPasswordPage />,
   },
   {
     element: (
@@ -76,11 +82,14 @@ export const routes = [
       { path: "/seller/customers", element: <RequireRole roles={["seller"]}><SellerCustomers /></RequireRole> },
       { path: "/seller/returns", element: <RequireRole roles={["seller"]}><SellerReturns /></RequireRole> },
       { path: "/seller/reviews", element: <RequireRole roles={["seller"]}><SellerReviews /></RequireRole> },
-      { path: "/seller/settings", element: <RequireRole roles={["seller"]}><SellerSettings /></RequireRole> },
+      // Route cũ — giữ redirect để không vỡ link/bookmark có sẵn.
+      { path: "/seller/settings", element: <Navigate to="/settings" replace /> },
+
+      // Cài đặt tài khoản (mọi role) + gian hàng (riêng seller, xem SettingsPage).
+      { path: "/settings", element: <RequireRole roles={["admin", "seller", "employee"]}><SettingsPage /></RequireRole> },
 
       // Giữ chỗ — chưa triển khai
       { path: "/messages", element: <ComingSoon title="Tin nhắn" /> },
-      { path: "/settings", element: <ComingSoon title="Cài đặt" /> },
     ],
   },
 ];

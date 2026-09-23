@@ -79,7 +79,7 @@ function StoresPage() {
               <StoreIcon className="size-6" />
             </span>
             <div>
-              <h1 className="font-sans text-[22px] font-extrabold sm:text-[26px]">
+              <h1 className="font-sans text-[22px] font-extrabold sm:text-[26px] !text-[#ffffff]">
                 Kênh Người Bán
               </h1>
               <p className="font-sans text-[13px] text-white/80">

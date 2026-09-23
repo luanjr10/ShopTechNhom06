@@ -41,6 +41,27 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
 
+    // Chatbot AI tư vấn sản phẩm (storefront) — OpenAI Chat Completions + function calling.
+    // Hiện KHÔNG dùng (tài khoản hết credit) — giữ lại config phòng khi đổi lại.
+    'openai' => [
+        'api_key' => env('OPENAI_API_KEY'),
+        'model' => env('OPENAI_MODEL', 'gpt-4o-mini'),
+    ],
+
+    // Chatbot AI tư vấn sản phẩm (storefront) — Google Gemini generateContent + function calling.
+    // Hiện KHÔNG dùng (key cần "Set up billing" mới gọi được, dù free tier) — giữ lại phòng khi đổi lại.
+    'gemini' => [
+        'api_key' => env('GEMINI_API_KEY'),
+        'model' => env('GEMINI_MODEL', 'gemini-2.5-flash'),
+    ],
+
+    // Chatbot AI tư vấn sản phẩm (storefront) — Groq (OpenAI-compatible Chat Completions,
+    // miễn phí, KHÔNG cần thẻ) + function calling. Đang dùng chính cho AiChatService.
+    'groq' => [
+        'api_key' => env('GROQ_API_KEY'),
+        'model' => env('GROQ_MODEL', 'openai/gpt-oss-120b'),
+    ],
+
     // MoMo sandbox (test-payment.momo.vn) — thay bằng thông tin merchant thật khi lên production.
     'momo' => [
         'endpoint' => env('MOMO_ENDPOINT', 'https://test-payment.momo.vn/v2/gateway/api/create'),

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\EmployeePermission;
 use App\Models\User;
+use App\Rules\VietnamesePhone;
 use App\Support\AdminModules;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -61,8 +62,8 @@ class EmployeeController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:150',
             'username' => 'required|string|max:50|unique:users,username',
-            'email' => 'required|email|max:150|unique:users,email',
-            'phone' => 'nullable|string|max:20',
+            'email' => 'required|email:rfc,dns|max:150|unique:users,email',
+            'phone' => ['nullable', 'string', new VietnamesePhone],
         ]);
 
         $employee = User::create([
@@ -84,11 +85,18 @@ class EmployeeController extends Controller
     {
         abort_unless($employee->role === 'employee', 404, 'Không tìm thấy nhân viên');
 
+        // Chỉ tra DNS khi email thay đổi — không chặn việc sửa các trường khác
+        // nếu email hiện tại của nhân viên trót không còn resolve được.
+        $emailChanged = $request->input('email') !== $employee->email;
+
         $validated = $request->validate([
             'name' => 'required|string|max:150',
             'username' => ['required', 'string', 'max:50', Rule::unique('users', 'username')->ignore($employee->id)],
-            'email' => ['required', 'email', 'max:150', Rule::unique('users', 'email')->ignore($employee->id)],
-            'phone' => 'nullable|string|max:20',
+            'email' => [
+                'required', $emailChanged ? 'email:rfc,dns' : 'email:rfc', 'max:150',
+                Rule::unique('users', 'email')->ignore($employee->id),
+            ],
+            'phone' => ['nullable', 'string', new VietnamesePhone],
         ]);
 
         $employee->update($validated);

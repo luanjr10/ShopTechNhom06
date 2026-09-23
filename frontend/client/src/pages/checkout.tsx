@@ -244,7 +244,7 @@ export default function CheckoutPage() {
       ? Boolean(selectedAddress)
       : Boolean(
           receiverName.trim() &&
-            receiverPhone.trim() &&
+            /^0\d{9}$/.test(receiverPhone) &&
             location.province &&
             location.district &&
             location.ward &&
@@ -425,8 +425,13 @@ export default function CheckoutPage() {
                           Số điện thoại
                         </label>
                         <input
+                          type="tel"
+                          inputMode="numeric"
+                          maxLength={10}
                           value={receiverPhone}
-                          onChange={(e) => setReceiverPhone(e.target.value)}
+                          onChange={(e) =>
+                            setReceiverPhone(e.target.value.replace(/\D/g, "").slice(0, 10))
+                          }
                           className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-[14px] outline-none focus:border-primary500"
                           placeholder="09xxxxxxxx"
                         />

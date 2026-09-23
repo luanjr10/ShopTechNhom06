@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Seller;
 
 use App\Http\Requests\ApiFormRequest;
+use App\Rules\VietnamesePhone;
 
 class UpdateStorePickupAddressRequest extends ApiFormRequest
 {
@@ -10,7 +11,7 @@ class UpdateStorePickupAddressRequest extends ApiFormRequest
     {
         return [
             'pickup_contact_name' => 'required|string|max:150',
-            'pickup_phone' => 'required|string|max:20',
+            'pickup_phone' => ['required', 'string', new VietnamesePhone],
             // Mã GHN (hệ cũ, có quận/huyện) — dùng làm địa chỉ lấy hàng khi tạo vận đơn thật.
             'province_id' => 'required|integer',
             'district_id' => 'required|integer',

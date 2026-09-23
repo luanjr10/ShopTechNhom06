@@ -11,7 +11,7 @@ class RegisterRequest extends ApiFormRequest
         return [
             'name' => 'required|string|max:150',
             'username' => 'required|string|max:50|alpha_dash|unique:users,username',
-            'email' => 'required|email|max:190|unique:users,email',
+            'email' => 'required|email:rfc,dns|max:190|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
         ];
     }
@@ -24,6 +24,7 @@ class RegisterRequest extends ApiFormRequest
             'username.alpha_dash' => 'Tên đăng nhập chỉ gồm chữ, số, gạch ngang/dưới',
             'username.unique' => 'Tên đăng nhập đã tồn tại',
             'email.required' => 'Vui lòng nhập email',
+            'email.email' => 'Email không hợp lệ hoặc tên miền không tồn tại',
             'email.email' => 'Email không hợp lệ',
             'email.unique' => 'Email đã tồn tại',
             'password.required' => 'Vui lòng nhập mật khẩu',

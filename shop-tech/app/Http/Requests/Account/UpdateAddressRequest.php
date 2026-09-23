@@ -3,17 +3,18 @@
 namespace App\Http\Requests\Account;
 
 use App\Http\Requests\ApiFormRequest;
+use App\Rules\VietnamesePhone;
 
 class UpdateAddressRequest extends ApiFormRequest
 {
     /**
-     * @return array<string, string>
+     * @return array<string, mixed>
      */
     public function rules(): array
     {
         return [
             'recipient_name' => 'sometimes|required|string|max:150',
-            'phone' => 'sometimes|required|string|max:20',
+            'phone' => ['sometimes', 'required', 'string', new VietnamesePhone],
             'province_id' => 'sometimes|required|integer',
             'district_id' => 'sometimes|required|integer',
             'ward_code' => 'sometimes|required|string',
