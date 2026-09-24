@@ -174,7 +174,7 @@ function OrderDetailTab() {
 
   if (!order) {
     return (
-      <div className="rounded-2xl border border-gray-100 bg-white p-10 text-center font-sans text-[14px] text-gray-500 shadow-sm">
+      <div className="rounded-2xl border border-gray-100 bg-white p-4 sm:p-6 sm:p-10 text-center font-sans text-[14px] text-gray-500 shadow-sm">
         Không tìm thấy đơn hàng.
       </div>
     );
@@ -188,12 +188,12 @@ function OrderDetailTab() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <Link
           to="/tai-khoan/don-hang"
           className="flex items-center gap-1.5 font-sans text-[13px] font-medium text-gray-500 hover:text-primary500"
         >
-          <ArrowLeft className="size-4" /> Quay lại danh sách đơn hàng
+          <ArrowLeft className="size-4" /> Quay lại<span className="hidden sm:inline"> danh sách đơn hàng</span>
         </Link>
         {cancellable && (
           <button
@@ -214,7 +214,7 @@ function OrderDetailTab() {
         </div>
       )}
 
-      <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+      <div className="rounded-2xl border border-gray-100 bg-white p-4 sm:p-6 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 pb-4">
           <div className="flex items-center gap-2">
             <h2 className="font-sans text-[18px] font-bold text-gray-800">
@@ -276,7 +276,7 @@ function OrderDetailTab() {
         const isTerminalOther = sellerOrder.status === "pending" || sellerOrder.status === "cancelled";
 
         return (
-          <div key={sellerOrder.id} className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+          <div key={sellerOrder.id} className="rounded-2xl border border-gray-100 bg-white p-4 sm:p-6 shadow-sm">
             <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2 font-sans text-[14px] font-semibold text-gray-800">
                 <StoreIcon className="size-4 text-primary500" />
@@ -432,7 +432,7 @@ function OrderDetailTab() {
         );
       })}
 
-      <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+      <div className="rounded-2xl border border-gray-100 bg-white p-4 sm:p-6 shadow-sm">
         <div className="flex items-center justify-between font-sans text-[14px] text-gray-600">
           <span>Tạm tính</span>
           <span>{formatPrice(productSubtotal)}</span>

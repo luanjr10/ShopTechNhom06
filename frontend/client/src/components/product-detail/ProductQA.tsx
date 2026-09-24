@@ -104,7 +104,7 @@ export function ProductQA({ productId }: Props) {
   };
 
   return (
-    <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+    <div className="rounded-2xl border border-gray-100 bg-white p-4 sm:p-6 shadow-sm">
       <h2 className="mb-4 flex items-center gap-2 font-sans text-[16px] font-bold text-gray-900">
         <MessageCircleQuestion className="size-5 text-primary500" />
         Hỏi &amp; đáp

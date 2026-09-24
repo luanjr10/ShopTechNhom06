@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "https://THAY-DOMAIN-RAILWAY.up.railway.app/api/:path*" },
+    { "source": "/sanctum/:path*", "destination": "https://THAY-DOMAIN-RAILWAY.up.railway.app/sanctum/:path*" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

@@ -41,7 +41,7 @@ function OrdersTab() {
   }, []);
 
   return (
-    <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+    <div className="rounded-2xl border border-gray-100 bg-white p-4 sm:p-6 shadow-sm">
       <div className="mb-5">
         <h2 className="font-sans text-[18px] font-bold text-gray-800">Đơn hàng của tôi</h2>
         <p className="font-sans text-[13px] text-gray-500">
@@ -69,7 +69,7 @@ function OrdersTab() {
               <Link
                 key={order.id}
                 to={`/tai-khoan/don-hang/${order.id}`}
-                className="flex items-center justify-between gap-3 rounded-xl border border-gray-100 p-4 transition-colors hover:border-primary500/40 hover:bg-primary500/5"
+                className="flex items-center justify-between gap-3 rounded-xl border border-gray-100 p-3 transition-colors sm:p-4 hover:border-primary500/40 hover:bg-primary500/5"
               >
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
@@ -87,7 +87,7 @@ function OrdersTab() {
                   </p>
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
-                  <span className="font-sans text-[15px] font-bold text-primary500">
+                  <span className="font-sans text-[14px] font-bold text-primary500 sm:text-[15px]">
                     {formatPrice(order.total_amount)}
                   </span>
                   <ChevronRight className="size-4 text-gray-400" />

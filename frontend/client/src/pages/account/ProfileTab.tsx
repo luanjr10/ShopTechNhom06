@@ -92,7 +92,7 @@ function ProfileTab() {
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+      <div className="rounded-2xl border border-gray-100 bg-white p-4 sm:p-6 shadow-sm">
         <h2 className="mb-1 font-sans text-[18px] font-bold text-gray-800">
           Hồ sơ của tôi
         </h2>

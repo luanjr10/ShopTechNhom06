@@ -157,7 +157,7 @@ function ForgotPassword() {
             {step === "code" && <ShieldCheck className="size-7" />}
             {step === "password" && <LockKeyhole className="size-7" />}
           </div>
-          <h1 className="font-sans text-[22px] leading-tight font-bold">
+          <h1 className="font-sans text-[19px] sm:text-[22px] leading-tight font-bold">
             {step === "email" && "Quên mật khẩu"}
             {step === "code" && "Nhập mã xác minh"}
             {step === "password" && "Tạo mật khẩu mới"}
@@ -283,7 +283,7 @@ function ForgotPassword() {
                     value={digit}
                     onChange={(e) => setDigit(i, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(i, e)}
-                    className={`size-12 rounded-xl border-2 text-center font-sans text-[22px] font-bold text-gray-800 outline-none transition-all focus:border-primary500 focus:ring-2 focus:ring-primary500/20 disabled:opacity-60 sm:size-13 ${
+                    className={`size-12 rounded-xl border-2 text-center font-sans text-[19px] sm:text-[22px] font-bold text-gray-800 outline-none transition-all focus:border-primary500 focus:ring-2 focus:ring-primary500/20 disabled:opacity-60 sm:size-13 ${
                       digit ? "border-primary500 bg-primary500/5" : "border-gray-200"
                     }`}
                   />

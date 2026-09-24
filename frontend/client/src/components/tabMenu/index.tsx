@@ -56,8 +56,8 @@ function TabMenu() {
 
   return (
     <div className="flex flex-col">
-      <div className="mt-5 flex flex-row items-center gap-4 font-sans">
-        <h3 className="text-[16px] font-bold uppercase text-gray-800">
+      <div className="mt-5 flex flex-row items-center gap-3 font-sans sm:gap-4">
+        <h3 className="text-[14px] font-bold uppercase text-gray-800 sm:text-[16px]">
           Sắm thêm phụ kiện chất lượng
         </h3>
         <span className="h-4 w-px bg-gray-200" />
@@ -75,14 +75,14 @@ function TabMenu() {
         )}
       </div>
 
-      <div className="mt-4 grid grid-cols-3 overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-[0_4px_20px_-8px_rgba(0,0,0,0.35)] sm:grid-cols-6">
+      <div className="mt-4 grid grid-cols-2 overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-[0_4px_20px_-8px_rgba(0,0,0,0.35)] sm:grid-cols-3 lg:grid-cols-6">
         {loading
           ? Array.from({ length: 18 }).map((_, i) => <TileSkeleton key={i} />)
           : subcategories.slice(0, 18).map((sub) => (
               <Link
                 key={sub.id}
                 to={`/danh-muc/${sub.slug}`}
-                className="group flex items-center gap-3 border-b border-r border-neutral-100 px-3 py-4 transition-colors hover:bg-primary200/40 max-sm:[&:nth-child(3n)]:border-r-0 sm:[&:nth-child(6n)]:border-r-0"
+                className="group flex min-w-0 items-center gap-2 border-b border-r border-neutral-100 px-2.5 py-3 sm:gap-3 sm:px-3 sm:py-4 transition-colors hover:bg-primary200/40 max-sm:[&:nth-child(2n)]:border-r-0 sm:max-lg:[&:nth-child(3n)]:border-r-0 lg:[&:nth-child(6n)]:border-r-0"
               >
                 <span className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gray-50 transition-colors group-hover:bg-white">
                   <CategoryVisual

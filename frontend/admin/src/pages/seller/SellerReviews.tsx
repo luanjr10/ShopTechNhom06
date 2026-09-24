@@ -58,7 +58,7 @@ export default function SellerReviews() {
 
   if (!activeStore) {
     return (
-      <div className="flex flex-col gap-8 px-10 py-10">
+      <div className="flex flex-col gap-6 px-4 py-6 sm:gap-8 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
         <h2 className="font-sans text-2xl font-bold text-white">Đánh giá & Người theo dõi</h2>
         <p className="text-sm text-gray-400">Bạn cần tạo/chọn 1 gian hàng trước.</p>
       </div>
@@ -130,7 +130,7 @@ export default function SellerReviews() {
   ];
 
   return (
-    <div className="flex flex-col gap-8 px-10 py-10">
+    <div className="flex flex-col gap-6 px-4 py-6 sm:gap-8 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <h2 className="font-sans text-2xl font-bold text-white">Đánh giá & Người theo dõi</h2>
 
       <div className="flex gap-2">

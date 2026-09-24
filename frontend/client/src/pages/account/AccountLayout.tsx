@@ -45,12 +45,12 @@ function AccountLayout() {
   }, []);
 
   return (
-    <div className="mx-auto w-full max-w-[1100px] px-4 py-6">
-      <div className="flex flex-col gap-6 md:flex-row">
+    <div className="mx-auto w-full max-w-[1100px] px-3 py-4 sm:px-4 sm:py-6">
+      <div className="flex flex-col gap-4 md:flex-row md:gap-6">
         {/* Sidebar */}
         <aside className="w-full shrink-0 md:w-[260px]">
-          <div className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
-            <div className="mb-4 flex items-center gap-3 border-b border-gray-100 pb-4">
+          <div className="rounded-2xl border border-gray-100 bg-white p-3 shadow-sm md:p-4">
+            <div className="mb-3 flex items-center gap-3 border-b border-gray-100 pb-3 md:mb-4 md:pb-4">
               {user?.avatar_url ? (
                 <img
                   src={user.avatar_url}
@@ -82,14 +82,15 @@ function AccountLayout() {
               </div>
             </div>
 
-            <nav className="flex flex-col gap-1">
+            {/* Mobile: menu tab cuộn ngang để nội dung tab hiện ngay, không bị đẩy xuống */}
+            <nav className="-mx-1 flex gap-1 overflow-x-auto px-1 [scrollbar-width:none] md:mx-0 md:flex-col md:overflow-visible md:px-0 [&::-webkit-scrollbar]:hidden">
               {navItems.map(({ to, end, icon: Icon, label }) => (
                 <NavLink
                   key={to}
                   to={to}
                   end={end}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 rounded-lg px-3 py-2.5 font-sans text-[14px] font-medium transition-colors ${
+                    `flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg px-3 py-2 font-sans text-[13px] font-medium transition-colors md:gap-3 md:py-2.5 md:text-[14px] ${
                       isActive
                         ? "bg-primary500/10 text-primary500"
                         : "text-gray-600 hover:bg-gray-50"

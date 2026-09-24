@@ -42,7 +42,7 @@ function Login() {
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-6 px-4 py-10">
-      <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-[0_4px_20px_-8px_rgba(0,0,0,0.35)]">
+      <div className="rounded-2xl border border-gray-100 bg-white p-4 sm:p-6 shadow-[0_4px_20px_-8px_rgba(0,0,0,0.35)]">
         <div className="mb-5 flex flex-col items-center gap-2 text-center">
           <div className="flex size-12 items-center justify-center rounded-full bg-primary500/10 text-primary500">
             <LockKeyhole className="size-6" />

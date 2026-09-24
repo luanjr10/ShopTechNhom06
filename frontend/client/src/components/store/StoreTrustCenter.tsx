@@ -17,7 +17,7 @@ export function StoreTrustCenter({ store }: StoreTrustCenterProps) {
   ];
 
   return (
-    <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-[0_2px_12px_rgba(0,0,0,0.05)]">
+    <div className="rounded-2xl border border-gray-100 bg-white p-4 sm:p-6 shadow-[0_2px_12px_rgba(0,0,0,0.05)]">
       <h3 className="mb-4 flex items-center gap-2 font-sans text-[16px] font-bold text-gray-800">
         <ShieldCheck className="size-5 text-primary500" />
         Trung tâm uy tín

@@ -81,12 +81,12 @@ export function TabAds() {
           {tabs.map((tab, index) => {
             const isActive = current === index;
             return (
-              <CarouselItem key={index} className="basis-1/4 pl-0">
+              <CarouselItem key={index} className="basis-1/2 pl-0 sm:basis-1/3 xl:basis-1/4">
                 <button
                   type="button"
                   onClick={() => goTo(index)}
                   className={cn(
-                    "relative h-14 w-full cursor-pointer px-2 py-2 text-center font-sans transition-colors",
+                    "relative h-12 w-full cursor-pointer px-2 py-1.5 sm:h-14 sm:py-2 text-center font-sans transition-colors",
                     isActive ? "bg-white" : "bg-neutral-50 hover:bg-neutral-100",
                   )}
                 >
@@ -155,7 +155,7 @@ export function TabAds() {
       </div>
 
       {/* 3 BANNER nhỏ */}
-      <div className="grid grid-cols-3 gap-2 p-2">
+      <div className="grid grid-cols-3 gap-1.5 p-1.5 sm:gap-2 sm:p-2">
         {subBanners.map((banner, index) => (
           <img
             key={index}

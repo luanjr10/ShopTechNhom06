@@ -11,6 +11,11 @@ export const API_ORIGIN =
   (import.meta.env.VITE_API_ORIGIN as string | undefined) ??
   "http://localhost:8000";
 
+/** Trang quản trị/Kênh người bán (app admin — Seller Center đã gộp vào đây). */
+export const ADMIN_URL =
+  (import.meta.env.VITE_ADMIN_URL as string | undefined) ??
+  "http://localhost:5173";
+
 const BASE_URL =
   (import.meta.env.VITE_API_URL as string | undefined) ?? `${API_ORIGIN}/api`;
 

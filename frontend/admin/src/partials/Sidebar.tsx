@@ -207,6 +207,11 @@ function Sidebar({
     return () => document.removeEventListener("click", clickHandler);
   });
 
+  // Mobile: chọn 1 mục menu (đổi route) thì tự đóng drawer
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [pathname, setSidebarOpen]);
+
   // close if the esc key is pressed
   useEffect(() => {
     const keyHandler = ({ keyCode }) => {

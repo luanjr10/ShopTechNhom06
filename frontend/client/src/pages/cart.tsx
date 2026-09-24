@@ -126,7 +126,7 @@ function CartRow({ item }: { item: CartItemResponse }) {
           disabled={busy || item.unavailable}
           onChange={handleQuantity}
         />
-        <p className="w-28 text-right font-sans text-[15px] font-bold text-gray-800">
+        <p className="text-right font-sans text-[15px] sm:w-28 font-bold text-gray-800">
           {formatPrice(item.subtotal)}
         </p>
         <button
@@ -183,9 +183,9 @@ export default function CartPage() {
   }
 
   return (
-    <div className="mx-auto max-w-[1000px] px-4 py-8">
+    <div className="mx-auto max-w-[1000px] px-3 py-4 sm:px-4 sm:py-8">
       <div className="mb-5 flex items-center justify-between">
-        <h1 className="font-sans text-[22px] font-bold text-gray-900">
+        <h1 className="font-sans text-[19px] sm:text-[22px] font-bold text-gray-900">
           Giỏ hàng ({cart?.total_item ?? 0})
         </h1>
         <button
@@ -212,12 +212,12 @@ export default function CartPage() {
         </div>
       )}
 
-      <div className="sticky bottom-4 mt-6 flex flex-col gap-3 rounded-2xl border border-gray-100 bg-white p-5 shadow-lg sm:flex-row sm:items-center sm:justify-between">
+      <div className="sticky bottom-2 mt-6 flex flex-row items-center justify-between gap-3 rounded-2xl border border-gray-100 bg-white p-3 shadow-lg sm:bottom-4 sm:p-5">
         <div>
           <p className="font-sans text-[13px] text-gray-500">
             Tổng cộng ({cart?.total_quantity ?? 0} sản phẩm)
           </p>
-          <p className="font-sans text-[24px] font-bold text-primary500">
+          <p className="font-sans text-[20px] sm:text-[24px] font-bold text-primary500">
             {formatPrice(cart?.subtotal ?? 0)}
           </p>
         </div>
@@ -225,7 +225,7 @@ export default function CartPage() {
           type="button"
           onClick={() => navigate("/thanh-toan")}
           disabled={hasBlockingIssue}
-          className="rounded-xl bg-primary500 px-8 py-3 font-sans text-[15px] font-bold text-white transition-colors hover:bg-primary500/90 disabled:cursor-not-allowed disabled:opacity-50"
+          className="shrink-0 rounded-xl bg-primary500 px-4 py-3 font-sans text-[14px] font-bold sm:px-8 sm:text-[15px] text-white transition-colors hover:bg-primary500/90 disabled:cursor-not-allowed disabled:opacity-50"
         >
           Tiến hành thanh toán
         </button>

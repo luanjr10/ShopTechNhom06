@@ -8,7 +8,7 @@ interface StoreAboutProps {
 /** Cột trái: giới thiệu + chính sách của shop. */
 export function StoreAbout({ store }: StoreAboutProps) {
   return (
-    <div className="flex flex-col gap-6 rounded-2xl border border-gray-100 bg-white p-6 shadow-[0_2px_12px_rgba(0,0,0,0.05)]">
+    <div className="flex flex-col gap-6 rounded-2xl border border-gray-100 bg-white p-4 sm:p-6 shadow-[0_2px_12px_rgba(0,0,0,0.05)]">
       <div>
         <h3 className="mb-2 font-sans text-[16px] font-bold text-gray-800">
           Giới thiệu

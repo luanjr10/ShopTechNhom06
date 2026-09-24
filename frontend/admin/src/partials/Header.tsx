@@ -27,31 +27,11 @@ function Header({
         <div className={`flex items-center justify-between h-16 ${variant === 'v2' || variant === 'v3' ? '' : 'lg:border-b border-gray-200 dark:border-gray-700/60'}`}>
 
           {/* Header: Left side */}
-          <div className="flex items-center gap-3">
-
-            {user?.role === 'seller' && stores.length > 0 && (
-              <div className="hidden items-center gap-2 sm:flex">
-                <StoreIcon className="h-4 w-4 text-gray-400" />
-                <select
-                  value={activeStore?.id ?? ''}
-                  onChange={(e) => {
-                    const s = stores.find((x) => x.id === Number(e.target.value));
-                    if (s) setActiveStore(s);
-                  }}
-                  className="rounded-lg border border-gray-300 bg-white px-2.5 py-1.5 text-sm font-medium text-gray-700 outline-none focus:border-violet-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
-                >
-                  {stores.map((s) => (
-                    <option key={s.id} value={s.id}>
-                      {s.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
+          <div className="flex min-w-0 items-center gap-3">
 
             {/* Hamburger button */}
             <button
-              className="text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 lg:hidden"
+              className="shrink-0 text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 lg:hidden"
               aria-controls="sidebar"
               aria-expanded={sidebarOpen}
               onClick={(e) => { e.stopPropagation(); setSidebarOpen(!sidebarOpen); }}
@@ -64,13 +44,35 @@ function Header({
               </svg>
             </button>
 
+            {/* Chọn gian hàng — luôn hiện (cả mobile) để seller đổi gian hàng được */}
+            {user?.role === 'seller' && stores.length > 0 && (
+              <div className="flex min-w-0 items-center gap-2">
+                <StoreIcon className="hidden h-4 w-4 shrink-0 text-gray-400 sm:block" />
+                <select
+                  value={activeStore?.id ?? ''}
+                  onChange={(e) => {
+                    const s = stores.find((x) => x.id === Number(e.target.value));
+                    if (s) setActiveStore(s);
+                  }}
+                  aria-label="Chọn gian hàng"
+                  className="w-full max-w-[150px] truncate rounded-lg border border-gray-300 bg-white py-1.5 pl-2.5 text-sm font-medium text-gray-700 outline-none focus:border-violet-500 sm:max-w-[240px] dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                >
+                  {stores.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
           </div>
 
           {/* Header: Right side */}
-          <div className="flex items-center space-x-3">
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
             <div>
               <button
-                className={`w-8 h-8 flex items-center justify-center hover:bg-gray-100 lg:hover:bg-gray-200 dark:hover:bg-gray-700/50 dark:lg:hover:bg-gray-800 rounded-full ml-3 ${searchModalOpen && 'bg-gray-200 dark:bg-gray-800'}`}
+                className={`w-8 h-8 flex items-center justify-center hover:bg-gray-100 lg:hover:bg-gray-200 dark:hover:bg-gray-700/50 dark:lg:hover:bg-gray-800 rounded-full sm:ml-3 ${searchModalOpen && 'bg-gray-200 dark:bg-gray-800'}`}
                 onClick={(e) => { e.stopPropagation(); setSearchModalOpen(true); }}
                 aria-controls="search-modal"
               >
@@ -89,10 +91,12 @@ function Header({
               <SearchModal id="search-modal" searchId="search" modalOpen={searchModalOpen} setModalOpen={setSearchModalOpen} />
             </div>
             <Notifications align="right" />
-            <Help align="right" />
+            <div className="hidden sm:block">
+              <Help align="right" />
+            </div>
             <ThemeToggle />
             {/*  Divider */}
-            <hr className="w-px h-6 bg-gray-200 dark:bg-gray-700/60 border-none" />
+            <hr className="hidden sm:block w-px h-6 bg-gray-200 dark:bg-gray-700/60 border-none" />
             <UserMenu align="right" />
 
           </div>

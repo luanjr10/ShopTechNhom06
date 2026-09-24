@@ -91,7 +91,7 @@ function DailyDealsSection() {
               type="button"
               onClick={() => handleTabChange(tab.key)}
               className={cn(
-                "relative z-10 flex-1 rounded-t-2xl border px-4 py-3 text-center font-sans text-[16px] font-extrabold uppercase tracking-wide transition-colors",
+                "relative z-10 flex-1 rounded-t-xl border px-1.5 py-2 text-center font-sans text-[11px] font-extrabold uppercase leading-tight tracking-wide transition-colors sm:rounded-t-2xl sm:px-4 sm:py-3 sm:text-[16px]",
                 isActive
                   ? "-mb-px border-blue-500 border-b-white bg-white text-blue-600"
                   : "border-gray-200 bg-gray-50 text-gray-400 hover:bg-gray-100",
@@ -101,7 +101,7 @@ function DailyDealsSection() {
                 <span className="inline-flex items-center gap-1.5">
                   <span
                     className={cn(
-                      "rounded-full px-3 py-1 text-[13px] font-extrabold tracking-wide",
+                      "hidden rounded-full px-3 py-1 text-[13px] font-extrabold tracking-wide sm:inline",
                       isActive
                         ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white"
                         : "text-gray-400",
@@ -111,7 +111,7 @@ function DailyDealsSection() {
                   </span>
                   <span
                     className={cn(
-                      "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[12px] font-extrabold text-white shadow-sm",
+                      "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-extrabold whitespace-nowrap text-white shadow-sm sm:px-2.5 sm:py-1 sm:text-[12px]",
                       isActive
                         ? "bg-gradient-to-r from-orange-500 to-primary500"
                         : "bg-gray-300",
@@ -129,14 +129,15 @@ function DailyDealsSection() {
         })}
       </div>
 
-      <div className="rounded-2xl rounded-tl-none border-2 border-blue-500 bg-gradient-to-b from-blue-50/40 to-white p-4">
+      <div className="rounded-2xl rounded-tl-none border-2 border-blue-500 bg-gradient-to-b from-blue-50/40 to-white p-2.5 sm:p-4">
         {/* Chip danh mục — kiểu pill tròn giống Quick Link */}
-        <div className="flex flex-wrap gap-2 pb-3">
+        {/* Mobile: 1 hàng cuộn ngang thay vì xếp nhiều dòng chiếm chỗ */}
+        <div className="-mx-2.5 flex gap-2 overflow-x-auto px-2.5 pb-3 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:px-0 [&::-webkit-scrollbar]:hidden">
           <button
             type="button"
             onClick={() => setActiveCategoryId(null)}
             className={cn(
-              "rounded-full border-2 px-4 py-2 font-sans text-[13px] font-bold uppercase transition-colors",
+              "shrink-0 rounded-full border-2 px-3 py-1.5 font-sans text-[12px] font-bold whitespace-nowrap uppercase transition-colors sm:px-4 sm:py-2 sm:text-[13px]",
               activeCategoryId === null
                 ? "border-blue-500 bg-white text-blue-600 shadow-[0_2px_8px_rgba(37,99,235,0.15)]"
                 : "border-transparent bg-white text-gray-500 hover:border-gray-200",
@@ -152,7 +153,7 @@ function DailyDealsSection() {
                 type="button"
                 onClick={() => setActiveCategoryId(category.id)}
                 className={cn(
-                  "inline-flex items-center gap-2 rounded-full border-2 px-4 py-2 font-sans text-[13px] font-bold uppercase transition-colors",
+                  "inline-flex shrink-0 items-center gap-2 rounded-full border-2 px-3 py-1.5 font-sans text-[12px] font-bold whitespace-nowrap uppercase transition-colors sm:px-4 sm:py-2 sm:text-[13px]",
                   isActive
                     ? "border-blue-500 bg-white text-blue-600 shadow-[0_2px_8px_rgba(37,99,235,0.15)]"
                     : "border-transparent bg-white text-gray-500 hover:border-gray-200",
@@ -168,7 +169,7 @@ function DailyDealsSection() {
         </div>
 
         {/* Sản phẩm — carousel để sau thêm nhiều SP vẫn kéo ngang xem được. */}
-        <Carousel opts={{ align: "start", dragFree: true }} className="px-2">
+        <Carousel opts={{ align: "start", dragFree: true }} className="sm:px-2">
           <CarouselContent className="-ml-3">
             {loading
               ? Array.from({ length: 5 }).map((_, i) => (
@@ -186,8 +187,8 @@ function DailyDealsSection() {
                 ))}
           </CarouselContent>
 
-          <CarouselPrevious className="-left-3 size-11 border-2 border-gray-200 bg-white text-gray-500 shadow-[0_4px_14px_rgba(0,0,0,0.15)] hover:bg-gray-50 hover:text-blue-600 disabled:opacity-30 sm:-left-5" />
-          <CarouselNext className="-right-3 size-11 border-2 border-gray-200 bg-white text-gray-500 shadow-[0_4px_14px_rgba(0,0,0,0.15)] hover:bg-gray-50 hover:text-blue-600 disabled:opacity-30 sm:-right-5" />
+          <CarouselPrevious className="-left-3 hidden size-11 sm:inline-flex border-2 border-gray-200 bg-white text-gray-500 shadow-[0_4px_14px_rgba(0,0,0,0.15)] hover:bg-gray-50 hover:text-blue-600 disabled:opacity-30 sm:-left-5" />
+          <CarouselNext className="-right-3 hidden size-11 sm:inline-flex border-2 border-gray-200 bg-white text-gray-500 shadow-[0_4px_14px_rgba(0,0,0,0.15)] hover:bg-gray-50 hover:text-blue-600 disabled:opacity-30 sm:-right-5" />
         </Carousel>
 
         {!loading && products.length === 0 && (

@@ -53,14 +53,14 @@ export function ProductReviews({ productId, productName }: Props) {
   };
 
   return (
-    <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+    <div className="rounded-2xl border border-gray-100 bg-white p-4 sm:p-6 shadow-sm">
       <h2 className="mb-4 font-sans text-[16px] font-bold text-gray-900">Đánh giá {productName}</h2>
 
       <div className="flex flex-col gap-6 sm:flex-row">
         {/* Tổng quan */}
         <div className="flex shrink-0 flex-col items-center justify-center gap-1 sm:w-[180px]">
           <div className="flex items-baseline gap-1">
-            <span className="font-sans text-[36px] font-bold text-gray-900">{(stats?.average ?? 0).toFixed(1)}</span>
+            <span className="font-sans text-[30px] sm:text-[36px] font-bold text-gray-900">{(stats?.average ?? 0).toFixed(1)}</span>
             <span className="font-sans text-[16px] text-gray-400">/5</span>
           </div>
           <Stars value={Math.round(stats?.average ?? 0)} size="size-5" />

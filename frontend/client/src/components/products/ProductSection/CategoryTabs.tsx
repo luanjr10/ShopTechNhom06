@@ -25,7 +25,7 @@ export function CategoryTabs({ tabs, activeIndex, onChange }: CategoryTabsProps)
               type="button"
               onClick={() => onChange(index)}
               className={cn(
-                "relative flex-1 cursor-pointer px-6 py-4 font-sans text-[19px] font-bold transition-colors",
+                "relative flex-1 cursor-pointer px-2 py-3 font-sans text-[14px] font-bold transition-colors sm:px-6 sm:py-4 sm:text-[19px]",
                 isActive
                   ? "bg-linear-to-b from-white to-primary300/25 text-primary500"
                   : "text-gray-500 hover:text-gray-800",
@@ -34,7 +34,7 @@ export function CategoryTabs({ tabs, activeIndex, onChange }: CategoryTabsProps)
               {tab.label}
               <span
                 className={cn(
-                  "absolute inset-x-6 bottom-0 h-[3px] rounded-full bg-primary500 transition-all duration-300",
+                  "absolute inset-x-3 bottom-0 sm:inset-x-6 h-[3px] rounded-full bg-primary500 transition-all duration-300",
                   isActive ? "opacity-100" : "opacity-0",
                 )}
               />

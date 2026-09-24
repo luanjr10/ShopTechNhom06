@@ -25,7 +25,7 @@ export function ProductGallery({ images, name }: ProductGalleryProps) {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex aspect-square w-full items-center justify-center overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 shadow-[0_2px_16px_rgba(0,0,0,0.05)]">
+      <div className="flex aspect-square w-full items-center justify-center overflow-hidden rounded-2xl border border-gray-100 bg-white p-4 sm:p-6 shadow-[0_2px_16px_rgba(0,0,0,0.05)]">
         <img
           src={images[activeIndex]}
           alt={name}

@@ -67,7 +67,7 @@ function SearchPage() {
   const hasMore = meta ? page < meta.last_page : false;
 
   return (
-    <div className="mx-auto flex w-full max-w-[1220px] flex-col gap-6 px-4 py-6">
+    <div className="mx-auto flex w-full max-w-[1220px] flex-col gap-6 px-3 py-4 sm:px-4 sm:py-6">
       <div>
         <h1 className="font-sans text-[20px] font-bold text-gray-800">
           Kết quả tìm kiếm cho "{keyword}"

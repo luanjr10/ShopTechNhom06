@@ -50,7 +50,7 @@ export function BrandChips({
                   type="button"
                   onClick={() => onSelect(isActive ? null : brand.id)}
                   className={cn(
-                    "flex h-8 items-center gap-1.5 rounded-xl border px-3 font-sans text-[14px] transition-colors cursor-pointer",
+                    "flex h-8 items-center gap-1.5 rounded-xl border px-3 font-sans text-[13px] whitespace-nowrap transition-colors cursor-pointer sm:text-[14px]",
                     isActive
                       ? "border-primary500 bg-primary300/15 text-primary500 font-semibold"
                       : "border-gray-200 hover:border-primary300 hover:bg-primary200",

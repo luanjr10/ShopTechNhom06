@@ -32,7 +32,7 @@ function SessionsTab() {
   };
 
   return (
-    <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+    <div className="rounded-2xl border border-gray-100 bg-white p-4 sm:p-6 shadow-sm">
       <h2 className="mb-1 font-sans text-[18px] font-bold text-gray-800">
         Phiên đăng nhập
       </h2>
@@ -48,7 +48,7 @@ function SessionsTab() {
 
       <div className="flex flex-col gap-3">
         {/* Thiết bị hiện tại */}
-        <div className="flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50/60 p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-gray-100 bg-gray-50/60 p-3 sm:p-4">
           <div className="flex items-center gap-3">
             <div className="flex size-10 items-center justify-center rounded-full bg-primary500/10 text-primary500">
               <MonitorSmartphone className="size-5" />

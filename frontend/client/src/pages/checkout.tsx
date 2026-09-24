@@ -349,8 +349,8 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="mx-auto max-w-[1100px] px-4 py-8">
-      <h1 className="mb-6 font-sans text-[22px] font-bold text-gray-900">
+    <div className="mx-auto max-w-[1100px] px-3 py-4 sm:px-4 sm:py-8">
+      <h1 className="mb-6 font-sans text-[19px] sm:text-[22px] font-bold text-gray-900">
         Thanh toán
       </h1>
 

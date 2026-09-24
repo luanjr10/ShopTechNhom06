@@ -26,8 +26,7 @@ class GoogleAuthController extends Controller
     {
         $app = $request->query('app') === 'admin' ? 'admin' : 'client';
 
-        return Socialite::driver('google')
-            ->stateless()
+        return $this->googleDriver($app)
             ->with(['state' => $app])
             ->redirect();
     }
@@ -46,9 +45,8 @@ class GoogleAuthController extends Controller
         $frontendBase = $app === 'admin' ? (string) config('app.admin_url') : null;
 
         try {
-            $googleUser = Socialite::driver('google')
-                ->stateless()
-                ->user();
+            // Đổi code lấy token phải dùng ĐÚNG redirect_uri đã gửi ở bước redirect().
+            $googleUser = $this->googleDriver($app)->user();
         } catch (Throwable $e) {
             Log::error('Google OAuth callback lỗi', ['exception' => $e->getMessage(), 'class' => get_class($e)]);
 
@@ -111,6 +109,22 @@ class GoogleAuthController extends Controller
         //    lên URL). React sẽ tự gọi /api/me để biết trạng thái đăng nhập.
         return redirect($this->frontendUrl('/', $frontendBase))
             ->withCookie(JwtCookie::make($token));
+    }
+
+    /**
+     * Driver Google với callback theo luồng: admin dùng GOOGLE_ADMIN_REDIRECT_URI
+     * (nếu có) để Google quay về qua domain admin -> cookie JWT đặt đúng domain đó.
+     */
+    private function googleDriver(string $app)
+    {
+        $driver = Socialite::driver('google')->stateless();
+
+        $adminRedirect = config('services.google.admin_redirect');
+        if ($app === 'admin' && $adminRedirect) {
+            $driver->redirectUrl($adminRedirect);
+        }
+
+        return $driver;
     }
 
     /**

@@ -49,7 +49,7 @@ export function StoreSellerInfo({ store }: StoreSellerInfoProps) {
   ];
 
   return (
-    <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-[0_2px_12px_rgba(0,0,0,0.05)]">
+    <div className="rounded-2xl border border-gray-100 bg-white p-4 sm:p-6 shadow-[0_2px_12px_rgba(0,0,0,0.05)]">
       <h3 className="mb-4 font-sans text-[16px] font-bold text-gray-800">
         Thông tin người bán
       </h3>
