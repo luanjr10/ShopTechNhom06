@@ -19,6 +19,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Chạy sau proxy HTTPS của Railway/Render/Nginx — tin header X-Forwarded-*
+        // để route()/url() sinh đúng https:// (URL trả về cổng thanh toán, ảnh…).
+        $middleware->trustProxies(at: '*');
+
         // Đọc JWT từ HttpOnly cookie và gắn vào header Bearer trước khi guard
         // auth:api chạy. Nhờ vậy React xác thực bằng cookie mà không cần đọc token.
         $middleware->api(prepend: [

@@ -168,7 +168,7 @@ function VouchersTab() {
         )}
 
         {vouchers.length === 0 ? (
-          <p className="rounded-2xl border border-dashed border-gray-200 p-6 text-center font-sans text-[13px] text-gray-400">
+          <p className="rounded-2xl border border-dashed border-gray-200 p-4 sm:p-6 text-center font-sans text-[13px] text-gray-400">
             Hiện chưa có voucher nào dành cho hạng của bạn. Mua thêm để lên hạng và mở khóa ưu đãi!
           </p>
         ) : (

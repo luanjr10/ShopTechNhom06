@@ -84,23 +84,23 @@ function FlashSaleSection() {
   return (
     <div className="relative mt-2">
       {/* Ruy băng trang trí 2 góc, giống viền sale thật. */}
-      <div className="absolute -top-3 -left-2 z-20 flex h-9 w-9 -rotate-12 items-center justify-center rounded-lg bg-yellow-400 shadow-[0_4px_10px_rgba(0,0,0,0.25)] ring-2 ring-white">
+      <div className="absolute -top-3 -left-2 z-20 hidden h-9 w-9 sm:flex -rotate-12 items-center justify-center rounded-lg bg-yellow-400 shadow-[0_4px_10px_rgba(0,0,0,0.25)] ring-2 ring-white">
         <Percent size={16} className="text-primary500" strokeWidth={3} />
       </div>
-      <div className="absolute -top-3 -right-2 z-20 flex h-9 w-9 rotate-12 items-center justify-center rounded-lg bg-yellow-400 shadow-[0_4px_10px_rgba(0,0,0,0.25)] ring-2 ring-white">
+      <div className="absolute -top-3 -right-2 z-20 hidden h-9 w-9 sm:flex rotate-12 items-center justify-center rounded-lg bg-yellow-400 shadow-[0_4px_10px_rgba(0,0,0,0.25)] ring-2 ring-white">
         <Percent size={16} className="text-primary500" strokeWidth={3} />
       </div>
 
       <div className="overflow-hidden rounded-2xl bg-gradient-to-b from-primary500 to-red-700 pt-2 shadow-[0_8px_28px_rgba(215,0,24,0.3)] ring-2 ring-yellow-300/80 ring-offset-2 ring-offset-white">
         {/* Tab trên cùng */}
-        <div className="flex flex-row px-3">
+        <div className="flex flex-row px-2 sm:px-3">
           {TOP_TABS.map((tab, index) => (
             <button
               key={tab}
               type="button"
               onClick={() => setActiveTopTab(index)}
               className={cn(
-                "flex-1 rounded-t-xl px-4 py-3 text-center font-sans text-[15px] font-extrabold uppercase tracking-wide transition-colors",
+                "flex-1 rounded-t-xl px-1.5 py-2 text-center font-sans text-[11px] font-extrabold uppercase leading-tight tracking-wide transition-colors sm:px-4 sm:py-3 sm:text-[15px]",
                 activeTopTab === index
                   ? "bg-white text-primary500"
                   : "text-white/80 hover:text-white",
@@ -111,7 +111,7 @@ function FlashSaleSection() {
           ))}
         </div>
 
-        <div className="bg-white/10 p-3 backdrop-blur-sm">
+        <div className="bg-white/10 p-2 backdrop-blur-sm sm:p-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
             {/* Tab danh mục con */}
             <div className="flex flex-wrap gap-2">
@@ -121,7 +121,7 @@ function FlashSaleSection() {
                   type="button"
                   onClick={() => setActiveGroup(index)}
                   className={cn(
-                    "rounded-full border px-4 py-1.5 font-sans text-[13px] font-semibold transition-colors",
+                    "rounded-full border px-3 py-1 font-sans text-[12px] font-semibold transition-colors sm:px-4 sm:py-1.5 sm:text-[13px]",
                     activeGroup === index
                       ? "border-white bg-white text-primary500"
                       : "border-white/50 text-white hover:bg-white/10",

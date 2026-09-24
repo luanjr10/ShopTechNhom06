@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  Check,
   Loader2,
   LockKeyhole,
   Mail,
@@ -24,7 +23,7 @@ function ChangePasswordTab() {
   const [method, setMethod] = useState<"password" | "email">(hasPassword ? "password" : "email");
 
   return (
-    <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+    <div className="rounded-2xl border border-gray-100 bg-white p-4 sm:p-6 shadow-sm">
       <h2 className="mb-1 font-sans text-[18px] font-bold text-gray-800">
         {hasPassword ? "Đổi mật khẩu" : "Đặt mật khẩu"}
       </h2>

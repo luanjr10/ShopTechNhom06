@@ -15,7 +15,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       to={`/san-pham/${product.slug}`}
-      className="group relative flex h-full flex-col items-center rounded-2xl border border-gray-100/60 bg-white p-3 text-left shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-all duration-200 hover:-translate-y-0.5 hover:border-primary300/40 hover:shadow-[0_8px_24px_rgba(215,0,24,0.12)] cursor-pointer">
+      className="group relative flex h-full flex-col items-center rounded-2xl border border-gray-100/60 bg-white p-2 text-left sm:p-3 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-all duration-200 hover:-translate-y-0.5 hover:border-primary300/40 hover:shadow-[0_8px_24px_rgba(215,0,24,0.12)] cursor-pointer">
       {/* Badge giảm giá */}
       {hasDiscount && (
         <span className="absolute -top-1.5 left-2 rounded-r-xl rounded-bl-md bg-primary500 px-2 py-0.5 font-sans text-[12px] font-semibold text-white before:absolute before:-left-1 before:top-0 before:border-t-[4px] before:border-r-[4px] before:border-b-[4px] before:border-t-transparent before:border-r-red-900 before:border-b-transparent before:content-['']">
@@ -24,16 +24,16 @@ export function ProductCard({ product }: ProductCardProps) {
       )}
 
       {/* Ảnh sản phẩm */}
-      <div className="flex w-full shrink-0 justify-center overflow-hidden py-4">
+      <div className="flex w-full shrink-0 justify-center overflow-hidden py-3 sm:py-4">
         {product.thumbnail ? (
           <img
             src={product.thumbnail}
             alt={product.name}
             loading="lazy"
-            className="h-[140px] w-[140px] object-contain transition-transform duration-300 ease-in-out group-hover:scale-110"
+            className="size-[110px] object-contain sm:size-[140px] transition-transform duration-300 ease-in-out group-hover:scale-110"
           />
         ) : (
-          <div className="flex h-[140px] w-[140px] items-center justify-center rounded-xl bg-gray-50 text-[11px] text-gray-300">
+          <div className="flex size-[110px] items-center sm:size-[140px] justify-center rounded-xl bg-gray-50 text-[11px] text-gray-300">
             Không có ảnh
           </div>
         )}
@@ -48,12 +48,12 @@ export function ProductCard({ product }: ProductCardProps) {
             </div>
           )}
 
-          <h3 className="line-clamp-2 min-h-[40px] text-[14px] font-bold leading-snug text-gray-800 group-hover:text-primary500">
+          <h3 className="line-clamp-2 min-h-[36px] text-[13px] font-bold sm:min-h-[40px] sm:text-[14px] leading-snug text-gray-800 group-hover:text-primary500">
             {product.name}
           </h3>
 
-          <div className="my-1 flex items-baseline justify-center gap-2">
-            <span className="text-[15px] font-bold text-primary500">
+          <div className="my-1 flex flex-wrap items-baseline justify-center gap-x-2">
+            <span className="text-[14px] font-bold text-primary500 sm:text-[15px]">
               {formatPrice(finalPrice)}
             </span>
             {hasDiscount && (
@@ -67,7 +67,7 @@ export function ProductCard({ product }: ProductCardProps) {
             Smember giảm đến 90%
           </div>
 
-          <div className="mt-1 rounded-md bg-gray-100 p-1.5 text-[10px] leading-tight text-gray-600">
+          <div className="mt-1 hidden rounded-md bg-gray-100 p-1.5 sm:block text-[10px] leading-tight text-gray-600">
             Trả góp 0% - 0đ phụ phí - 0đ trả trước - kỳ hạn đến 12 tháng
           </div>
         </div>

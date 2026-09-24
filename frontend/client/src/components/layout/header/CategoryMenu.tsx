@@ -27,11 +27,12 @@ export function CategoryMenu() {
     <div ref={rootRef} className="relative shrink-0">
       <Button
         onClick={() => setOpen((o) => !o)}
+        aria-label="Danh mục"
         className="gap-1.5 bg-white/15 backdrop-blur hover:bg-white/25 cursor-pointer"
       >
         <LayoutGrid className="size-5" />
-        <span>Danh Mục</span>
-        <ChevronDown className={`size-4 transition-transform ${open ? "rotate-180" : ""}`} />
+        <span className="hidden sm:inline">Danh Mục</span>
+        <ChevronDown className={`hidden size-4 sm:block transition-transform ${open ? "rotate-180" : ""}`} />
       </Button>
 
       {open && (
@@ -43,8 +44,10 @@ export function CategoryMenu() {
             onClick={() => setOpen(false)}
             aria-hidden
           />
-          <div className="absolute left-0 top-full z-1001 mt-2">
-            <TabCategory />
+          {/* Mobile: giới hạn chiều cao + cuộn; bỏ flyout con (TabCategory tự ẩn
+              flyout dưới lg vì màn cảm ứng không có hover). */}
+          <div className="absolute left-0 top-full z-1001 mt-2 max-lg:max-h-[70vh] max-lg:overflow-y-auto max-lg:rounded-2xl">
+            <TabCategory onNavigate={() => setOpen(false)} />
           </div>
         </>
       )}

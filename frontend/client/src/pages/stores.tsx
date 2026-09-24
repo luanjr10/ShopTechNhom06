@@ -70,7 +70,7 @@ function StoresPage() {
   const hasMore = meta ? page < meta.last_page : false;
 
   return (
-    <div className="mx-auto flex w-full max-w-[1220px] flex-col gap-6 px-4 py-6">
+    <div className="mx-auto flex w-full max-w-[1220px] flex-col gap-6 px-3 py-4 sm:px-4 sm:py-6">
       {/* Banner */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary500 to-red-700 px-6 py-8 text-white shadow-[0_8px_28px_rgba(215,0,24,0.25)] sm:px-10 sm:py-10">
         <div className="relative z-10 flex flex-col gap-4">
@@ -79,7 +79,7 @@ function StoresPage() {
               <StoreIcon className="size-6" />
             </span>
             <div>
-              <h1 className="font-sans text-[22px] font-extrabold sm:text-[26px] !text-[#ffffff]">
+              <h1 className="font-sans text-[19px] sm:text-[22px] font-extrabold sm:text-[26px] !text-[#ffffff]">
                 Kênh Người Bán
               </h1>
               <p className="font-sans text-[13px] text-white/80">

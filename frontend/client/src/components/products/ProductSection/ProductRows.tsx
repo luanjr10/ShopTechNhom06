@@ -31,7 +31,7 @@ export function ProductRows({ products, loading }: ProductRowsProps) {
         {[0, 1].map((row) => (
           <Row key={row}>
             {Array.from({ length: 4 }).map((_, i) => (
-              <CarouselItem key={i} className="h-full basis-1/4 pl-3">
+              <CarouselItem key={i} className="h-full basis-1/2 pl-3 sm:basis-1/3 lg:basis-1/4">
                 <ProductCardSkeleton />
               </CarouselItem>
             ))}
@@ -64,7 +64,7 @@ export function ProductRows({ products, loading }: ProductRowsProps) {
               {rowProducts.map((product) => (
                 <CarouselItem
                   key={product.id}
-                  className="h-full basis-1/4 pl-3"
+                  className="h-full basis-1/2 pl-3 sm:basis-1/3 lg:basis-1/4"
                 >
                   <ProductCard product={product} />
                 </CarouselItem>

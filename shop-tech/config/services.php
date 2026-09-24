@@ -39,6 +39,11 @@ return [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_REDIRECT_URI'),
+        // Callback riêng cho luồng Dashboard (admin/seller). Cần khi FE deploy
+        // trên domain khác nhau không chung gốc (vd 2 project Vercel proxy /api):
+        // callback phải quay về đúng domain admin để cookie JWT đặt trên domain
+        // đó. Để trống = dùng chung GOOGLE_REDIRECT_URI (như chạy local).
+        'admin_redirect' => env('GOOGLE_ADMIN_REDIRECT_URI'),
     ],
 
     // Chatbot AI tư vấn sản phẩm (storefront) — OpenAI Chat Completions + function calling.

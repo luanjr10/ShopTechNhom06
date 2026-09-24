@@ -13,7 +13,7 @@ interface BreadcrumbProps {
 /** Đường dẫn điều hướng: Trang chủ / ... */
 export function Breadcrumb({ items }: BreadcrumbProps) {
   return (
-    <nav className="flex items-center gap-1 font-sans text-[13px] text-gray-500">
+    <nav className="flex min-w-0 flex-wrap items-center gap-1 font-sans text-[13px] text-gray-500">
       <Link
         to="/"
         className="flex items-center gap-1 transition-colors hover:text-primary500"
@@ -29,7 +29,7 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
               {item.label}
             </Link>
           ) : (
-            <span className="font-medium text-gray-700">{item.label}</span>
+            <span className="line-clamp-1 font-medium text-gray-700">{item.label}</span>
           )}
         </span>
       ))}

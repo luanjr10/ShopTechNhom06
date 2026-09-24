@@ -5,7 +5,7 @@ import { getCategoriesWithChildren } from "../../services/catalog";
 import { CategoryVisual } from "../category/CategoryVisual";
 import { type Category } from "../../types/product";
 
-function TabCategory() {
+function TabCategory({ onNavigate }: { onNavigate?: () => void }) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -42,6 +42,7 @@ function TabCategory() {
               <div key={category.id} className="group/item relative">
                 <Link
                   to={`/danh-muc/${category.slug}`}
+                  onClick={onNavigate}
                   className="group flex h-10 cursor-pointer items-center gap-2.5 rounded-lg px-2.5 transition-colors hover:bg-primary200"
                 >
                   <span className="flex size-5.5 shrink-0 items-center justify-center">
@@ -54,7 +55,7 @@ function TabCategory() {
                 </Link>
 
                 {hasChildren && (
-                  <div className="invisible absolute left-full top-0 z-30 pl-2 opacity-0 transition-opacity duration-150 group-hover/item:visible group-hover/item:opacity-100">
+                  <div className="invisible absolute left-full top-0 z-30 hidden pl-2 lg:block opacity-0 transition-opacity duration-150 group-hover/item:visible group-hover/item:opacity-100">
                     <div className="grid w-[360px] grid-cols-2 gap-1 rounded-2xl border border-gray-100 bg-white p-3 shadow-[0_12px_32px_rgba(0,0,0,0.15)]">
                       <div className="col-span-2 mb-1 flex items-center gap-2 border-b border-gray-100 pb-2">
                         <span className="flex size-4 shrink-0 items-center justify-center">
@@ -68,6 +69,7 @@ function TabCategory() {
                         <Link
                           key={child.id}
                           to={`/danh-muc/${child.slug}`}
+                          onClick={onNavigate}
                           className="group/child flex items-center gap-2 rounded-lg px-2 py-1.5 transition-colors hover:bg-primary200"
                         >
                           <span className="flex size-6 shrink-0 items-center justify-center overflow-hidden rounded-md">

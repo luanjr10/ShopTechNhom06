@@ -8,16 +8,22 @@ import Products from "../components/products/index";
 function Home() {
   return (
     <>
-      <div className="flex flex-col mx-auto w-full max-w-[1220px] px-4 py-2 gap-2">
-        <div className="flex flex-row items-stretch gap-3 mb-2">
-          <TabCategory />
+      <div className="mx-auto flex w-full max-w-[1220px] flex-col gap-2 px-3 py-2 sm:px-4">
+        {/* Mobile/tablet chỉ giữ banner — danh mục đã có ở nút "Danh Mục" trên
+            header; thẻ chào mừng hiện từ md. */}
+        <div className="mb-2 flex flex-row items-stretch gap-3">
+          <div className="hidden lg:flex">
+            <TabCategory />
+          </div>
           <TabAds />
-          <TabIntroduce />
+          <div className="hidden md:flex">
+            <TabIntroduce />
+          </div>
         </div>
-        <DealShock/>
+        <DealShock />
         <FlashSaleSection />
         <DailyDealsSection />
-        <Products/>
+        <Products />
       </div>
     </>
   );

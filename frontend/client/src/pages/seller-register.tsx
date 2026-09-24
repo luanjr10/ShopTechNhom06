@@ -15,11 +15,11 @@ import {
   submitSellerApplication,
 } from "../services/seller";
 import { getCategories } from "../services/catalog";
-import { type ApiError } from "../libs/api";
+import { ADMIN_URL, type ApiError } from "../libs/api";
 import { type SellerApplication } from "../types/auth";
 import { type Category } from "../types/product";
 
-const SELLER_CENTER_URL = "http://localhost:5174";
+const SELLER_CENTER_URL = ADMIN_URL;
 
 const BENEFITS = [
   "Tiếp cận hàng nghìn khách hàng mỗi ngày",
@@ -118,7 +118,7 @@ function SellerRegister() {
     // Chưa đăng nhập.
     if (!user) {
       return (
-        <div className="flex flex-col items-center gap-3 rounded-xl bg-gray-50 p-6 text-center">
+        <div className="flex flex-col items-center gap-3 rounded-xl bg-gray-50 p-4 sm:p-6 text-center">
           <LogIn className="size-8 text-primary500" />
           <p className="font-sans text-[14px] text-gray-600">
             Bạn cần đăng nhập để đăng ký mở gian hàng.
@@ -144,7 +144,7 @@ function SellerRegister() {
     // Đã là người bán.
     if (isSeller) {
       return (
-        <div className="flex flex-col items-center gap-3 rounded-xl bg-green-50 p-6 text-center">
+        <div className="flex flex-col items-center gap-3 rounded-xl bg-green-50 p-4 sm:p-6 text-center">
           <BadgeCheck className="size-8 text-green-600" />
           <p className="font-sans text-[15px] font-semibold text-gray-800">
             Bạn đã là người bán 🎉
@@ -175,7 +175,7 @@ function SellerRegister() {
     // Đang có đơn chờ duyệt.
     if (pendingApp) {
       return (
-        <div className="flex flex-col items-center gap-3 rounded-xl bg-amber-50 p-6 text-center">
+        <div className="flex flex-col items-center gap-3 rounded-xl bg-amber-50 p-4 sm:p-6 text-center">
           <Clock className="size-8 text-amber-500" />
           <p className="font-sans text-[15px] font-semibold text-gray-800">
             Đơn đăng ký đang chờ duyệt
@@ -318,11 +318,11 @@ function SellerRegister() {
   };
 
   return (
-    <div className="mx-auto grid w-full max-w-[1000px] grid-cols-1 gap-6 px-4 py-8 lg:grid-cols-2">
+    <div className="mx-auto grid w-full max-w-[1000px] grid-cols-1 gap-6 px-3 py-4 sm:px-4 sm:py-8 lg:grid-cols-2">
       {/* Giới thiệu */}
-      <div className="flex flex-col justify-center gap-4 rounded-2xl bg-linear-to-br from-primary500 to-primary300 p-8 text-white">
+      <div className="flex flex-col justify-center gap-4 rounded-2xl bg-linear-to-br from-primary500 to-primary300 p-5 sm:p-8 text-white">
         <Store className="size-10" />
-        <h1 className="font-sans text-[26px] font-bold leading-tight !text-[#ffffff]">
+        <h1 className="font-sans text-[21px] sm:text-[26px] font-bold leading-tight !text-[#ffffff]">
           Trở thành người bán trên ShopTech
         </h1>
         <p className="font-sans text-[14px] text-white/90">
@@ -339,7 +339,7 @@ function SellerRegister() {
       </div>
 
       {/* Nội dung/Form */}
-      <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-[0_4px_20px_-8px_rgba(0,0,0,0.35)]">
+      <div className="rounded-2xl border border-gray-100 bg-white p-4 sm:p-6 shadow-[0_4px_20px_-8px_rgba(0,0,0,0.35)]">
         <h2 className="mb-4 font-sans text-[18px] font-bold text-gray-800">
           Đăng ký mở gian hàng
         </h2>

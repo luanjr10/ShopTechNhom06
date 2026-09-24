@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Bot, Send, Sparkles, User, X } from "lucide-react";
 import {
   sendAiChatMessage,
@@ -106,6 +106,12 @@ export function ChatWidget() {
     }
   }
 
+  // Trang giỏ/thanh toán có thanh tổng tiền dính đáy — trên mobile nút chat
+  // sẽ đè lên nút thanh toán, nên ẩn đi (vẫn hiện nếu panel đang mở).
+  const { pathname } = useLocation();
+  const hideLauncherOnMobile =
+    !open && (pathname === "/gio-hang" || pathname === "/thanh-toan");
+
   return (
     <>
       {/* Nút mở chat — nổi góc dưới phải, hiện trên mọi trang */}
@@ -113,7 +119,9 @@ export function ChatWidget() {
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "Đóng trợ lý AI" : "Mở trợ lý AI tư vấn"}
-        className="fixed bottom-5 right-5 z-[60] flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-primary500 to-red-700 text-white shadow-[0_8px_24px_rgba(215,0,24,0.35)] transition-transform duration-200 hover:scale-105 active:scale-95 sm:bottom-6 sm:right-6"
+        className={`fixed bottom-4 right-4 z-[60] h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-primary500 to-red-700 text-white shadow-[0_8px_24px_rgba(215,0,24,0.35)] transition-transform duration-200 hover:scale-105 active:scale-95 sm:bottom-6 sm:right-6 sm:flex sm:h-14 sm:w-14 ${
+          hideLauncherOnMobile ? "hidden" : "flex"
+        }`}
       >
         {open ? (
           <X size={24} />
@@ -127,7 +135,7 @@ export function ChatWidget() {
 
       {/* Panel chat */}
       {open && (
-        <div className="fixed bottom-[92px] right-5 z-[60] flex h-[70vh] max-h-[600px] w-[92vw] max-w-[380px] flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-[0_16px_48px_rgba(0,0,0,0.18)] sm:bottom-24 sm:right-6">
+        <div className="fixed inset-x-3 bottom-[76px] z-[60] flex h-[min(75dvh,600px)] flex-col sm:inset-x-auto sm:w-[380px] overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-[0_16px_48px_rgba(0,0,0,0.18)] sm:bottom-24 sm:right-6">
           {/* Header */}
           <div className="flex shrink-0 items-center gap-3 bg-gradient-to-r from-primary500 to-red-700 px-4 py-3.5 text-white">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20">

@@ -31,7 +31,7 @@ function Stat({
   label: string;
 }) {
   return (
-    <div className="flex min-w-0 items-center gap-2 px-4 py-3">
+    <div className="flex min-w-0 items-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3">
       <Icon className="size-5 shrink-0 text-primary500" />
       <div className="min-w-0">
         <div className="truncate font-sans text-[15px] font-bold text-gray-800">
@@ -73,13 +73,13 @@ export function StoreProfileHeader({ store }: StoreProfileHeaderProps) {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(215,0,24,0.35),transparent_45%)]" />
 
         {/* Nút hành động */}
-        <div className="absolute right-4 top-4 flex flex-wrap items-center gap-2">
+        <div className="absolute right-3 top-3 flex flex-wrap items-center justify-end gap-2 sm:right-4 sm:top-4">
           <button
             type="button"
             onClick={handleToggleFollow}
             disabled={!user || followLoading}
             title={!user ? "Đăng nhập để theo dõi gian hàng" : undefined}
-            className={`flex items-center gap-1.5 rounded-lg px-3.5 py-2 font-sans text-[13px] font-semibold transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 ${
+            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 font-sans sm:px-3.5 sm:py-2 text-[13px] font-semibold transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 ${
               following
                 ? "bg-white/20 text-white"
                 : "bg-primary500 text-white hover:bg-primary300"
@@ -94,23 +94,23 @@ export function StoreProfileHeader({ store }: StoreProfileHeaderProps) {
             )}
             {following ? "Đang theo dõi" : "Theo dõi"}
           </button>
-          <button className="flex items-center gap-1.5 rounded-lg bg-white/15 px-3.5 py-2 font-sans text-[13px] font-medium text-white backdrop-blur transition-colors hover:bg-white/25 cursor-pointer">
+          <button aria-label="Chia sẻ" className="flex items-center gap-1.5 rounded-lg bg-white/15 px-2.5 py-1.5 font-sans text-[13px] font-medium text-white backdrop-blur transition-colors hover:bg-white/25 cursor-pointer sm:px-3.5 sm:py-2">
             <Share2 className="size-4" />
-            Chia sẻ
+            <span className="hidden sm:inline">Chia sẻ</span>
           </button>
-          <button className="flex items-center gap-1.5 rounded-lg bg-white/15 px-3.5 py-2 font-sans text-[13px] font-medium text-white backdrop-blur transition-colors hover:bg-white/25 cursor-pointer">
+          <button aria-label="Thảo luận" className="flex items-center gap-1.5 rounded-lg bg-white/15 px-2.5 py-1.5 font-sans text-[13px] font-medium text-white backdrop-blur transition-colors hover:bg-white/25 cursor-pointer sm:px-3.5 sm:py-2">
             <MessagesSquare className="size-4" />
-            Thảo luận
+            <span className="hidden sm:inline">Thảo luận</span>
           </button>
         </div>
 
         {/* Tên + handle + badge */}
-        <div className="absolute bottom-4 left-4 right-4 pl-40 text-white">
-          <div className="flex items-center gap-2">
-            <h1 className="font-sans text-[26px] font-bold drop-shadow">
+        <div className="absolute bottom-12 left-4 right-4 text-white sm:bottom-4 sm:pl-40">
+          <div className="flex min-w-0 items-center gap-2">
+            <h1 className="line-clamp-1 font-sans text-[21px] font-bold text-white drop-shadow sm:text-[26px]">
               {store.name}
             </h1>
-            <BadgeCheck className="size-6 text-primary300" />
+            <BadgeCheck className="size-5 shrink-0 text-primary300 sm:size-6" />
           </div>
           <div className="mt-1 flex flex-wrap items-center gap-2 text-[13px]">
             <span className="text-white/80">/{store.slug}</span>
@@ -124,12 +124,12 @@ export function StoreProfileHeader({ store }: StoreProfileHeaderProps) {
 
       {/* Logo lớn (overlap) */}
       <div className="relative">
-        <div className="absolute -top-16 left-5 rounded-full bg-white p-1.5 shadow-lg">
+        <div className="absolute -top-10 left-3 origin-top-left scale-[0.62] rounded-full bg-white p-1.5 shadow-lg sm:-top-16 sm:left-5 sm:scale-100">
           <StoreLogo name={store.name} logo={store.logo} size={112} />
         </div>
 
         {/* Badge cấp độ + bảo hành (dưới, cạnh logo) */}
-        <div className="flex flex-wrap items-center gap-2 pl-40 pr-5 pt-3">
+        <div className="flex flex-wrap items-center gap-2 pl-[96px] pr-3 pt-2 sm:pl-40 sm:pr-5 sm:pt-3">
           <span className="flex items-center gap-1 rounded-lg border border-amber-300 bg-amber-50 px-2.5 py-1 font-sans text-[12px] font-semibold text-amber-600">
             <ShoppingBag className="size-3.5" />
             {stats?.seller_level ?? "New Seller"}
@@ -141,7 +141,7 @@ export function StoreProfileHeader({ store }: StoreProfileHeaderProps) {
         </div>
 
         {/* Hàng chỉ số */}
-        <div className="mt-3 flex flex-wrap items-center divide-x divide-gray-100 border-t border-gray-100 pl-40">
+        <div className="mt-4 grid grid-cols-2 divide-gray-100 border-t border-gray-100 max-sm:[&>*:nth-child(odd)]:border-r max-sm:[&>*:nth-child(-n+2)]:border-b [&>*]:border-gray-100 sm:mt-3 sm:flex sm:flex-wrap sm:items-center sm:divide-x sm:pl-40">
           <Stat
             icon={Star}
             value={rating.toFixed(1)}

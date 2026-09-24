@@ -136,7 +136,7 @@ export function ProductSection({ categories, banners }: ProductSectionProps) {
   return (
     <div className="flex flex-row gap-2">
       {/* Banner bên trái */}
-      <div className="flex w-50 shrink-0 flex-col gap-2">
+      <div className="hidden w-50 shrink-0 flex-col gap-2 lg:flex">
         <img
           className="w-full rounded-lg object-cover"
           src={banners[0]}
@@ -150,7 +150,7 @@ export function ProductSection({ categories, banners }: ProductSectionProps) {
       </div>
 
       {/* Khối bên phải */}
-      <div className="flex min-w-0 flex-1 flex-col items-stretch rounded-xl border border-gray-100 bg-white/60 p-3 shadow-[0_2px_16px_rgba(0,0,0,0.05)]">
+      <div className="flex min-w-0 flex-1 flex-col items-stretch rounded-xl border border-gray-100 bg-white/60 p-2 sm:p-3 shadow-[0_2px_16px_rgba(0,0,0,0.05)]">
         <CategoryTabs
           tabs={tabs}
           activeIndex={activeIndex}

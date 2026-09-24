@@ -167,7 +167,7 @@ function CategoryPage() {
   const categoryName = category?.name ?? "Danh mục";
 
   return (
-    <div className="mx-auto flex w-full max-w-[1220px] flex-col gap-6 px-4 py-4">
+    <div className="mx-auto flex w-full max-w-[1220px] flex-col gap-4 px-3 py-3 sm:gap-6 sm:px-4 sm:py-4">
       <Breadcrumb items={[{ label: categoryName }]} />
 
       <CategoryBanner />

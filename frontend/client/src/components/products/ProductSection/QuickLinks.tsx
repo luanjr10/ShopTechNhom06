@@ -36,14 +36,14 @@ export function QuickLinks({ links, activeSlug, onSelect }: QuickLinksProps) {
                 <button
                   type="button"
                   onClick={() => onSelect?.(link.slug)}
-                  className={`flex min-w-[140px] cursor-pointer flex-row items-center rounded-lg p-1 transition-colors ${
+                  className={`flex min-w-[120px] cursor-pointer sm:min-w-[140px] flex-row items-center rounded-lg p-1 transition-colors ${
                     active
                       ? "bg-primary300/30 ring-2 ring-primary300"
                       : "bg-primary200 hover:bg-primary300/20"
                   }`}
                 >
                   <img className="w-10 shrink-0" src={link.image} alt={link.name} />
-                  <p className="whitespace-pre-line text-left font-sans text-[13px] font-bold">
+                  <p className="whitespace-pre-line text-left font-sans text-[12px] font-bold sm:text-[13px]">
                     {link.name}
                   </p>
                 </button>
@@ -51,8 +51,8 @@ export function QuickLinks({ links, activeSlug, onSelect }: QuickLinksProps) {
             );
           })}
         </CarouselContent>
-        <CarouselPrevious className="left-0 size-7 -translate-x-1/2 border-gray-200 bg-white shadow-md" />
-        <CarouselNext className="right-0 size-7 translate-x-1/2 border-gray-200 bg-white shadow-md" />
+        <CarouselPrevious className="left-0 hidden size-7 sm:inline-flex -translate-x-1/2 border-gray-200 bg-white shadow-md" />
+        <CarouselNext className="right-0 hidden size-7 sm:inline-flex translate-x-1/2 border-gray-200 bg-white shadow-md" />
       </Carousel>
     </div>
   );

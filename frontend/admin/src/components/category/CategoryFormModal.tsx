@@ -288,7 +288,7 @@ export default function CategoryFormModal({
         <div className="mb-2 block">
           <Label htmlFor="brand">Chọn Thương Hiệu Cho Danh Mục Này</Label>
         </div>
-        <div className="grid max-w-md grid-cols-3 gap-4 mt-5">
+        <div className="grid max-w-md grid-cols-2 gap-4 mt-5 sm:grid-cols-3">
           {brands.length > 0 &&
             brands.map((item) => (
               <div key={item.id} className="flex items-center gap-2">

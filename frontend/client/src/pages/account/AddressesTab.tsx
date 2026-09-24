@@ -134,7 +134,7 @@ function AddressesTab() {
   };
 
   return (
-    <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+    <div className="rounded-2xl border border-gray-100 bg-white p-4 sm:p-6 shadow-sm">
       <div className="mb-5 flex items-center justify-between">
         <div>
           <h2 className="font-sans text-[18px] font-bold text-gray-800">
@@ -230,7 +230,7 @@ function AddressesTab() {
       {/* Modal thêm/sửa */}
       {modalOpen && (
         <div className="fixed inset-0 z-1100 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl">
+          <div className="w-full max-w-lg rounded-2xl bg-white p-4 sm:p-6 shadow-xl">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="font-sans text-[16px] font-bold text-gray-800">
                 {editing ? "Sửa địa chỉ" : "Thêm địa chỉ mới"}

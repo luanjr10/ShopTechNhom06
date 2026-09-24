@@ -83,7 +83,7 @@ export function PurchasePanel({ product }: PurchasePanelProps) {
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <h1 className="font-sans text-[22px] font-bold leading-snug text-gray-900">
+        <h1 className="font-sans text-[19px] sm:text-[22px] font-bold leading-snug text-gray-900">
           {product.name}
         </h1>
         <div className="mt-2 flex items-center gap-3 text-[13px] text-gray-500">
@@ -104,7 +104,7 @@ export function PurchasePanel({ product }: PurchasePanelProps) {
       {/* Khối giá */}
       <div className="rounded-2xl border border-primary500/15 bg-primary500/5 p-4">
         <div className="flex flex-wrap items-baseline gap-3">
-          <span className="font-sans text-[28px] font-bold text-primary500">
+          <span className="font-sans text-[20px] sm:text-[24px] sm:text-[28px] font-bold text-primary500">
             {formatPrice(currentPrice)}
           </span>
           {hasDiscount && (

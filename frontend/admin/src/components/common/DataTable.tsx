@@ -64,7 +64,7 @@ export default function DataTable<T>({
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
       {/* Header Toolbar */}
-      <div className="flex flex-col justify-between gap-5 border-b border-gray-200 px-5 py-4 sm:flex-row sm:items-center dark:border-gray-800">
+      <div className="flex flex-col justify-between gap-3 border-b border-gray-200 px-4 py-4 sm:flex-row sm:gap-5 sm:px-5 sm:items-center dark:border-gray-800">
         <div>
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
             {title}
@@ -75,7 +75,7 @@ export default function DataTable<T>({
             </p>
           )}
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-2 sm:gap-3">
           <button className="shadow-theme-xs inline-flex items-center justify-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-medium text-gray-700 ring-1 ring-gray-300 transition hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-white/[0.03]">
             Export
           </button>
@@ -84,9 +84,9 @@ export default function DataTable<T>({
       </div>
 
       {/* Search & Filter Bar */}
-      <div className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
         <SearchInput value={searchValue} onChange={(value) => onSearch?.(value)} />
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           {filters}
           <button className="inline-flex items-center gap-2 rounded-lg border border-gray-800 bg-[#0e1726]/60 px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-800 transition">
             <SlidersHorizontal className="h-4 w-4" />
@@ -100,7 +100,7 @@ export default function DataTable<T>({
         <table className="w-full text-left text-sm text-gray-400">
           <thead className="border-b border-gray-800/60 text-xs uppercase text-gray-400">
             <tr>
-              <th className="px-6 py-4 w-12">
+              <th className="w-12 px-4 py-3 sm:px-6 sm:py-4">
                 <input
                   type="checkbox"
                   checked={isAllSelected}
@@ -111,7 +111,7 @@ export default function DataTable<T>({
               {columns.map((col, idx) => (
                 <th
                   key={idx}
-                  className={`px-6 py-4 ${
+                  className={`whitespace-nowrap px-4 py-3 sm:px-6 sm:py-4 ${
                     col.align === "right"
                       ? "text-right"
                       : col.align === "center"
@@ -143,7 +143,7 @@ export default function DataTable<T>({
 
               return (
                 <tr key={id} className="transition hover:bg-white/[0.02]">
-                  <td className="px-6 py-4">
+                  <td className="px-4 py-3 sm:px-6 sm:py-4">
                     <input
                       type="checkbox"
                       checked={isChecked}
@@ -154,7 +154,7 @@ export default function DataTable<T>({
                   {columns.map((col, cIdx) => (
                     <td
                       key={cIdx}
-                      className={`px-6 py-4 ${
+                      className={`px-4 py-3 sm:px-6 sm:py-4 ${
                         col.align === "right"
                           ? "text-right"
                           : col.align === "center"
@@ -174,7 +174,10 @@ export default function DataTable<T>({
             })}
           </tbody>
         </table>
+      </div>
 
+      {/* Phân trang nằm ngoài vùng cuộn ngang để luôn nhìn thấy trên mobile */}
+      <div>
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}

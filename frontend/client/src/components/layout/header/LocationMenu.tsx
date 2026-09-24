@@ -11,7 +11,7 @@ import { Button } from "../../ui/button";
  * dùng `selectedProvince` ở ProductSection/category/stores/search) + là điều
  * kiện để ShippingService backend tính miễn phí ship/giao 2 giờ lúc đặt hàng.
  */
-export function LocationMenu() {
+export function LocationMenu({ className = "" }: { className?: string }) {
   const { provinces, loadingProvinces, selectedProvince, setSelectedProvince } =
     useLocationContext();
   const [open, setOpen] = useState(false);
@@ -35,19 +35,20 @@ export function LocationMenu() {
   );
 
   return (
-    <div ref={rootRef} className="relative shrink-0">
+    <div ref={rootRef} className={`shrink-0 sm:relative ${className}`}>
       <Button
         onClick={() => setOpen((o) => !o)}
+        aria-label="Chọn khu vực"
         className="gap-1.5 bg-white/15 backdrop-blur hover:bg-white/25 cursor-pointer"
       >
         <MapPinPen className="size-5" />
-        <span className="max-w-[100px] truncate">
+        <span className="hidden max-w-[100px] truncate sm:inline">
           {selectedProvince?.name ?? "Toàn quốc"}
         </span>
       </Button>
 
       {open && (
-        <div className="absolute left-0 top-full z-1001 mt-2 w-72 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-2xl">
+        <div className="absolute inset-x-0 top-full z-1001 mt-1 overflow-hidden sm:right-auto sm:mt-2 sm:w-72 rounded-xl border border-gray-100 bg-white shadow-2xl">
           <div className="border-b border-gray-100 px-4 py-3">
             <p className="font-sans text-[13px] font-semibold text-gray-800">
               Chọn khu vực của bạn
@@ -68,7 +69,7 @@ export function LocationMenu() {
             />
           </div>
 
-          <div className="max-h-72 overflow-y-auto">
+          <div className="max-h-[min(18rem,55vh)] overflow-y-auto">
             <button
               type="button"
               onClick={() => {

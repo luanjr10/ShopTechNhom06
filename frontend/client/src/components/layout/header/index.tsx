@@ -20,6 +20,7 @@ import { useCart } from "../../../context/CartContext";
 import { CategoryMenu } from "./CategoryMenu";
 import { LocationMenu } from "./LocationMenu";
 import logo from "../../../assets/logo.png";
+import { ADMIN_URL } from "../../../libs/api";
 
 const marqueeText = "Thu cũ giá ngon - Lên đời tiết kiệm";
 
@@ -65,16 +66,16 @@ function Header() {
 
   return (
     <header className="sticky top-0 right-0 left-0 z-1000 flex flex-col items-center bg-linear-to-b from-primary500 to-primary300 text-white shadow-[0_4px_16px_rgba(215,0,24,0.25)]">
-      <div className="w-full max-w-[1220px] px-4">
+      <div className="w-full max-w-[1220px] px-3 sm:px-4">
         {/* Thanh tiện ích trên cùng */}
-        <div className="flex flex-row items-center gap-6 border-b border-white/15 py-2">
+        <div className="hidden flex-row items-center gap-6 border-b border-white/15 py-2 md:flex">
           {/* Marquee chạy liền mạch */}
           <div className="relative flex-1 overflow-hidden">
             <div className="animate-scroll-left-infinite flex w-max gap-8 pr-8">
               {Array.from({ length: 2 }).map((_, copy) => (
                 <ul
                   key={copy}
-                  className="flex shrink-0 flex-row gap-8 font-sans text-[13px] whitespace-nowrap"
+                  className="flex shrink-0 flex-row gap-8 font-sans text-[12px] whitespace-nowrap sm:text-[13px]"
                   aria-hidden={copy === 1}
                 >
                   {Array.from({ length: 4 }).map((__, i) => (
@@ -112,21 +113,32 @@ function Header() {
           </div>
         </div>
 
-        {/* Thanh chính: logo + danh mục + tìm kiếm + giỏ hàng */}
-        <div className="flex flex-row items-center gap-3 py-3">
-          <Link to="/" title="ShopTech" className="shrink-0">
+        {/* Thanh chính: logo + danh mục + tìm kiếm + giỏ hàng.
+            < lg: 2 hàng (logo + giỏ/tài khoản | danh mục + khu vực + tìm kiếm)
+            nhờ flex-wrap + order; >= lg: 1 hàng như cũ. `relative` để dropdown
+            khu vực trên mobile bám theo bề ngang cả hàng thay vì theo nút. */}
+        <div className="relative flex flex-wrap items-center gap-2 py-2 sm:gap-x-3 lg:flex-nowrap lg:py-3">
+          <Link to="/" title="ShopTech" className="order-1 shrink-0">
             <img
               src={logo}
               alt="ShopTechLogo"
-              className="w-[170px] cursor-pointer transition-transform duration-300 hover:scale-95"
+              className="w-[112px] cursor-pointer transition-transform duration-300 hover:scale-95 sm:w-[140px] lg:w-[170px]"
             />
           </Link>
 
-          <CategoryMenu />
+          {/* Ngắt dòng < lg: ép danh mục/khu vực/tìm kiếm xuống hàng 2 */}
+          <div className="order-3 h-0 basis-full lg:hidden" aria-hidden />
 
-          <LocationMenu />
+          <div className="order-4 shrink-0 lg:order-2">
+            <CategoryMenu />
+          </div>
 
-          <form onSubmit={handleSearchSubmit} className="min-w-0 flex-1">
+          <LocationMenu className="order-4 lg:order-2" />
+
+          <form
+            onSubmit={handleSearchSubmit}
+            className="order-4 min-w-0 flex-1 lg:order-2"
+          >
             <InputGroup className="min-w-0 rounded-full border-none bg-white text-gray-600 shadow-sm">
               <InputGroupInput
                 placeholder="Bạn muốn mua gì hôm nay?"
@@ -151,75 +163,84 @@ function Header() {
             </InputGroup>
           </form>
 
-          <Button
-            variant="ghost"
-            onClick={goToCart}
-            className="relative shrink-0 gap-1.5 hover:bg-white/20 hover:text-white cursor-pointer"
-          >
-            <ShoppingCart className="size-5" />
-            <span>Giỏ Hàng</span>
-            {cartCount > 0 && (
-              <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1 text-[11px] font-bold text-primary500 shadow-sm">
-                {cartCount > 99 ? "99+" : cartCount}
-              </span>
-            )}
-          </Button>
-
-          {user ? (
-            <div className="flex shrink-0 items-center gap-1.5">
-              {isSeller ? (
-                <a
-                  href="http://localhost:5173"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 font-sans text-[13px] font-semibold text-primary500 transition-transform hover:scale-95"
-                >
-                  <Store className="size-4" />
-                  Quản lý gian hàng
-                </a>
-              ) : (
-                <Link
-                  to="/dang-ky-ban-hang"
-                  className="flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 font-sans text-[13px] font-semibold text-primary500 transition-transform hover:scale-95"
-                >
-                  <Store className="size-4" />
-                  Đăng ký mở gian hàng
-                </Link>
-              )}
-              <Link
-                to="/tai-khoan"
-                title="Tài khoản của tôi"
-                className="flex items-center gap-1.5 rounded-lg bg-white/15 px-3 py-1.5 font-sans text-[14px] font-medium backdrop-blur transition-colors hover:bg-white/25"
-              >
-                {user.avatar_url ? (
-                  <img
-                    src={user.avatar_url}
-                    alt={user.name}
-                    className="size-5 rounded-full object-cover"
-                  />
-                ) : (
-                  <CircleUserRound className="size-5" />
-                )}
-                <span className="max-w-[110px] truncate">{user.name}</span>
-              </Link>
-              <Button
-                onClick={handleLogout}
-                variant="ghost"
-                title="Đăng xuất"
-                className="shrink-0 hover:bg-white/20 hover:text-white cursor-pointer"
-              >
-                <LogOut className="size-5" />
-              </Button>
-            </div>
-          ) : (
+          {/* Giỏ hàng + tài khoản — mobile nằm bên phải logo ở hàng 1 */}
+          <div className="order-2 ml-auto flex shrink-0 items-center gap-1 sm:gap-1.5 lg:order-3 lg:ml-0">
             <Button
-              onClick={() => navigate("/login")}
-              className="shrink-0 gap-1.5 bg-white/15 backdrop-blur hover:bg-white/25 cursor-pointer"
+              variant="ghost"
+              onClick={goToCart}
+              aria-label="Giỏ hàng"
+              className="relative shrink-0 gap-1.5 hover:bg-white/20 hover:text-white cursor-pointer"
             >
-              <CircleUserRound className="size-5" />
-              <span>Đăng Nhập</span>
+              <ShoppingCart className="size-5" />
+              <span className="hidden md:inline">Giỏ Hàng</span>
+              {cartCount > 0 && (
+                <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1 text-[11px] font-bold text-primary500 shadow-sm">
+                  {cartCount > 99 ? "99+" : cartCount}
+                </span>
+              )}
             </Button>
-          )}
+
+            {user ? (
+              <>
+                {isSeller ? (
+                  <a
+                    href={ADMIN_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                    title="Quản lý gian hàng"
+                    className="flex items-center gap-1.5 rounded-lg bg-white px-2 py-1.5 font-sans text-[13px] font-semibold text-primary500 transition-transform hover:scale-95 sm:px-3"
+                  >
+                    <Store className="size-4" />
+                    <span className="hidden xl:inline">Quản lý gian hàng</span>
+                  </a>
+                ) : (
+                  <Link
+                    to="/dang-ky-ban-hang"
+                    title="Đăng ký mở gian hàng"
+                    className="flex items-center gap-1.5 rounded-lg bg-white px-2 py-1.5 font-sans text-[13px] font-semibold text-primary500 transition-transform hover:scale-95 sm:px-3"
+                  >
+                    <Store className="size-4" />
+                    <span className="hidden xl:inline">Đăng ký mở gian hàng</span>
+                  </Link>
+                )}
+                <Link
+                  to="/tai-khoan"
+                  title="Tài khoản của tôi"
+                  className="flex items-center gap-1.5 rounded-lg bg-white/15 px-2 py-1.5 font-sans text-[14px] font-medium backdrop-blur transition-colors hover:bg-white/25 sm:px-3"
+                >
+                  {user.avatar_url ? (
+                    <img
+                      src={user.avatar_url}
+                      alt={user.name}
+                      className="size-5 rounded-full object-cover"
+                    />
+                  ) : (
+                    <CircleUserRound className="size-5" />
+                  )}
+                  <span className="hidden max-w-[110px] truncate md:inline">
+                    {user.name}
+                  </span>
+                </Link>
+                <Button
+                  onClick={handleLogout}
+                  variant="ghost"
+                  title="Đăng xuất"
+                  aria-label="Đăng xuất"
+                  className="shrink-0 hover:bg-white/20 hover:text-white cursor-pointer"
+                >
+                  <LogOut className="size-5" />
+                </Button>
+              </>
+            ) : (
+              <Button
+                onClick={() => navigate("/login")}
+                className="shrink-0 gap-1.5 bg-white/15 backdrop-blur hover:bg-white/25 cursor-pointer"
+              >
+                <CircleUserRound className="size-5" />
+                <span>Đăng Nhập</span>
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </header>

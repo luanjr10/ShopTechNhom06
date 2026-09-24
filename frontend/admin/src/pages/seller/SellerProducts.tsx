@@ -100,7 +100,7 @@ export default function SellerProducts() {
 
   if (!activeStore) {
     return (
-      <div className="flex flex-col gap-8 px-10 py-10">
+      <div className="flex flex-col gap-6 px-4 py-6 sm:gap-8 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
         <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Sản phẩm</h2>
         <div className="rounded-xl border border-gray-200 bg-white p-10 text-center text-sm text-gray-500 dark:border-gray-800 dark:bg-white/[0.03] dark:text-gray-400">
           Bạn chưa có gian hàng. Hãy tạo gian hàng trước khi thêm sản phẩm.
@@ -182,7 +182,7 @@ export default function SellerProducts() {
   ];
 
   return (
-    <div className="flex flex-col gap-8 px-10 py-10">
+    <div className="flex flex-col gap-6 px-4 py-6 sm:gap-8 sm:px-6 sm:py-8 lg:px-10 lg:py-10">
       <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Sản phẩm</h2>
 
       <DataTable
