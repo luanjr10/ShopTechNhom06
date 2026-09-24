@@ -37,7 +37,8 @@ export async function apiGet<T>(
   path: string,
   params?: Record<string, QueryValue>,
 ): Promise<T> {
-  const url = new URL(`${BASE_URL}${path}`);
+  // Tham số thứ 2 cho phép BASE_URL tương đối ("/api" khi production chạy qua proxy Vercel).
+  const url = new URL(`${BASE_URL}${path}`, window.location.origin);
 
   if (params) {
     for (const [key, value] of Object.entries(params)) {
