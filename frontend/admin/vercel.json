@@ -1,7 +1,7 @@
 {
   "rewrites": [
-    { "source": "/api/:path*", "destination": "https://THAY-DOMAIN-RAILWAY.up.railway.app/api/:path*" },
-    { "source": "/sanctum/:path*", "destination": "https://THAY-DOMAIN-RAILWAY.up.railway.app/sanctum/:path*" },
+    { "source": "/api/:path*", "destination": "https://shoptech-api-oi0c.onrender.com/api/:path*" },
+    { "source": "/sanctum/:path*", "destination": "https://shoptech-api-oi0c.onrender.com/sanctum/:path*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
