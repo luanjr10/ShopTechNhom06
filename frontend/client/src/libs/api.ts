@@ -7,9 +7,12 @@
  *   vì vậy hãy mở client ở http://localhost:5173 (KHÔNG dùng 127.0.0.1) để cookie
  *   session/XSRF đọc được — xem note trong bộ nhớ dự án.
  */
+// Bản build production mặc định gọi API cùng domain ("/api/..."), được Vercel
+// proxy sang backend (xem vercel.json) — cookie đăng nhập là first-party nên
+// không cần biết trước domain Vercel. Dev vẫn gọi thẳng localhost:8000.
 export const API_ORIGIN =
   (import.meta.env.VITE_API_ORIGIN as string | undefined) ??
-  "http://localhost:8000";
+  (import.meta.env.PROD ? "" : "http://localhost:8000");
 
 /** Trang quản trị/Kênh người bán (app admin — Seller Center đã gộp vào đây). */
 export const ADMIN_URL =
