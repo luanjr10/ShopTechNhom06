@@ -13,4 +13,5 @@ php artisan migrate --force || echo "!!! migrate that bai — kiem tra DB da imp
 # QUEUE_CONNECTION=database cần worker chạy nền
 php artisan queue:work --sleep=3 --tries=3 &
 
-exec php artisan serve --host=0.0.0.0 --port="${PORT:-8000}"
+# --no-reload: bắt buộc để artisan serve dùng PHP_CLI_SERVER_WORKERS (nhiều tiến trình)
+exec php artisan serve --host=0.0.0.0 --port="${PORT:-8000}" --no-reload
