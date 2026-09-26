@@ -11,9 +11,9 @@ return new class extends Migration
         Schema::create('seller_wallets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('seller_profile_id')->unique()->constrained('seller_profiles')->cascadeOnDelete();
-            $table->decimal('balance', 15, 2)->default(0);            // tổng
-            $table->decimal('pending_balance', 15, 2)->default(0);    // đơn chưa hoàn thành
-            $table->decimal('withdrawable_balance', 15, 2)->default(0); // đã hoàn thành, rút được
+            $table->decimal('balance', 15, 2)->default(0);
+            $table->decimal('pending_balance', 15, 2)->default(0);
+            $table->decimal('withdrawable_balance', 15, 2)->default(0);
             $table->timestamps();
         });
     }

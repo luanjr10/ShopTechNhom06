@@ -15,10 +15,6 @@ interface ProductDetailModalProps {
   categories: CategoryItem[];
 }
 
-/**
- * Modal xem chi tiết sản phẩm — tự lấy dữ liệu theo `productId` khi mở.
- * `ProductsList` chỉ cần truyền id, không cần tự fetch/giữ state sản phẩm.
- */
 export default function ProductDetailModal({
   open,
   productId,
@@ -78,12 +74,10 @@ export default function ProductDetailModal({
           </div>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-5">
-            {/* Gallery */}
             <div className="md:col-span-2">
               <ImageGallery images={images} alt={product.name} />
             </div>
 
-            {/* Info */}
             <div className="space-y-5 md:col-span-3">
               <div className="flex items-end gap-3">
                 <span className="text-3xl font-bold text-indigo-400">

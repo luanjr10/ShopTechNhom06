@@ -19,7 +19,6 @@ export interface UpdateProfilePayload {
   phone?: string | null;
 }
 
-/** Cập nhật hồ sơ (tên, username, email, sđt). */
 export async function updateProfile(
   payload: UpdateProfilePayload,
 ): Promise<AuthUser> {
@@ -27,7 +26,6 @@ export async function updateProfile(
   return res.data;
 }
 
-/** Upload ảnh đại diện. */
 export async function uploadAvatar(file: File): Promise<AuthUser> {
   const form = new FormData();
   form.append("avatar", file);
@@ -41,7 +39,6 @@ export interface ChangePasswordPayload {
   password_confirmation: string;
 }
 
-/** Đổi mật khẩu (nhập mật khẩu hiện tại). */
 export async function changePassword(
   payload: ChangePasswordPayload,
 ): Promise<string> {
@@ -49,19 +46,15 @@ export async function changePassword(
   return res.message;
 }
 
-/** Đăng xuất khỏi tất cả thiết bị khác. */
 export async function logoutOtherDevices(): Promise<string> {
   const res = await apiPost<MessageResponse>("/logout-others");
   return res.message;
 }
 
-/** Gửi lại email xác thực. */
 export async function resendVerification(): Promise<string> {
   const res = await apiPost<MessageResponse>("/email/verification-notification");
   return res.message;
 }
-
-// ---- Địa chỉ giao hàng ----
 
 export async function fetchAddresses(): Promise<Address[]> {
   const res = await apiAuthGet<{ data: Address[] }>("/addresses");

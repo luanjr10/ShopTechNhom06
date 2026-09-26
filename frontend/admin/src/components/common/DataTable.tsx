@@ -21,7 +21,6 @@ interface DataTableProps<T> {
   filters?: React.ReactNode;
   searchValue?: string;
   onSearch?: (keyword: string) => void;
-  // Phân trang
   currentPage?: number;
   totalPages?: number;
   totalItems?: number;
@@ -63,7 +62,6 @@ export default function DataTable<T>({
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
-      {/* Header Toolbar */}
       <div className="flex flex-col justify-between gap-3 border-b border-gray-200 px-4 py-4 sm:flex-row sm:gap-5 sm:px-5 sm:items-center dark:border-gray-800">
         <div>
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
@@ -83,7 +81,6 @@ export default function DataTable<T>({
         </div>
       </div>
 
-      {/* Search & Filter Bar */}
       <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
         <SearchInput value={searchValue} onChange={(value) => onSearch?.(value)} />
         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
@@ -95,7 +92,6 @@ export default function DataTable<T>({
         </div>
       </div>
 
-      {/* Table Container */}
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm text-gray-400">
           <thead className="border-b border-gray-800/60 text-xs uppercase text-gray-400">
@@ -176,7 +172,6 @@ export default function DataTable<T>({
         </table>
       </div>
 
-      {/* Phân trang nằm ngoài vùng cuộn ngang để luôn nhìn thấy trên mobile */}
       <div>
         <Pagination
           currentPage={currentPage}

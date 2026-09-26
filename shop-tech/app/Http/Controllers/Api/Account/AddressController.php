@@ -13,9 +13,6 @@ class AddressController extends Controller
 {
     public function __construct(private LocationService $locationService) {}
 
-    /**
-     * [GET] /api/addresses — danh sách địa chỉ của người dùng (mặc định lên đầu).
-     */
     public function index(Request $request)
     {
         $addresses = $request->user()->addresses()
@@ -29,9 +26,6 @@ class AddressController extends Controller
         ]);
     }
 
-    /**
-     * [POST] /api/addresses — thêm địa chỉ mới.
-     */
     public function store(StoreAddressRequest $request)
     {
         $user = $request->user();
@@ -45,7 +39,6 @@ class AddressController extends Controller
             ], 422);
         }
 
-        // Địa chỉ đầu tiên luôn là mặc định.
         $makeDefault = ($data['is_default'] ?? false) || $user->addresses()->count() === 0;
 
         $address = $user->addresses()->create([
@@ -67,9 +60,6 @@ class AddressController extends Controller
         ], 201);
     }
 
-    /**
-     * [PATCH] /api/addresses/{address} — cập nhật địa chỉ.
-     */
     public function update(UpdateAddressRequest $request, Address $address)
     {
         $this->authorizeOwner($request, $address);
@@ -105,9 +95,6 @@ class AddressController extends Controller
         ]);
     }
 
-    /**
-     * [DELETE] /api/addresses/{address} — xoá địa chỉ.
-     */
     public function destroy(Request $request, Address $address)
     {
         $this->authorizeOwner($request, $address);
@@ -115,7 +102,6 @@ class AddressController extends Controller
         $wasDefault = $address->is_default;
         $address->delete();
 
-        // Nếu vừa xoá địa chỉ mặc định, chọn địa chỉ mới nhất làm mặc định.
         if ($wasDefault) {
             $next = $request->user()->addresses()->latest()->first();
             $next?->update(['is_default' => true]);
@@ -127,9 +113,6 @@ class AddressController extends Controller
         ]);
     }
 
-    /**
-     * [POST] /api/addresses/{address}/default — đặt làm địa chỉ mặc định.
-     */
     public function setDefault(Request $request, Address $address)
     {
         $this->authorizeOwner($request, $address);
@@ -144,14 +127,6 @@ class AddressController extends Controller
         ]);
     }
 
-    /**
-     * Tra cứu tỉnh + quận/huyện + phường/xã theo mã GHN từ nguồn hành chính
-     * (KHÔNG tin tên do FE gửi lên) và trả snapshot tên để lưu — dùng hệ CŨ của
-     * GHN (có quận/huyện) vì API Tính phí GHN chỉ nhận district_id/ward_code
-     * kiểu này. Null nếu không hợp lệ/không khớp nhau.
-     *
-     * @return array{province_id_ghn:int, province_name_ghn:string, district_id:int, district_name:string, ward_code_ghn:string, ward_name_ghn:string}|null
-     */
     private function resolveLocation(int $provinceId, int $districtId, string $wardCode): ?array
     {
         $province = $this->locationService->findProvince($provinceId);
@@ -172,9 +147,6 @@ class AddressController extends Controller
         ];
     }
 
-    /**
-     * Đảm bảo chỉ một địa chỉ là mặc định.
-     */
     private function markAsOnlyDefault(Request $request, Address $address): void
     {
         $request->user()->addresses()
@@ -182,9 +154,6 @@ class AddressController extends Controller
             ->update(['is_default' => false]);
     }
 
-    /**
-     * Chặn thao tác lên địa chỉ không thuộc người dùng hiện tại.
-     */
     private function authorizeOwner(Request $request, Address $address): void
     {
         abort_unless($address->user_id === $request->user()->id, 403, 'Không có quyền với địa chỉ này');

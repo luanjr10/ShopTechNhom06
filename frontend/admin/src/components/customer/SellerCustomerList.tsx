@@ -26,7 +26,6 @@ interface StoreCustomerRow {
   tier_label: string;
 }
 
-/** Khách hàng ĐÃ TỪNG MUA tại gian hàng đang chọn — chỉ xem, không sửa/xoá. */
 export default function SellerCustomerList() {
   const { activeStore } = useAuth();
   const [items, setItems] = useState<StoreCustomerRow[]>([]);

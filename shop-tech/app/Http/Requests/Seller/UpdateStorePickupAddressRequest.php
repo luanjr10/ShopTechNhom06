@@ -12,7 +12,6 @@ class UpdateStorePickupAddressRequest extends ApiFormRequest
         return [
             'pickup_contact_name' => 'required|string|max:150',
             'pickup_phone' => ['required', 'string', new VietnamesePhone],
-            // Mã GHN (hệ cũ, có quận/huyện) — dùng làm địa chỉ lấy hàng khi tạo vận đơn thật.
             'province_id' => 'required|integer',
             'district_id' => 'required|integer',
             'ward_code' => 'required|string',

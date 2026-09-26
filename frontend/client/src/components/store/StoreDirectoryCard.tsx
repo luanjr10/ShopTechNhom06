@@ -7,7 +7,6 @@ interface StoreDirectoryCardProps {
   store: StoreListItem;
 }
 
-/** 1 gian hàng trong lưới "Kênh người bán" — khách bấm để khám phá. */
 export function StoreDirectoryCard({ store }: StoreDirectoryCardProps) {
   return (
     <Link

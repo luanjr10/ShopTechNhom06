@@ -147,7 +147,6 @@ function StorePage() {
 
       <StoreProfileHeader store={store} />
 
-      {/* Thông tin 2 cột */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <StoreAbout store={store} />
@@ -158,7 +157,6 @@ function StorePage() {
         </div>
       </div>
 
-      {/* Sản phẩm của shop */}
       <div className="flex flex-col gap-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.05)]">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="font-sans text-[18px] font-bold text-gray-800">
@@ -167,7 +165,6 @@ function StorePage() {
           <SortBar value={sort} onChange={setSort} />
         </div>
 
-        {/* Chip lọc danh mục */}
         {categoryChips.length > 0 && (
           <div className="flex flex-wrap gap-2">
             <button

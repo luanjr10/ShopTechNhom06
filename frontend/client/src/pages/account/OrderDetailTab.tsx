@@ -46,8 +46,6 @@ const SELLER_STATUS_CLASS: Record<SellerOrderStatus, string> = {
   cancelled: "bg-rose-50 text-rose-600 border-rose-200",
 };
 
-/** Timeline hiển thị cho khách — theo đúng luồng backend: seller xác nhận ->
- * bàn giao GHN (shipping) -> GHN báo delivered -> khách tự xác nhận completed. */
 const TIMELINE_STEPS: { status: SellerOrderStatus; label: string }[] = [
   { status: "confirmed", label: "Đã xác nhận" },
   { status: "shipping", label: "Đang giao" },
@@ -180,8 +178,6 @@ function OrderDetailTab() {
     );
   }
 
-  // Laravel trả các cột decimal dạng string trong JSON ("21950000.00") — phải
-  // Number() trước khi tính, nếu không "+" sẽ nối chuỗi thay vì cộng số.
   const productSubtotal =
     Number(order.total_amount) - Number(order.shipping_fee) + Number(order.discount_amount);
   const cancellable = isOrderCancellable(order);
@@ -289,7 +285,6 @@ function OrderDetailTab() {
               </span>
             </div>
 
-            {/* Timeline vận chuyển — chỉ hiện khi đã qua bước xác nhận */}
             {!isTerminalOther && (
               <div className="mb-4 flex items-center gap-1">
                 {TIMELINE_STEPS.map((step, idx) => {
@@ -320,7 +315,6 @@ function OrderDetailTab() {
               </div>
             )}
 
-            {/* Vận chuyển — gian hàng tự giao hàng, không có mã vận đơn hãng ngoài */}
             {sellerOrder.shipment && (
               <div className="mb-4 flex items-center gap-2 rounded-xl bg-violet-50 px-4 py-3 font-sans text-[13px] text-violet-700">
                 <Truck className="size-4 shrink-0" />
@@ -407,7 +401,6 @@ function OrderDetailTab() {
               ))}
             </div>
 
-            {/* Khách tự xác nhận đã nhận hàng — CHỈ khi GHN đã báo delivered */}
             {sellerOrder.status === "delivered" && (
               <button
                 type="button"

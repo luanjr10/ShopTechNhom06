@@ -5,7 +5,6 @@ interface ComingSoonProps {
   description?: string;
 }
 
-/** Trang giữ chỗ cho các mục chưa triển khai (Tin nhắn, Cài đặt...). */
 export default function ComingSoon({ title, description }: ComingSoonProps) {
   return (
     <div className="flex flex-col gap-6 px-4 py-6 sm:gap-8 sm:px-6 sm:py-8 lg:px-10 lg:py-10">

@@ -1,6 +1,5 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
-/** Dãy số trang rút gọn: 1 … 4 5 6 … 20 (null = dấu …) để không tràn màn hình nhỏ. */
 function pageWindow(current: number, total: number): (number | null)[] {
   if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
   const pages: (number | null)[] = [1];

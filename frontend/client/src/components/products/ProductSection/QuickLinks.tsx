@@ -9,18 +9,10 @@ import { type UseCase } from "../../../types/product";
 
 interface QuickLinksProps {
   links: UseCase[];
-  /** Slug Quick Link đang được chọn (để tô sáng). */
   activeSlug?: string | null;
-  /** Bấm 1 Quick Link -> lọc sản phẩm; bấm lại chính nó -> bỏ lọc. */
   onSelect?: (slug: string) => void;
 }
 
-/**
- * Các Quick Link của danh mục (lấy từ API): hiển thị ảnh + tên, bấm để lọc
- * sản phẩm. Dùng chung `Carousel` (embla) với BrandChips/TabAds thay vì
- * `overflow-x-auto` thô — kéo mượt bằng chuột/chạm, không lộ thanh cuộn
- * ngang mặc định của trình duyệt, có nút mũi tên khi tràn.
- */
 export function QuickLinks({ links, activeSlug, onSelect }: QuickLinksProps) {
   if (links.length === 0) return null;
 

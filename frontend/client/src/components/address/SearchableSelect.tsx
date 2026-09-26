@@ -3,7 +3,6 @@ import { ChevronDown, Loader2, Search } from "lucide-react";
 import { matchesQuery } from "../../libs/vietnameseSearch";
 
 export interface SearchableOption {
-  /** Mã phường/xã GHN là chuỗi (vd "1A0605"), các cấp khác là số. */
   code: number | string;
   name: string;
 }
@@ -19,7 +18,6 @@ interface SearchableSelectProps {
   error?: string;
 }
 
-/** Select có ô tìm kiếm (không dấu), dữ liệu options luôn lấy từ API ở nơi gọi. */
 export function SearchableSelect({
   label,
   placeholder,

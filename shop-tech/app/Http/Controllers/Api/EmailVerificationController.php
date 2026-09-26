@@ -10,11 +10,6 @@ use Illuminate\Http\Request;
 
 class EmailVerificationController extends Controller
 {
-    /**
-     * [GET] /api/email/verify/{id}/{hash} — link signed từ email.
-     * Chữ ký đã được middleware `signed` kiểm tra; ở đây đối chiếu hash email
-     * rồi đánh dấu đã xác thực và redirect về client.
-     */
     public function verify(Request $request, string $id, string $hash): RedirectResponse
     {
         $user = User::find($id);
@@ -31,10 +26,6 @@ class EmailVerificationController extends Controller
         return redirect($this->targetUrl($user).'?verified=1');
     }
 
-    /**
-     * Admin/seller/employee xác thực email được đưa về Dashboard (/settings),
-     * còn lại (customer) vẫn về client như trước (/tai-khoan).
-     */
     private function targetUrl(?User $user): string
     {
         if ($user && in_array($user->role, ['admin', 'seller', 'employee'], true)) {
@@ -44,9 +35,6 @@ class EmailVerificationController extends Controller
         return $this->frontendUrl('/tai-khoan');
     }
 
-    /**
-     * [POST] /api/email/verification-notification — gửi lại email xác thực.
-     */
     public function resend(Request $request)
     {
         $user = $request->user();

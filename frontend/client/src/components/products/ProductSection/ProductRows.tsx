@@ -23,7 +23,6 @@ function Row({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** Hai hàng sản phẩm dạng carousel (mỗi hàng 4 sản phẩm/khung nhìn). */
 export function ProductRows({ products, loading }: ProductRowsProps) {
   if (loading) {
     return (

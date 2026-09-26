@@ -6,19 +6,6 @@ use App\Models\Order;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
-/**
- * Hạng thành viên tính theo TỔNG giá trị đơn hàng ĐÃ HOÀN TẤT THÀNH CÔNG
- * (status completed) trên TOÀN SÀN — không tính riêng từng gian hàng, vì hạng
- * là chương trình khách hàng thân thiết của SÀN, không phải của seller. Đơn
- * mới 'paid' (đã thanh toán nhưng chưa giao xong) KHÔNG được tính, vì có thể
- * còn bị hủy/giao thất bại sau đó.
- *
- * Ngưỡng (đơn vị: đồng):
- * - Đồng:       0 (mặc định, mọi khách hàng mới)
- * - Bạc:        >= 10.000.000
- * - Vàng:       >= 50.000.000
- * - Kim Cương:  >= 200.000.000
- */
 class CustomerTierService
 {
     public const TIERS = [
@@ -28,11 +15,6 @@ class CustomerTierService
         'kim_cuong' => ['label' => 'Kim Cương', 'min_spent' => 200_000_000, 'color' => '#0891b2'],
     ];
 
-    /**
-     * Đơn tính hạng — luôn dùng ở mọi nơi tính "khách đã mua bao nhiêu". CHỈ
-     * tính đơn 'completed' (khách đã nhận hàng thành công) — 'paid' mới là đã
-     * thanh toán, đơn có thể còn bị hủy/giao thất bại sau đó nên KHÔNG tính.
-     */
     public const TIER_STATUSES = ['completed'];
 
     public function resolve(float $totalSpent): string
@@ -58,7 +40,6 @@ class CustomerTierService
         return self::TIERS[$tier]['color'] ?? self::TIERS['dong']['color'];
     }
 
-    /** Thứ hạng theo THỨ TỰ (dong=0 thấp nhất) — dùng để so sánh "đủ điều kiện". */
     public function rank(string $tier): int
     {
         return array_search($tier, array_keys(self::TIERS), true) ?: 0;
@@ -69,11 +50,6 @@ class CustomerTierService
         return (float) (self::TIERS[$tier]['min_spent'] ?? 0);
     }
 
-    /**
-     * Khoảng chi tiêu [min, max) của 1 hạng — max=null nếu là hạng cao nhất.
-     *
-     * @return array{0: float, 1: ?float}
-     */
     public function rangeForTier(string $tier): array
     {
         $keys = array_keys(self::TIERS);
@@ -89,9 +65,6 @@ class CustomerTierService
         return [$min, $max];
     }
 
-    /**
-     * @return array<int, array{key:string,label:string,min_spent:float,color:string}>
-     */
     public function all(): array
     {
         return collect(self::TIERS)
@@ -112,11 +85,6 @@ class CustomerTierService
         return $this->resolve($this->totalSpentForUser($user->id));
     }
 
-    /**
-     * Hạng kế tiếp + còn thiếu bao nhiêu để lên hạng (null nếu đã ở hạng cao nhất).
-     *
-     * @return array{tier:?string,label:?string,remaining:float}|null
-     */
     public function nextTier(float $totalSpent): ?array
     {
         $keys = array_keys(self::TIERS);
@@ -136,10 +104,6 @@ class CustomerTierService
         ];
     }
 
-    /**
-     * @param  array<int,int>  $userIds
-     * @return array<int,float> user_id => total_spent
-     */
     public function totalSpentForUsers(array $userIds): array
     {
         if (empty($userIds)) {

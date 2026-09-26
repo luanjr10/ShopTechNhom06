@@ -6,13 +6,6 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 
-/**
- * Cùng giới hạn môi trường như SellerAdminIsolationTest: KHÔNG dùng RefreshDatabase
- * (migration cũ đọc Mongo trong up(), CLI test không có ext-mongodb) -> tự tạo
- * schema tối giản. CartController luôn query ProductSpecification/ProductImage
- * (Mongo) trong formatCart() dù sản phẩm không có variant/ảnh -> các case "happy
- * path" cần Mongo thật sẽ bị skip nếu CLI hiện tại thiếu ext-mongodb.
- */
 beforeEach(function () {
     Schema::dropIfExists('cart_items');
     Schema::dropIfExists('carts');
@@ -79,8 +72,6 @@ function loginAsCustomer(): User
     return $user;
 }
 
-// --- Bắt buộc đăng nhập (guest không có cart) ---
-
 test('guest cannot view the cart', function () {
     test()->getJson('/api/cart')->assertStatus(401);
 });
@@ -89,13 +80,11 @@ test('guest cannot add to the cart', function () {
     test()->postJson('/api/cart/items', ['product_id' => 1, 'quantity' => 1])->assertStatus(401);
 });
 
-// --- Không tìm thấy sản phẩm ---
-
 test('adding a non existent product is rejected', function () {
     loginAsCustomer();
 
     test()->postJson('/api/cart/items', ['product_id' => 9999, 'quantity' => 1])
-        ->assertStatus(422); // fails the exists:products,id validation rule
+        ->assertStatus(422);
 });
 
 test('adding a hidden (status=0) product returns not found', function () {
@@ -106,21 +95,17 @@ test('adding a hidden (status=0) product returns not found', function () {
         ->assertStatus(404);
 });
 
-// --- Chủ sở hữu: user A không đụng được cart_item của user B ---
-
 test('a user cannot update or delete another users cart item', function () {
     $userA = loginAsCustomer();
     $product = Product::create(['name' => 'Sản phẩm', 'price' => 100, 'stock' => 10, 'status' => 1]);
     $cartA = Cart::create(['user_id' => $userA->id]);
     $itemA = $cartA->items()->create(['product_id' => $product->id, 'sku' => '', 'quantity' => 1]);
 
-    loginAsCustomer(); // user B
+    loginAsCustomer();
 
     test()->putJson("/api/cart/items/{$itemA->id}", ['quantity' => 2])->assertStatus(404);
     test()->deleteJson("/api/cart/items/{$itemA->id}")->assertStatus(404);
 });
-
-// --- Happy path: cần Mongo thật (ProductSpecification/ProductImage) ---
 
 test('a logged in customer can add a product to the cart and see it with correct subtotal', function () {
     loginAsCustomer();
@@ -129,7 +114,7 @@ test('a logged in customer can add a product to the cart and see it with correct
     test()->postJson('/api/cart/items', ['product_id' => $product->id, 'quantity' => 2])
         ->assertStatus(201)
         ->assertJsonPath('data.total_quantity', 2)
-        ->assertJsonPath('data.subtotal', 360000.0); // (200000 - 10%) * 2
+        ->assertJsonPath('data.subtotal', 360000.0);
 })->skip(! extension_loaded('mongodb'), 'Cần ext-mongodb (ProductSpecification/ProductImage) để chạy được.');
 
 test('adding beyond available stock is rejected without changing product stock', function () {

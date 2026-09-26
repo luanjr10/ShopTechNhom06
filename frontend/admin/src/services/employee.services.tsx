@@ -1,11 +1,6 @@
 import api from "../api/axios";
 import type { PermissionModule } from "../types/employee.types";
 
-/**
- * Quản lý nhân viên + phân quyền — CHỈ role=admin thật gọi được (BE chặn ở
- * routes/api/admin.php, không bọc middleware `permission:`).
- */
-
 export const getEmployees = async (params: { search?: string; page?: number } = {}) => {
   const res = await api.get("admin/employees", { params });
   return res.data;

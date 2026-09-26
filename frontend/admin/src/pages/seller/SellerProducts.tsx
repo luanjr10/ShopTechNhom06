@@ -31,12 +31,6 @@ const SORT_OPTIONS: SortOption<ProductSort>[] = [
   { value: "discount_desc", label: "Giảm giá nhiều nhất" },
 ];
 
-/**
- * Sản phẩm của gian hàng — dùng chung ProductFormModal/ProductDetailModal với
- * admin (đầy đủ thông số/variants/Quick Link/nhiều ảnh), chỉ thay nơi lưu
- * (submitCreate/submitUpdate) để ép theo activeStore. Xem chi tiết & sửa/xóa
- * đồng bộ giao diện DataTable chung.
- */
 export default function SellerProducts() {
   const { activeStore } = useAuth();
   const [categories, setCategories] = useState<CategoryItem[]>([]);

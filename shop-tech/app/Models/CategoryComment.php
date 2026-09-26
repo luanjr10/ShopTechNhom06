@@ -6,11 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * "Hỏi & đáp" theo danh mục — parent_id luôn trỏ về comment GỐC (BE làm phẳng
- * tối đa 2 cấp lúc tạo, xem CategoryCommentController::store), cùng khuôn mẫu
- * với ProductComment.
- */
 class CategoryComment extends Model
 {
     protected $fillable = ['category_id', 'user_id', 'parent_id', 'body'];

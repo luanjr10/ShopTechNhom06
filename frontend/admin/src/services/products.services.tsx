@@ -38,7 +38,6 @@ export const createProduct = async (data: FormData) => {
 
 export const updateProduct = async (id: number, data: FormData) => {
   try {
-    // Laravel spoof method: gửi POST kèm _method=PUT để hỗ trợ upload file multipart
     data.append("_method", "PUT");
     const response = await api.post(`/products/${id}`, data);
     return response.data;

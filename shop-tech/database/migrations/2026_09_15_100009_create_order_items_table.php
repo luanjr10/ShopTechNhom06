@@ -11,10 +11,9 @@ return new class extends Migration
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('seller_order_id')->constrained('seller_orders')->cascadeOnDelete();
-            // products.id là int (signed) trong DB hiện tại -> khớp kiểu để tạo FK.
             $table->integer('product_id');
-            $table->string('product_name'); // snapshot tên lúc mua
-            $table->string('sku')->nullable(); // snapshot SKU variant
+            $table->string('product_name');
+            $table->string('sku')->nullable();
             $table->decimal('unit_price', 15, 2);
             $table->unsignedInteger('quantity');
             $table->decimal('line_total', 15, 2);

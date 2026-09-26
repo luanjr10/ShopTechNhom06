@@ -33,7 +33,6 @@ export interface ProductReviewsResponse {
   stats: ReviewStats;
 }
 
-/** "Hỏi & đáp" — BE luôn làm phẳng tối đa 2 cấp, `replies` chỉ có ở comment gốc. */
 export interface ProductComment {
   id: number;
   product_id: number;
@@ -46,7 +45,6 @@ export interface ProductComment {
   replies?: ProductComment[];
 }
 
-/** "Hỏi & đáp" theo DANH MỤC (trang danh mục) — cùng khuôn mẫu ProductComment. */
 export interface CategoryComment {
   id: number;
   category_id: number;

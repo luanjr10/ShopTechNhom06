@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Schema;
 
-/**
- * Cùng cách ly như các test khác (xem SellerAdminIsolationTest): tự tạo schema
- * tối giản, không dùng RefreshDatabase. LocationService gọi provinces.open-api.vn
- * thật -> fake bằng Http::fake() để test không phụ thuộc mạng/uptime bên thứ 3.
- */
 beforeEach(function () {
     Cache::flush();
 
@@ -113,7 +108,6 @@ test('creating an address snapshots the real province/ward names, not client sup
 test('creating an address with a ward that does not belong to the province is rejected', function () {
     loginAsAddressOwner();
 
-    // ward 4 (Ba Đình) thuộc province 1, không thuộc province 37.
     test()->postJson('/api/addresses', [
         'recipient_name' => 'Nguyen Van A',
         'phone' => '0900000000',
@@ -136,7 +130,7 @@ test('a user cannot update another users address', function () {
         'is_default' => true,
     ]);
 
-    loginAsAddressOwner(); // user B
+    loginAsAddressOwner();
 
     test()->patchJson("/api/addresses/{$addressA->id}", ['address_line' => 'hacked'])
         ->assertStatus(403);

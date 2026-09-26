@@ -43,7 +43,6 @@ export interface CouponPayload {
   is_active?: boolean;
 }
 
-// Voucher (bao gồm voucher hạng thành viên) — chỉ admin quản lý.
 export const getCoupons = async (params: { search?: string; page?: number } = {}) => {
   const res = await api.get("admin/coupons", { params });
   return res.data;

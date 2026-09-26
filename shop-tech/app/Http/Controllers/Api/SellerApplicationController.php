@@ -7,12 +7,8 @@ use App\Http\Requests\Seller\StoreSellerApplicationRequest;
 use App\Models\SellerApplication;
 use Illuminate\Http\Request;
 
-/**
- * Customer đăng ký trở thành người bán. Quản lý/duyệt nằm ở Admin\SellerApplicationController.
- */
 class SellerApplicationController extends Controller
 {
-    // [POST] /api/seller-applications
     public function store(StoreSellerApplicationRequest $request)
     {
         $user = $request->user();
@@ -51,7 +47,6 @@ class SellerApplicationController extends Controller
         ], 201);
     }
 
-    // [GET] /api/seller-applications/mine
     public function mine(Request $request)
     {
         $applications = SellerApplication::where('user_id', $request->user()->id)

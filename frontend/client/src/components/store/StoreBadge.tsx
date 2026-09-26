@@ -4,13 +4,11 @@ import { type StoreRef } from "../../types/product";
 
 interface StoreBadgeProps {
   store: StoreRef;
-  /** Cho phép bấm để sang trang gian hàng (mặc định false — tránh <a> lồng <a>). */
   asLink?: boolean;
   logoSize?: number;
   className?: string;
 }
 
-/** Chip hiển thị gian hàng: logo + tên. Dùng ở card, trang chi tiết, header gian hàng. */
 export function StoreBadge({
   store,
   asLink = false,

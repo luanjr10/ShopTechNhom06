@@ -6,7 +6,6 @@ interface Props {
   data: TopStoreItem[];
 }
 
-/** Top 5 gian hàng theo doanh thu thực nhận — thay DashboardCard07 gốc (Top Channels). */
 export default function TopStoresTable({ data }: Props) {
   return (
     <div className="col-span-full xl:col-span-8 bg-white dark:bg-gray-800 shadow-xs rounded-xl">

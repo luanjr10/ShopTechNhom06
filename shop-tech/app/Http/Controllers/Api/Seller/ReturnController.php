@@ -8,14 +8,8 @@ use App\Models\Store;
 use App\Notifications\ReturnRequestRespondedNotification;
 use Illuminate\Http\Request;
 
-/**
- * Seller xem + duyệt/từ chối yêu cầu hoàn trả/bảo hành của khách cho gian
- * hàng của mình. Phản hồi (seller_response) được gửi email về cho khách
- * ngay khi duyệt/từ chối (xem ReturnRequestRespondedNotification).
- */
 class ReturnController extends Controller
 {
-    // [GET] /api/seller/stores/{store}/returns
     public function index(Request $request, Store $store)
     {
         $query = ReturnRequest::whereHas('sellerOrder', fn ($q) => $q->where('store_id', $store->id))
@@ -32,7 +26,6 @@ class ReturnController extends Controller
         ], 200);
     }
 
-    // [GET] /api/seller/stores/{store}/returns/{returnRequest}
     public function show(Store $store, ReturnRequest $returnRequest)
     {
         $this->assertBelongsToStore($returnRequest, $store);
@@ -43,7 +36,6 @@ class ReturnController extends Controller
         ], 200);
     }
 
-    // [PATCH] /api/seller/stores/{store}/returns/{returnRequest}/respond
     public function respond(Request $request, Store $store, ReturnRequest $returnRequest)
     {
         $this->assertBelongsToStore($returnRequest, $store);

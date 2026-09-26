@@ -5,7 +5,6 @@ import { useAuth } from "../../context/AuthContext";
 import { getCategoryComments, submitCategoryComment } from "../../services/reviews";
 import { type CategoryComment } from "../../types/review";
 
-/** Màu avatar xoay vòng theo user — chỉ để phân biệt trực quan giữa người hỏi, không mang ý nghĩa gì khác. */
 const AVATAR_COLORS = [
   "bg-lime-700",
   "bg-purple-700",
@@ -34,9 +33,6 @@ interface Props {
   categoryId: number;
 }
 
-/** Khối "Hỏi & đáp" của trang danh mục — dữ liệu thật (giống hệt cơ chế bình
- * luận Hỏi & đáp ở trang chi tiết sản phẩm, chỉ khác gắn theo danh mục thay vì
- * 1 sản phẩm cụ thể), xem `ProductQA` (product-detail) để đối chiếu. */
 export function CategoryQnA({ categoryId }: Props) {
   const { user } = useAuth();
   const [comments, setComments] = useState<CategoryComment[]>([]);
@@ -86,7 +82,6 @@ export function CategoryQnA({ categoryId }: Props) {
     <section className="rounded-2xl bg-gray-50 p-4 sm:p-6">
       <h2 className="mb-4 font-sans text-[18px] font-bold text-gray-800">Hỏi và đáp</h2>
 
-      {/* Ô đặt câu hỏi */}
       <div className="flex flex-col gap-4 rounded-xl bg-white p-4 shadow-sm sm:flex-row sm:items-center">
         <img
           src="https://cdn2.cellphones.com.vn/insecure/rs:fill:0:0/q:90/plain/https://cellphones.com.vn/media/wysiwyg/ant-smile.png"
@@ -129,7 +124,6 @@ export function CategoryQnA({ categoryId }: Props) {
         </div>
       </div>
 
-      {/* Danh sách câu hỏi */}
       {loading ? (
         <div className="flex justify-center py-10">
           <Loader2 className="size-6 animate-spin text-primary500" />

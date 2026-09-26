@@ -8,16 +8,10 @@ use App\Models\ProductImage;
 use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 
-/**
- * Quản lý "Nổi bật trang chủ": giờ kết thúc flash sale (đếm ngược) + đánh dấu
- * sản phẩm nào thuộc Flash sale / Sản phẩm hot trend cho storefront hiển thị.
- * Xem routes/api/admin.php (module `home_highlights`).
- */
 class HomeHighlightController extends Controller
 {
     private const PER_PAGE = 10;
 
-    // [GET] /api/admin/home-highlights/flash-sale
     public function showFlashSale()
     {
         return response()->json([
@@ -28,7 +22,6 @@ class HomeHighlightController extends Controller
         ], 200);
     }
 
-    // [PUT] /api/admin/home-highlights/flash-sale
     public function updateFlashSale(Request $request)
     {
         $validated = $request->validate([
@@ -44,11 +37,10 @@ class HomeHighlightController extends Controller
         ], 200);
     }
 
-    // [GET] /api/admin/home-highlights/products — danh sách sản phẩm để bật/tắt Flash sale + Hot trend.
     public function products(Request $request)
     {
         $search = trim((string) $request->input('search', ''));
-        $highlight = $request->input('highlight'); // 'featured' | 'flash_sale' | null
+        $highlight = $request->input('highlight');
 
         $query = Product::query()->with('brand:id,name');
 
@@ -103,7 +95,6 @@ class HomeHighlightController extends Controller
         ], 200);
     }
 
-    // [PATCH] /api/admin/home-highlights/products/{id}
     public function updateProductFlags(Request $request, $id)
     {
         $product = Product::findOrFail($id);

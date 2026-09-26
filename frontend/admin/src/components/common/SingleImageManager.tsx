@@ -24,7 +24,6 @@ export default function SingleImageManager({
         </Label>
       </div>
 
-      {/* Ảnh hiện tại */}
       {existingImage && !newImage && (
         <div className="mb-3">
           <div className="relative inline-block">
@@ -45,7 +44,6 @@ export default function SingleImageManager({
         </div>
       )}
 
-      {/* Ảnh mới */}
       {newImage && (
         <div className="mb-3">
           <div className="relative inline-block">
@@ -66,7 +64,6 @@ export default function SingleImageManager({
         </div>
       )}
 
-      {/* Chọn ảnh */}
       {!newImage && (
         <FileInput
           accept="image/*"

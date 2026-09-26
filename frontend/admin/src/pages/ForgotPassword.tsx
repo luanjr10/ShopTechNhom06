@@ -44,9 +44,6 @@ export default function ForgotPasswordPage() {
     return () => clearInterval(t);
   }, [resendIn]);
 
-  // Tự xác minh khi nhập đủ 6 số — dùng effect (không kiểm tra ngay trong
-  // onChange) để tránh bug closure cũ khi gõ nhanh: setDigit dựa vào `digits`
-  // chụp tại thời điểm render, có thể chưa phản ánh ký tự vừa gõ trước đó.
   useEffect(() => {
     if (step === "code" && codeComplete && !loading) {
       verifyCode(code);

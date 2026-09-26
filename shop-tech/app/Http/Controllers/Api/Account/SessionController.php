@@ -10,10 +10,6 @@ use Throwable;
 
 class SessionController extends Controller
 {
-    /**
-     * [POST] /api/refresh — cấp JWT mới từ token trong cookie (gia hạn phiên).
-     * Không đặt sau middleware auth:api để token gần hết hạn vẫn refresh được.
-     */
     public function refresh(Request $request)
     {
         try {
@@ -31,10 +27,6 @@ class SessionController extends Controller
         ])->withCookie(JwtCookie::make($token));
     }
 
-    /**
-     * [POST] /api/logout-others — đăng xuất tất cả thiết bị khác.
-     * Tăng token_version → mọi JWT cũ vô hiệu; cấp token mới cho thiết bị này.
-     */
     public function logoutOthers(Request $request)
     {
         $user = $request->user();

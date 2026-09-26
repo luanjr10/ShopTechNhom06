@@ -173,9 +173,6 @@ function ChangeByEmailCode({ email }: { email: string }) {
     return () => clearInterval(t);
   }, [resendIn]);
 
-  // Tự xác minh khi nhập đủ 6 số — dùng effect thay vì kiểm tra ngay trong
-  // onChange để tránh bug closure khi gõ nhanh (state `digits` chụp tại thời
-  // điểm render có thể chưa phản ánh ký tự vừa gõ ở ô trước).
   useEffect(() => {
     if (step === "code" && codeComplete && !loading) {
       verifyCode(code);

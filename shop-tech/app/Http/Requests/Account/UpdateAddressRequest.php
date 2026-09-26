@@ -7,9 +7,6 @@ use App\Rules\VietnamesePhone;
 
 class UpdateAddressRequest extends ApiFormRequest
 {
-    /**
-     * @return array<string, mixed>
-     */
     public function rules(): array
     {
         return [
@@ -23,9 +20,6 @@ class UpdateAddressRequest extends ApiFormRequest
         ];
     }
 
-    /**
-     * @return array<string, string>
-     */
     public function messages(): array
     {
         return [

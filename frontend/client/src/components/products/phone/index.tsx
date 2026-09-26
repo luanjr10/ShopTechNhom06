@@ -3,7 +3,6 @@ import { ProductSection } from "../ProductSection/ProductSection";
 function ProductsPhone() {
   return (
     <div className="space-y-10">
-      {/* Khối Điện thoại & Máy tính bảng — dữ liệu thật từ DB, Quick Link lấy từ API */}
       <ProductSection
         categories={[
           { code: "CATE-02", label: "ĐIỆN THOẠI" },

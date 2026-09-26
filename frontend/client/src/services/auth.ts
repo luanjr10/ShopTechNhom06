@@ -16,7 +16,6 @@ export interface RegisterPayload {
 }
 
 export interface LoginPayload {
-  /** username hoặc email. */
   login: string;
   password: string;
   remember?: boolean;
@@ -32,7 +31,6 @@ export async function loginUser(payload: LoginPayload): Promise<AuthUser> {
   return res.data;
 }
 
-/** Lấy user hiện tại; trả null nếu chưa đăng nhập (401). */
 export async function fetchMe(): Promise<AuthUser | null> {
   try {
     const res = await apiAuthGet<AuthResponse>("/me");
@@ -46,7 +44,6 @@ export async function logoutUser(): Promise<void> {
   await apiPost("/logout");
 }
 
-/** Gửi mã OTP đặt lại mật khẩu về email. Trả về thời hạn (giây) của mã. */
 export async function forgotPassword(email: string): Promise<number> {
   const res = await apiPost<{ message: string; ttl?: number }>(
     "/forgot-password",
@@ -55,7 +52,6 @@ export async function forgotPassword(email: string): Promise<number> {
   return res.ttl ?? 60;
 }
 
-/** Kiểm tra mã OTP có hợp lệ không (chưa đổi mật khẩu). */
 export async function verifyResetCode(
   email: string,
   code: string,
@@ -70,7 +66,6 @@ export interface ResetPasswordPayload {
   password_confirmation: string;
 }
 
-/** Xác minh mã OTP và đặt mật khẩu mới. */
 export async function resetPassword(
   payload: ResetPasswordPayload,
 ): Promise<string> {

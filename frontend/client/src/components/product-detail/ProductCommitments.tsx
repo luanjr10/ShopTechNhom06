@@ -19,7 +19,6 @@ const COMMITMENTS = [
   },
 ] as const;
 
-/** Khối "Cam kết sản phẩm" — thông tin chính sách chung của cửa hàng. */
 export function ProductCommitments() {
   return (
     <div>

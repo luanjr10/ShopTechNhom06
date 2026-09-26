@@ -16,11 +16,6 @@ export const getAllCategories = async (params?: {
   }
 };
 
-/**
- * TOÀN BỘ danh mục (mọi cấp, phẳng) — dùng để dựng cây lựa chọn "Danh mục
- * cha" trong form (cây không giới hạn số cấp, danh mục con vẫn chọn được
- * làm cha của danh mục khác).
- */
 export const getAllCategoriesFlat = async () => {
   try {
     const response = await api.get("categories", {
@@ -93,7 +88,6 @@ export const deleteCategory = async (id: number) => {
   }
 };
 
-/** Upload ảnh đại diện danh mục (thay icon) lên Cloudinary — lưu ở MongoDB. */
 export const uploadCategoryImage = async (id: number, file: File) => {
   const formData = new FormData();
   formData.set("image", file);
@@ -101,7 +95,6 @@ export const uploadCategoryImage = async (id: number, file: File) => {
   return response.data;
 };
 
-/** Gỡ ảnh đại diện, quay lại hiển thị bằng icon. */
 export const deleteCategoryImage = async (id: number) => {
   const response = await api.delete(`/categories/${id}/image`);
   return response.data;

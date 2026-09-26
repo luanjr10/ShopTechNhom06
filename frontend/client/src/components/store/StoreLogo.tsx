@@ -3,12 +3,10 @@ import { useState } from "react";
 interface StoreLogoProps {
   name: string;
   logo?: string | null;
-  /** Kích thước px (mặc định 40). */
   size?: number;
   className?: string;
 }
 
-/** Logo gian hàng — tự fallback về chữ cái đầu khi thiếu/lỗi ảnh. */
 export function StoreLogo({ name, logo, size = 40, className = "" }: StoreLogoProps) {
   const [errored, setErrored] = useState(false);
   const initial = name?.trim()?.charAt(0)?.toUpperCase() || "S";

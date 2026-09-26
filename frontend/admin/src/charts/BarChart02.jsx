@@ -7,7 +7,6 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-moment';
 
-// Import utilities
 import { formatValue } from '../utils/Utils';
 
 Chart.register(BarController, BarElement, LinearScale, TimeScale, Tooltip, Legend);
@@ -84,7 +83,7 @@ function BarChart02({
           },
           tooltip: {
             callbacks: {
-              title: () => false, // Disable tooltip title
+              title: () => false,
               label: (context) => formatValue(context.parsed.y),
             },
             bodyColor: darkMode ? tooltipBodyColor.dark : tooltipBodyColor.light,

@@ -7,7 +7,6 @@ interface StoreInfoCardProps {
   store: StoreRef;
 }
 
-/** Mục "Thương hiệu / Gian hàng" ở trang chi tiết: logo + tên + nút xem gian hàng. */
 export function StoreInfoCard({ store }: StoreInfoCardProps) {
   return (
     <div className="flex items-center gap-3 rounded-2xl border border-gray-100 bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.05)]">

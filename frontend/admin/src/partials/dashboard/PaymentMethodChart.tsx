@@ -7,7 +7,6 @@ interface Props {
   data: RevenueByPaymentMethod;
 }
 
-/** Doanh thu COD vs Thanh toán online theo tháng — thay DashboardCard04 gốc (Direct VS Indirect). */
 export default function PaymentMethodChart({ data }: Props) {
   const chartData = {
     labels: data.labels.map(monthLabelToChartLabel),

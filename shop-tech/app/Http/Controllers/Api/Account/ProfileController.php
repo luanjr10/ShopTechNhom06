@@ -13,10 +13,6 @@ use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
-    /**
-     * [PATCH] /api/profile — cập nhật hồ sơ. Đổi email sẽ reset trạng thái
-     * xác thực và gửi lại mail xác thực.
-     */
     public function update(UpdateProfileRequest $request)
     {
         $user = $request->user();
@@ -43,9 +39,6 @@ class ProfileController extends Controller
         ]);
     }
 
-    /**
-     * [POST] /api/profile/avatar — upload ảnh đại diện.
-     */
     public function updateAvatar(UpdateAvatarRequest $request)
     {
         $user = $request->user();
@@ -64,10 +57,6 @@ class ProfileController extends Controller
         ]);
     }
 
-    /**
-     * [POST] /api/change-password — đổi mật khẩu (nhập mật khẩu hiện tại).
-     * Đăng xuất các thiết bị khác, cấp lại cookie cho thiết bị hiện tại.
-     */
     public function changePassword(ChangePasswordRequest $request)
     {
         $user = $request->user();

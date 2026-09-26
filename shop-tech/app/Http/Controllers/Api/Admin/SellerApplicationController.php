@@ -9,12 +9,8 @@ use App\Models\SellerWallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-/**
- * Admin xem và duyệt/từ chối đơn đăng ký người bán.
- */
 class SellerApplicationController extends Controller
 {
-    // [GET] /api/admin/seller-applications?status=pending
     public function index(Request $request)
     {
         $query = SellerApplication::with('user:id,name,username,email')->latest();
@@ -29,7 +25,6 @@ class SellerApplicationController extends Controller
         ], 200);
     }
 
-    // [GET] /api/admin/seller-applications/{application}
     public function show(SellerApplication $application)
     {
         return response()->json([
@@ -38,7 +33,6 @@ class SellerApplicationController extends Controller
         ], 200);
     }
 
-    // [POST] /api/admin/seller-applications/{application}/approve
     public function approve(Request $request, SellerApplication $application)
     {
         if ($application->status !== 'pending') {
@@ -58,7 +52,6 @@ class SellerApplicationController extends Controller
             $user = $application->user;
             $user->update(['role' => 'seller']);
 
-            // Tạo SellerProfile (1-1) + ví nếu chưa có.
             $profile = SellerProfile::firstOrCreate(
                 ['user_id' => $user->id],
                 ['display_name' => $application->shop_name, 'phone' => $application->phone, 'status' => 'active'],
@@ -74,7 +67,6 @@ class SellerApplicationController extends Controller
         ], 200);
     }
 
-    // [POST] /api/admin/seller-applications/{application}/reject
     public function reject(Request $request, SellerApplication $application)
     {
         if ($application->status !== 'pending') {

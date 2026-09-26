@@ -7,13 +7,8 @@ use App\Models\SellerOrder;
 use App\Models\Store;
 use Illuminate\Http\Request;
 
-/**
- * Doanh thu gian hàng: tổng hợp từ seller_orders (chỉ đơn completed).
- * commission_amount/seller_amount là số đã snapshot lúc tạo/hoàn tất đơn.
- */
 class RevenueController extends Controller
 {
-    // [GET] /api/seller/stores/{store}/revenue?days=30
     public function summary(Request $request, Store $store)
     {
         $days = (int) $request->input('days', 30);
@@ -22,9 +17,6 @@ class RevenueController extends Controller
 
         $since = now()->subDays($days - 1)->startOfDay();
 
-        // Thẻ tổng quan phải khớp đúng khoảng "$days" đang chọn — trước đây
-        // chỉ mỗi biểu đồ theo ngày lọc theo $since, còn 4 thẻ số phía trên
-        // luôn tính all-time, khiến đổi 7/30/90 ngày không đổi số liệu thẻ.
         $totals = (clone $completed)
             ->where('completed_at', '>=', $since)
             ->selectRaw(

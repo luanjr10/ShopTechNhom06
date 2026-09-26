@@ -7,10 +7,6 @@ use App\Models\Store;
 
 class CommissionService
 {
-    /**
-     * Xác định tỉ lệ hoa hồng áp dụng: ưu tiên Store > Category > mặc định.
-     * Chỉ lấy cấu hình đang bật (is_active). Trả 0 nếu không có cấu hình nào.
-     */
     public function resolveRate(Store $store, ?int $categoryId = null): float
     {
         $storeRate = CommissionSetting::where('scope', 'store')

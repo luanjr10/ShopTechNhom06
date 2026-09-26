@@ -12,14 +12,8 @@ use App\Services\ProductPricingService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-/**
- * Giỏ hàng của customer đã đăng nhập. KHÔNG đụng tới products.stock ở đây —
- * chỉ kiểm tra tồn kho để chặn thêm/sửa vượt quá, việc trừ stock thật chỉ xảy ra
- * lúc đặt hàng thành công (OrderService::place, có lock + transaction).
- */
 class CartController extends Controller
 {
-    // [GET] /api/cart
     public function index(Request $request)
     {
         $cart = $this->cartOf($request);
@@ -30,7 +24,6 @@ class CartController extends Controller
         ], 200);
     }
 
-    // [POST] /api/cart/items
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -44,10 +37,6 @@ class CartController extends Controller
             return response()->json(['success' => false, 'message' => 'Không tìm thấy sản phẩm.'], 404);
         }
 
-        // Sku ở đây có thể là 1 variant thật (Mongo) HOẶC sku mặc định được sinh
-        // lúc hiển thị chi tiết sản phẩm (ProductController::defaultVariant) và
-        // KHÔNG có trong Mongo — không coi đó là lỗi, ProductPricingService tự
-        // fallback về giá/tồn kho của product khi không khớp variant nào.
         $sku = $validated['sku'] ?? '';
         $spec = ProductSpecification::where('productId', $product->id)->first();
         $availableStock = ProductPricingService::stock($product, $spec, $sku !== '' ? $sku : null);
@@ -76,7 +65,6 @@ class CartController extends Controller
         ], 201);
     }
 
-    // [PUT] /api/cart/items/{cartItem}
     public function update(Request $request, CartItem $cartItem)
     {
         $owned = $this->ownedItem($request, $cartItem);
@@ -113,7 +101,6 @@ class CartController extends Controller
         ], 200);
     }
 
-    // [DELETE] /api/cart/items/{cartItem}
     public function destroy(Request $request, CartItem $cartItem)
     {
         $owned = $this->ownedItem($request, $cartItem);
@@ -131,7 +118,6 @@ class CartController extends Controller
         ], 200);
     }
 
-    // [DELETE] /api/cart
     public function clear(Request $request)
     {
         $cart = $this->cartOf($request);
@@ -149,10 +135,6 @@ class CartController extends Controller
         return Cart::firstOrCreate(['user_id' => $request->user()->id]);
     }
 
-    /**
-     * Trả JsonResponse 404 nếu cart_item không thuộc user hiện tại, ngược lại null.
-     * Trả 404 (không phải 403) để không lộ việc cart_item đó tồn tại hay không.
-     */
     private function ownedItem(Request $request, CartItem $cartItem)
     {
         if ($cartItem->cart->user_id !== $request->user()->id) {
@@ -162,11 +144,6 @@ class CartController extends Controller
         return null;
     }
 
-    /**
-     * Format cart trả về FE: giá/tồn kho luôn tính lại từ DB tại thời điểm gọi,
-     * KHÔNG tin số đã lưu trước đó. Đánh dấu rõ dòng nào không còn hợp lệ để FE
-     * cảnh báo user tự điều chỉnh trước khi checkout (không tự âm thầm xóa).
-     */
     private function formatCart(Cart $cart): array
     {
         $items = $cart->items()->get();
@@ -202,10 +179,6 @@ class CartController extends Controller
             }
 
             $spec = $specs->get($product->id);
-            // Sku có thể là 1 variant thật (Mongo) hoặc sku mặc định được sinh lúc
-            // hiển thị chi tiết sản phẩm (không lưu trong Mongo) — không tìm thấy
-            // KHÔNG có nghĩa là hàng không còn, ProductPricingService đã tự fallback
-            // về giá/tồn kho của product. Chỉ dùng $variant để hiện thuộc tính nếu có.
             $sku = $item->sku !== '' ? $item->sku : null;
             $variant = $sku ? $this->findVariant($spec, $sku) : null;
 
@@ -245,9 +218,6 @@ class CartController extends Controller
         ];
     }
 
-    /**
-     * @return array<string, mixed>|null
-     */
     private function findVariant(?ProductSpecification $spec, string $sku): ?array
     {
         foreach ($spec?->variants ?? [] as $variant) {

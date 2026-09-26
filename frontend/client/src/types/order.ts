@@ -8,8 +8,6 @@ export type SellerOrderStatus =
 export type OrderStatus = "pending" | "paid" | "completed" | "cancelled";
 export type PaymentMethod = "cod" | "momo" | "vnpay" | "onepay" | "sepay";
 
-/** Vận đơn gắn với 1 SellerOrder — chỉ có sau khi seller bàn giao vận chuyển
- * (seller tự giao hàng, KHÔNG có tracking_number của hãng vận chuyển ngoài). */
 export interface Shipment {
   id: number;
   provider: string;
@@ -46,7 +44,6 @@ export interface OrderItem {
   return_request?: ReturnRequest | null;
 }
 
-/** Bảo hành tính từ thời điểm mua — chỉ áp dụng khi seller_order đã 'completed'. */
 export interface WarrantyStatus {
   applicable: boolean;
   status: "chua_ap_dung" | "con_han" | "het_han";
@@ -86,7 +83,6 @@ export interface Order {
   seller_orders: SellerOrder[];
 }
 
-/** Khách chỉ hủy được khi TẤT CẢ gian hàng trong đơn còn 'chờ xác nhận'. */
 export function isOrderCancellable(order: Order): boolean {
   return order.status === "pending" && order.seller_orders.every((so) => so.status === "pending");
 }

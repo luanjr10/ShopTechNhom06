@@ -6,14 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Services\CustomerTierService;
 use Illuminate\Http\Request;
 
-/**
- * Hạng thành viên của khách đang đăng nhập — hiển thị ở "Tài khoản của tôi".
- */
 class LoyaltyController extends Controller
 {
     public function __construct(private CustomerTierService $tierService) {}
 
-    // [GET] /api/loyalty/summary
     public function summary(Request $request)
     {
         $user = $request->user();

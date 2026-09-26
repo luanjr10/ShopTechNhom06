@@ -14,7 +14,6 @@ const STORAGE_KEY = "shoptech_selected_province";
 interface LocationContextValue {
   provinces: Province[];
   loadingProvinces: boolean;
-  /** Tỉnh khách đang chọn ở header — null = xem toàn sàn, không lọc theo tỉnh. */
   selectedProvince: Province | null;
   setSelectedProvince: (province: Province | null) => void;
 }
@@ -30,12 +29,6 @@ function readStoredProvince(): Province | null {
   }
 }
 
-/**
- * Tỉnh/thành khách đang chọn ở header ("Hà Nội" ...) — dùng để lọc gian
- * hàng/sản phẩm theo tỉnh VÀ để tính miễn phí ship + giao nhanh 2 giờ khi
- * trùng tỉnh với kho gian hàng (xem ShippingService::feeForStore backend).
- * Chỉ lưu ở trình duyệt (localStorage) — không đồng bộ server, không cần đăng nhập.
- */
 export function LocationProvider({ children }: { children: ReactNode }) {
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [loadingProvinces, setLoadingProvinces] = useState(true);
@@ -59,7 +52,6 @@ export function LocationProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem(STORAGE_KEY);
       }
     } catch {
-      // localStorage có thể bị chặn (chế độ ẩn danh) — bỏ qua, state trong phiên vẫn hoạt động.
     }
   }, []);
 

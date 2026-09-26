@@ -13,21 +13,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
 
-/**
- * Admin duyệt rút tiền qua cổng online (momo/vnpay/onepay/sepay) bằng cách đi
- * THẬT sang trang checkout sandbox của cổng đó — giống hệt trải nghiệm khách
- * hàng thanh toán ở checkout (nhập ví/thẻ/OTP test), chứ không chỉ bấm 1 nút
- * là xong. Vì các cổng này KHÔNG có API giải ngân thật (xem PayoutService),
- * "thanh toán" ở đây là admin tự đóng vai người trả tiền trên sandbox để lấy
- * trải nghiệm giao diện thật, sau đó hệ thống MỚI ghi nhận đã giải ngân.
- *
- * create() (auth:api + role:admin) tạo phiên thanh toán, trả `pay_url` để FE
- * điều hướng cả trang sang sandbox. *Return()/sepayRedirect() là route CÔNG
- * KHAI (cổng gọi/redirect trình duyệt về, không có JWT) — xác thực bằng
- * signature riêng từng cổng (giống PaymentController) rồi chốt giải ngân qua
- * PayoutService::finalizeOnlinePayout(), sau đó redirect trình duyệt admin về
- * lại app quản trị.
- */
 class WithdrawalPaymentController extends Controller
 {
     public function __construct(
@@ -38,7 +23,6 @@ class WithdrawalPaymentController extends Controller
         private PayoutService $payoutService,
     ) {}
 
-    // [POST] /api/admin/withdrawals/{withdrawal}/pay
     public function create(Request $request, WithdrawalRequest $withdrawal)
     {
         if ($withdrawal->status !== 'pending') {
@@ -51,9 +35,6 @@ class WithdrawalPaymentController extends Controller
             ], 422);
         }
 
-        // Lưu lại admin đang xử lý NGAY LÚC NÀY (route return sau đó là public,
-        // không có JWT, không biết ai) — PayoutService::finalizeOnlinePayout()
-        // không đụng tới field này nên giá trị ở đây được giữ nguyên.
         $withdrawal->update(['reviewed_by' => $request->user()->id]);
 
         try {
@@ -71,7 +52,6 @@ class WithdrawalPaymentController extends Controller
         return response()->json(['success' => true, 'data' => ['pay_url' => $payUrl]], 200);
     }
 
-    // [GET] /api/payments/momo/withdrawal-return
     public function momoReturn(Request $request)
     {
         $data = $request->query();
@@ -89,7 +69,6 @@ class WithdrawalPaymentController extends Controller
         return $this->redirectToAdmin($withdrawal?->id, 'failed');
     }
 
-    // [GET] /api/payments/vnpay/withdrawal-return
     public function vnpayReturn(Request $request)
     {
         $data = $request->query();
@@ -107,7 +86,6 @@ class WithdrawalPaymentController extends Controller
         return $this->redirectToAdmin($withdrawal?->id, 'failed');
     }
 
-    // [GET] /api/payments/onepay/withdrawal-return
     public function onepayReturn(Request $request)
     {
         $data = $request->query();
@@ -125,8 +103,6 @@ class WithdrawalPaymentController extends Controller
         return $this->redirectToAdmin($withdrawal?->id, 'failed');
     }
 
-    // [GET] /api/admin/withdrawals/{withdrawal}/sepay-redirect — trang trung
-    // gian auto-submit form POST sang SePay thật (giống PaymentController::sepayRedirect).
     public function sepayRedirect(WithdrawalRequest $withdrawal)
     {
         if ($withdrawal->method !== 'sepay' || $withdrawal->status !== 'pending') {
@@ -136,7 +112,6 @@ class WithdrawalPaymentController extends Controller
         return view('payments.sepay-redirect', $this->sepayService->buildWithdrawalCheckoutForm($withdrawal));
     }
 
-    // [GET] /api/payments/sepay/withdrawal-return/{withdrawal}
     public function sepayReturn(Request $request, WithdrawalRequest $withdrawal)
     {
         if ($request->query('status') === 'success') {

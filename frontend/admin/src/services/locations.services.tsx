@@ -1,10 +1,5 @@
 import api from "../api/axios";
 
-/**
- * Địa chỉ hành chính VN — hệ CŨ của GHN (tỉnh -> quận/huyện -> phường/xã),
- * public (không cần token), dùng cho form địa chỉ lấy hàng của gian hàng.
- * Xem shop-tech/app/Services/LocationService.php.
- */
 export interface LocationOption {
   code: number | string;
   name: string;

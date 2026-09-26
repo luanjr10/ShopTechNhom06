@@ -34,13 +34,11 @@ class Category extends Model
         return $this->belongsToMany(Brands::class, 'category_brand', 'category_id', 'brand_id');
     }
 
-    /** Danh mục cha (null nếu đây đã là danh mục cấp cao nhất). */
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'parent_id');
     }
 
-    /** Danh mục con — hệ thống chỉ hỗ trợ tối đa 2 cấp (cha - con). */
     public function children(): HasMany
     {
         return $this->hasMany(Category::class, 'parent_id');

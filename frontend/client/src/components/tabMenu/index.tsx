@@ -5,7 +5,7 @@ import { getCategories, getSubcategories } from "../../services/catalog";
 import { CategoryVisual } from "../category/CategoryVisual";
 import { type Category } from "../../types/product";
 
-const PARENT_CODE = "CATE-06"; // Danh mục cha "Phụ Kiện"
+const PARENT_CODE = "CATE-06";
 
 function TileSkeleton() {
   return (
@@ -16,7 +16,6 @@ function TileSkeleton() {
   );
 }
 
-/** "Sắm thêm phụ kiện chất lượng" — dữ liệu thật: các danh mục con của "Phụ Kiện". */
 function TabMenu() {
   const [subcategories, setSubcategories] = useState<Category[]>([]);
   const [parentSlug, setParentSlug] = useState<string | null>(null);
@@ -49,7 +48,6 @@ function TabMenu() {
     };
   }, []);
 
-  // Không có danh mục con thật nào (chưa cấu hình) -> ẩn cả khối, không render placeholder giả.
   if (!loading && subcategories.length === 0) {
     return null;
   }

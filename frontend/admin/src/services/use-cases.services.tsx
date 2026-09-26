@@ -1,10 +1,5 @@
 import api from "../api/axios";
 
-/**
- * Quick Link luôn thao tác trong phạm vi 1 danh mục: categoryId nằm trên URL nên
- * backend tự gán, admin không phải nhập tay.
- */
-
 export const getUseCasesByCategory = async (categoryId: number) => {
   try {
     const response = await api.get(`categories/${categoryId}/use-cases`);
@@ -31,7 +26,6 @@ export const updateUseCase = async (
   data: FormData,
 ) => {
   try {
-    // Method spoof để gửi multipart (upload ảnh) qua POST.
     data.append("_method", "PUT");
     const response = await api.post(
       `categories/${categoryId}/use-cases/${useCaseId}`,

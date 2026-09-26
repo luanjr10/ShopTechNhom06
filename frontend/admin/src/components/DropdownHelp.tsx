@@ -11,7 +11,6 @@ function DropdownHelp({
   const trigger = useRef(null);
   const dropdown = useRef(null);
 
-  // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }) => {
       if (!dropdown.current) return;
@@ -22,7 +21,6 @@ function DropdownHelp({
     return () => document.removeEventListener('click', clickHandler);
   });
 
-  // close if the esc key is pressed
   useEffect(() => {
     const keyHandler = ({ keyCode }) => {
       if (!dropdownOpen || keyCode !== 27) return;

@@ -37,8 +37,6 @@ function TabCategory({ onNavigate }: { onNavigate?: () => void }) {
             const hasChildren = children.length > 0;
 
             return (
-              // `group/item` cô lập hover theo TỪNG danh mục — flyout chỉ hiện
-              // đúng hàng đang hover, không ảnh hưởng các hàng khác.
               <div key={category.id} className="group/item relative">
                 <Link
                   to={`/danh-muc/${category.slug}`}

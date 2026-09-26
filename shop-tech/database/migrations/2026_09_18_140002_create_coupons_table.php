@@ -13,17 +13,16 @@ return new class extends Migration
             $table->id();
             $table->string('code')->unique();
             $table->enum('type', ['percent', 'fixed'])->default('percent');
-            $table->decimal('value', 15, 2); // % nếu type=percent, số tiền nếu type=fixed
-            $table->decimal('max_discount', 15, 2)->nullable(); // chặn trên khi type=percent
+            $table->decimal('value', 15, 2);
+            $table->decimal('max_discount', 15, 2)->nullable();
             $table->decimal('min_order_amount', 15, 2)->default(0);
-            $table->unsignedInteger('usage_limit')->nullable(); // null = không giới hạn
+            $table->unsignedInteger('usage_limit')->nullable();
             $table->unsignedInteger('used_count')->default(0);
             $table->timestamp('expires_at')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
 
-        // Vài mã demo để test — không hard-code ở FE, luôn qua API validate.
         DB::table('coupons')->insert([
             [
                 'code' => 'GIAM10',

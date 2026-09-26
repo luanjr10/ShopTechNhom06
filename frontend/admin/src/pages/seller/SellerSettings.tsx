@@ -29,7 +29,6 @@ export default function SellerSettings() {
   const { activeStore, refreshStores } = useAuth();
   const [submitting, setSubmitting] = useState(false);
 
-  // ---- Địa chỉ lấy hàng (GHN) ----
   const [provinces, setProvinces] = useState<LocationOption[]>([]);
   const [districts, setDistricts] = useState<LocationOption[]>([]);
   const [wards, setWards] = useState<LocationOption[]>([]);
@@ -45,7 +44,6 @@ export default function SellerSettings() {
     getProvinces().then(setProvinces);
   }, []);
 
-  // Điền sẵn địa chỉ hiện có của store (nếu có) khi đổi store hoặc danh sách tỉnh vừa tải xong.
   useEffect(() => {
     if (!activeStore) return;
     setPickupContactName(activeStore.pickup_contact_name ?? "");
@@ -128,7 +126,6 @@ export default function SellerSettings() {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Thẻ tổng quan gian hàng */}
       <div className="flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-6 sm:flex-row sm:items-center sm:justify-between dark:border-gray-800 dark:bg-white/[0.03]">
         <div className="flex items-center gap-4">
           {activeStore.logo ? (

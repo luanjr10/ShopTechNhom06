@@ -43,7 +43,6 @@ class Coupon extends Model
         return $this->hasMany(CouponRedemption::class);
     }
 
-    /** Voucher hạng thành viên — chỉ dành cho khách đạt target_tier trở lên. */
     public function isTierRestricted(): bool
     {
         return $this->target_tier !== null;

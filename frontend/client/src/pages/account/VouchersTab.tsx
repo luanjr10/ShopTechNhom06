@@ -105,7 +105,6 @@ function VouchersTab() {
 
   return (
     <div className="flex flex-col gap-5">
-      {/* Thẻ hạng thành viên */}
       <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
@@ -157,7 +156,6 @@ function VouchersTab() {
         )}
       </div>
 
-      {/* Voucher hạng thành viên */}
       <div>
         <h3 className="mb-3 font-sans text-[15px] font-bold text-gray-800">Ưu đãi dành cho hạng của bạn</h3>
 

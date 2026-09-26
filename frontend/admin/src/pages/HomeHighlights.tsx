@@ -25,7 +25,6 @@ interface HighlightProduct {
   brand?: string | null;
 }
 
-/** Chuyển "2026-09-20 15:08:38" (giờ server) <-> "2026-09-20T15:08" (input datetime-local). */
 function toDatetimeLocal(value: string | null): string {
   if (!value) return "";
   return value.slice(0, 16).replace(" ", "T");
@@ -181,7 +180,6 @@ export default function HomeHighlightsPage() {
         Nổi Bật Trang Chủ
       </h2>
 
-      {/* Cấu hình Flash sale */}
       {canEdit && (
         <form
           onSubmit={handleSaveSetting}
@@ -207,7 +205,6 @@ export default function HomeHighlightsPage() {
         </form>
       )}
 
-      {/* Chọn sản phẩm hiển thị */}
       <div className="flex flex-col gap-4">
         <div className="flex gap-2">
           <button

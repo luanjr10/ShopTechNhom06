@@ -7,19 +7,12 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-/**
- * Báo cho khách khi seller đã duyệt/từ chối yêu cầu hoàn trả/bảo hành —
- * "gửi tin nhắn của seller về cho người dùng" (xem Seller\ReturnController::respond).
- */
 class ReturnRequestRespondedNotification extends Notification
 {
     use Queueable;
 
     public function __construct(public ReturnRequest $returnRequest) {}
 
-    /**
-     * @return array<int, string>
-     */
     public function via(object $notifiable): array
     {
         return ['mail'];

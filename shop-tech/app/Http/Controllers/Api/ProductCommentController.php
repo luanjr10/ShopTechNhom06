@@ -7,13 +7,8 @@ use App\Models\Product;
 use App\Models\ProductComment;
 use Illuminate\Http\Request;
 
-/**
- * "Hỏi & đáp" của sản phẩm — ai đăng nhập cũng bình luận/trả lời được (không
- * chỉ seller), public xem không cần đăng nhập.
- */
 class ProductCommentController extends Controller
 {
-    // [GET] /api/products/{product}/comments
     public function index(Product $product)
     {
         $comments = ProductComment::where('product_id', $product->id)
@@ -32,7 +27,6 @@ class ProductCommentController extends Controller
         return response()->json(['success' => true, 'data' => $this->presentThread($comments, $product)], 200);
     }
 
-    // [POST] /api/products/{product}/comments
     public function store(Request $request, Product $product)
     {
         $validated = $request->validate([
@@ -44,8 +38,6 @@ class ProductCommentController extends Controller
 
         if (! empty($validated['parent_id'])) {
             $parent = ProductComment::where('product_id', $product->id)->findOrFail($validated['parent_id']);
-            // Luôn "làm phẳng" về tối đa 2 cấp: trả lời 1 reply thì gắn vào
-            // đúng comment GỐC của reply đó, không tạo chuỗi lồng sâu thêm.
             $parentId = $parent->parent_id ?? $parent->id;
         }
 

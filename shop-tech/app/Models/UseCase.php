@@ -4,10 +4,6 @@ namespace App\Models;
 
 use MongoDB\Laravel\Eloquent\Model;
 
-/**
- * Quick Link (nhu cầu sử dụng) gắn với một danh mục MySQL qua `categoryId`.
- * Lưu trên MongoDB giống các dữ liệu bổ trợ khác (ProductImage, ProductSpecification).
- */
 class UseCase extends Model
 {
     protected $connection = 'mongodb';

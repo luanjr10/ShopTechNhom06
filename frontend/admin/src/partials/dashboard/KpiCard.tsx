@@ -11,13 +11,9 @@ interface KpiCardProps {
   changePercent: number;
   labels: string[];
   series: number[];
-  /** "money" (mặc định) dùng định dạng tiền cho tooltip, "count" dùng số nguyên thường (đơn/người dùng...). */
   unit?: "money" | "count";
 }
 
-/** 3 thẻ KPI đầu Dashboard (Doanh thu/Đơn hàng/Người dùng mới) — 30 ngày gần
- * nhất vs 30 ngày trước, có sparkline. Thay cho DashboardCard01/02/03 gốc
- * (dữ liệu giả "Acme Plus/Advanced/Professional"). */
 export default function KpiCard({ title, subtitle, value, changePercent, labels, series, unit = "money" }: KpiCardProps) {
   const chartLabels = labels.map(isoDateToChartLabel);
   const Chart = unit === "count" ? LineChartCount : LineChart;

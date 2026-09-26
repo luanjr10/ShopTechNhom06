@@ -2,7 +2,6 @@ interface FieldErrorProps {
   message?: string;
 }
 
-/** Dòng lỗi hiển thị bên dưới 1 ô input khi validate thất bại. */
 export default function FieldError({ message }: FieldErrorProps) {
   if (!message) return null;
 

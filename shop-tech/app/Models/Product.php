@@ -49,7 +49,6 @@ class Product extends Model
         return $this->hasMany(ProductReview::class);
     }
 
-    /** Chỉ bình luận GỐC (parent_id null) — trả lời nằm trong ProductComment::replies(). */
     public function comments(): HasMany
     {
         return $this->hasMany(ProductComment::class)->whereNull('parent_id');

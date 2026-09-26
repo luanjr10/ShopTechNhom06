@@ -10,9 +10,6 @@ use App\Services\SellerOrderService;
 use Illuminate\Http\Request;
 use RuntimeException;
 
-/**
- * Seller quản lý đơn (SellerOrder) trong một gian hàng. Mỗi SellerOrder có trạng thái riêng.
- */
 class SellerOrderController extends Controller
 {
     public function __construct(
@@ -20,7 +17,6 @@ class SellerOrderController extends Controller
         private InvoiceService $invoiceService,
     ) {}
 
-    // [GET] /api/seller/stores/{store}/orders
     public function index(Request $request, Store $store)
     {
         $query = SellerOrder::where('store_id', $store->id)
@@ -37,7 +33,6 @@ class SellerOrderController extends Controller
         ], 200);
     }
 
-    // [GET] /api/seller/stores/{store}/orders/{sellerOrder}
     public function show(Store $store, SellerOrder $sellerOrder)
     {
         if ($sellerOrder->store_id !== $store->id) {
@@ -50,11 +45,6 @@ class SellerOrderController extends Controller
         ], 200);
     }
 
-    // [PATCH] /api/seller/stores/{store}/orders/{sellerOrder}/status
-    // CHỈ cho xác nhận (confirmed) hoặc hủy (cancelled) — 'shipping' phải qua
-    // handover(), 'delivered'/'completed' seller tự báo qua driverMarkDelivered/
-    // driverMarkCancelled (xem SellerOrderService), 'completed' từ 'delivered'
-    // chỉ customer tự xác nhận (xem OrderController::completeSellerOrder).
     public function updateStatus(Request $request, Store $store, SellerOrder $sellerOrder)
     {
         if ($sellerOrder->store_id !== $store->id) {
@@ -78,8 +68,6 @@ class SellerOrderController extends Controller
         ], 200);
     }
 
-    // [POST] /api/seller/stores/{store}/orders/{sellerOrder}/handover — seller bàn
-    // giao vận chuyển: ghi nhận Shipment nội bộ (seller tự giao, không gọi GHN thật).
     public function handover(Store $store, SellerOrder $sellerOrder)
     {
         if ($sellerOrder->store_id !== $store->id) {
@@ -99,10 +87,6 @@ class SellerOrderController extends Controller
         ], 200);
     }
 
-    // [POST] /api/seller/stores/{store}/orders/{sellerOrder}/driver-mark-delivered
-    // Seller (tự làm shipper) bấm "Đã giao" — luôn chuyển shipping→delivered
-    // (KHÔNG phân biệt COD/online), tiền vẫn giữ ở "đang chờ" tới khi khách tự
-    // xác nhận đã nhận hàng (xem SellerOrderService::markDeliveredByDriver).
     public function driverMarkDelivered(Store $store, SellerOrder $sellerOrder)
     {
         if ($sellerOrder->store_id !== $store->id) {
@@ -122,8 +106,6 @@ class SellerOrderController extends Controller
         ], 200);
     }
 
-    // [POST] /api/seller/stores/{store}/orders/{sellerOrder}/driver-mark-cancelled
-    // Seller (tự làm shipper) báo giao thất bại/huỷ — cho phép kể cả khi đã bàn giao (hoàn kho + ví).
     public function driverMarkCancelled(Store $store, SellerOrder $sellerOrder)
     {
         if ($sellerOrder->store_id !== $store->id) {
@@ -143,7 +125,6 @@ class SellerOrderController extends Controller
         ], 200);
     }
 
-    // [GET] /api/seller/stores/{store}/orders/{sellerOrder}/invoice/pdf — hóa đơn RIÊNG của gian hàng này.
     public function invoicePdf(Store $store, SellerOrder $sellerOrder)
     {
         if ($sellerOrder->store_id !== $store->id) {
@@ -155,7 +136,6 @@ class SellerOrderController extends Controller
         return $this->invoiceService->renderPdf($invoice)->stream("{$invoice['invoice_no']}.pdf");
     }
 
-    // [POST] /api/seller/stores/{store}/orders/{sellerOrder}/invoice/email
     public function emailInvoice(Request $request, Store $store, SellerOrder $sellerOrder)
     {
         if ($sellerOrder->store_id !== $store->id) {

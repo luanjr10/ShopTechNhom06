@@ -8,10 +8,6 @@ use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
-/**
- * Gửi hóa đơn PDF cho khách — $invoice là mảng chuẩn hoá từ
- * App\Services\InvoiceService (dùng chung cho hóa đơn admin lẫn seller).
- */
 class OrderInvoiceMail extends Mailable
 {
     public function __construct(public array $invoice) {}
@@ -31,9 +27,6 @@ class OrderInvoiceMail extends Mailable
         );
     }
 
-    /**
-     * @return array<int, Attachment>
-     */
     public function attachments(): array
     {
         $pdf = Pdf::loadView('pdf.invoice', ['invoice' => $this->invoice]);

@@ -9,11 +9,6 @@ use App\Services\CloudinaryService;
 use App\Services\WarrantyService;
 use Illuminate\Http\Request;
 
-/**
- * Khách gửi yêu cầu hoàn trả/bảo hành cho 1 dòng sản phẩm ĐÃ NHẬN HÀNG
- * (seller_order.status = completed) — bắt buộc kèm ảnh minh chứng. Seller
- * phản hồi (duyệt/từ chối) ở App\Http\Controllers\Api\Seller\ReturnController.
- */
 class CustomerReturnController extends Controller
 {
     public function __construct(
@@ -21,7 +16,6 @@ class CustomerReturnController extends Controller
         private WarrantyService $warrantyService,
     ) {}
 
-    // [GET] /api/returns/mine
     public function index(Request $request)
     {
         $requests = ReturnRequest::where('user_id', $request->user()->id)
@@ -32,7 +26,6 @@ class CustomerReturnController extends Controller
         return response()->json(['success' => true, 'data' => $requests], 200);
     }
 
-    // [GET] /api/returns/{returnRequest}
     public function show(Request $request, ReturnRequest $returnRequest)
     {
         if ($returnRequest->user_id !== $request->user()->id) {
@@ -45,7 +38,6 @@ class CustomerReturnController extends Controller
         ], 200);
     }
 
-    // [POST] /api/order-items/{orderItem}/returns
     public function store(Request $request, OrderItem $orderItem)
     {
         $sellerOrder = $orderItem->sellerOrder()->with('order')->first();

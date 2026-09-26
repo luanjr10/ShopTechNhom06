@@ -5,15 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-/**
- * Phí ship tính RIÊNG theo từng seller_order (mỗi seller có địa chỉ kho khác
- * nhau, GHN trả giá khác nhau theo tuyến) — trước đây shipping_fee chỉ có ở
- * `orders` (1 giá chung cho cả đơn multi-seller, sai bản chất GHN).
- *
- * Thêm status `delivered` vào enum: pending→confirmed→shipping→delivered→completed.
- * `delivered` CHỈ được set bởi webhook GHN (SellerOrderService), seller không tự
- * set qua route PATCH status thường (xem SellerOrderController::updateStatus).
- */
 return new class extends Migration
 {
     public function up(): void

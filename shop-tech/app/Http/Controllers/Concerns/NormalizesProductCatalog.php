@@ -6,11 +6,6 @@ use App\Models\Product;
 use App\Models\ProductUseCase;
 use App\Models\UseCase;
 
-/**
- * Logic chuẩn hoá catalog dùng chung giữa ProductController (admin) và
- * SellerProductController (seller quản lý sản phẩm trong gian hàng), để hai
- * kênh tạo/sửa sản phẩm cho ra cùng một cấu trúc variants/use_case/giá.
- */
 trait NormalizesProductCatalog
 {
     private function calculateFinalPrice($price, $discountPercent): float
@@ -18,12 +13,6 @@ trait NormalizesProductCatalog
         return round($price - ($price * ($discountPercent ?: 0) / 100), 2);
     }
 
-    /**
-     * Lọc danh sách _id Quick Link hợp lệ: tồn tại và thuộc đúng danh mục sản phẩm.
-     *
-     * @param  array<int, string>  $useCaseIds
-     * @return array<int, string>
-     */
     private function sanitizeUseCaseIds(array $useCaseIds, int $categoryId): array
     {
         $useCaseIds = array_values(array_unique(array_filter($useCaseIds)));
@@ -39,11 +28,6 @@ trait NormalizesProductCatalog
             ->all();
     }
 
-    /**
-     * Lưu Quick Link đã gán cho sản phẩm sau khi lọc theo đúng danh mục.
-     *
-     * @param  array<int, string>  $rawUseCaseIds
-     */
     private function syncUseCases(int $productId, array $rawUseCaseIds, int $categoryId): void
     {
         $useCaseIds = $this->sanitizeUseCaseIds($rawUseCaseIds, $categoryId);
@@ -54,14 +38,6 @@ trait NormalizesProductCatalog
         );
     }
 
-    /**
-     * Chuẩn hoá danh sách variants nhận từ request trước khi lưu vào MongoDB.
-     * Bỏ qua variant rỗng; chỉ giữ các thuộc tính có giá trị (color/storage/ram/cpu).
-     * Nếu không có variant hợp lệ nào thì tạo 1 variant mặc định từ sản phẩm.
-     *
-     * @param  array<int, mixed>  $rawVariants
-     * @return array<int, array<string, mixed>>
-     */
     private function normalizeVariants(array $rawVariants, Product $product): array
     {
         $variants = [];
@@ -98,12 +74,6 @@ trait NormalizesProductCatalog
         return $variants ?: [$this->defaultVariant($product)];
     }
 
-    /**
-     * Trả về variants để hiển thị: dùng dữ liệu đã lưu, nếu trống thì 1 variant mặc định.
-     *
-     * @param  array<int, mixed>  $storedVariants
-     * @return array<int, array<string, mixed>>
-     */
     private function resolveVariants(array $storedVariants, Product $product): array
     {
         return ! empty($storedVariants)
@@ -111,11 +81,6 @@ trait NormalizesProductCatalog
             : [$this->defaultVariant($product)];
     }
 
-    /**
-     * Variant mặc định cho sản phẩm chỉ có 1 phiên bản.
-     *
-     * @return array<string, mixed>
-     */
     private function defaultVariant(Product $product): array
     {
         return [

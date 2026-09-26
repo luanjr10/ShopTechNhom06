@@ -32,7 +32,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Khôi phục phiên khi mở app.
   useEffect(() => {
     let ignore = false;
 

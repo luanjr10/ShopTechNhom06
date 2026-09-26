@@ -1,4 +1,3 @@
-/** Quick Link (nhu cầu sử dụng) thuộc một danh mục. */
 export interface UseCaseItem {
   id: string;
   categoryId: number;

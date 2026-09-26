@@ -12,7 +12,6 @@ interface ApplyCouponResponse {
   data: CouponResult;
 }
 
-/** Xem trước số tiền giảm — backend luôn tính lại lúc đặt hàng, đây chỉ để hiển thị. */
 export const applyCoupon = async (
   code: string,
   subtotal: number,

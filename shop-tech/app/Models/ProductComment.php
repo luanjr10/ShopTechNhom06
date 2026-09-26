@@ -6,10 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * "Hỏi & đáp" của sản phẩm — parent_id luôn trỏ về comment GỐC (BE làm phẳng
- * tối đa 2 cấp lúc tạo, xem ProductCommentController::store).
- */
 class ProductComment extends Model
 {
     protected $fillable = ['product_id', 'user_id', 'parent_id', 'body'];

@@ -15,9 +15,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'ward_name',
     'address_line',
     'is_default',
-    // Mã GHN (hệ cũ, có quận/huyện) — nguồn DUY NHẤT dùng để tính phí/tạo vận đơn
-    // từ nay trở đi. province_code/ward_code phía trên (provinces.open-api.vn) giữ
-    // lại cho dữ liệu cũ, không còn được ghi mới.
     'province_id_ghn',
     'province_name_ghn',
     'district_id',

@@ -9,17 +9,10 @@ use App\Services\CustomerTierService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-/**
- * Seller xem danh sách/chi tiết khách hàng ĐÃ TỪNG MUA HÀNG TẠI GIAN HÀNG của
- * mình — CHỈ XEM. Hạng thành viên (tier) vẫn tính TOÀN SÀN (xem
- * CustomerTierService), "store_spent" mới là số seller thực sự bán được cho
- * khách đó tại store này.
- */
 class CustomerController extends Controller
 {
     public function __construct(private CustomerTierService $tierService) {}
 
-    // [GET] /api/seller/stores/{store}/customers
     public function index(Request $request, Store $store)
     {
         $rowsQuery = DB::table('seller_orders')
@@ -86,7 +79,6 @@ class CustomerController extends Controller
         ], 200);
     }
 
-    // [GET] /api/seller/stores/{store}/customers/{customer}
     public function show(Store $store, User $customer)
     {
         $hasOrderedHere = DB::table('seller_orders')

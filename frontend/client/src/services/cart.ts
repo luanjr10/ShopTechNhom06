@@ -7,7 +7,6 @@ interface CartResponse {
   data: CartSummary;
 }
 
-/** Giỏ hàng thật từ backend (bắt buộc đăng nhập) — thay cho libs/cart.ts (localStorage). */
 export const getCart = async (): Promise<CartSummary> =>
   (await apiAuthGet<CartResponse>("/cart")).data;
 

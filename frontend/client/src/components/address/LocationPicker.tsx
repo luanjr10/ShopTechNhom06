@@ -16,11 +16,6 @@ interface LocationPickerProps {
   errors?: { province_id?: string; district_id?: string; ward_code?: string; address_line?: string };
 }
 
-/**
- * Chọn Tỉnh/Thành phố -> Quận/Huyện -> Phường/Xã (dữ liệu luôn lấy từ API, hệ
- * CŨ của GHN — xem services/locations.ts) + ô địa chỉ cụ thể. Dùng chung cho
- * AddressesTab và Checkout (nhập địa chỉ mới).
- */
 export function LocationPicker({ value, onChange, errors }: LocationPickerProps) {
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [districts, setDistricts] = useState<District[]>([]);
@@ -40,7 +35,6 @@ export function LocationPicker({ value, onChange, errors }: LocationPickerProps)
   useEffect(() => {
     const provinceCode = value.province?.code ?? null;
 
-    // Đổi tỉnh -> quận/huyện + phường/xã đã chọn không còn hợp lệ, phải chọn lại.
     if (previousProvinceCode.current !== provinceCode) {
       previousProvinceCode.current = provinceCode;
       if (value.district || value.ward) {
@@ -62,7 +56,6 @@ export function LocationPicker({ value, onChange, errors }: LocationPickerProps)
   useEffect(() => {
     const districtCode = value.district?.code ?? null;
 
-    // Đổi quận/huyện -> phường/xã đã chọn không còn hợp lệ, phải chọn lại.
     if (previousDistrictCode.current !== districtCode) {
       previousDistrictCode.current = districtCode;
       if (value.ward) {

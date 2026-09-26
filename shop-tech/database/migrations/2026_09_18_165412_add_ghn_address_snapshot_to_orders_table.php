@@ -4,12 +4,6 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-/**
- * Snapshot địa chỉ giao hàng theo mã GHN tại thời điểm đặt hàng — trước đây Order
- * chỉ lưu `shipping_address` dạng string phẳng + `province_code` dùng tạm lúc
- * tính phí rồi bỏ, không đủ để tạo vận đơn GHN thật (cần district_id/ward_code
- * chính xác). Đổi profile địa chỉ của user sau khi đặt hàng KHÔNG ảnh hưởng đơn cũ.
- */
 return new class extends Migration
 {
     public function up(): void

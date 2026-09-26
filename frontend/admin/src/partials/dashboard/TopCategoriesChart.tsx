@@ -15,7 +15,6 @@ const PALETTE = [
   ["--color-rose-500", "--color-rose-600"],
 ];
 
-/** Top 5 danh mục theo doanh thu (+ "Khác") — thay DashboardCard06 gốc (Top Countries). */
 export default function TopCategoriesChart({ data }: Props) {
   const hasData = data.some((item) => item.revenue > 0);
 

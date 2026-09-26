@@ -10,14 +10,8 @@ use App\Support\JwtCookie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-/**
- * Xác thực bằng session (Sanctum SPA). Toàn bộ nghiệp vụ chỉ phụ thuộc
- * $request->user() + middleware 'role', nên sau này thay JWT chỉ cần sửa
- * controller này + guard, không đụng phần còn lại.
- */
 class AuthController extends Controller
 {
-    // [POST] /api/register — luôn tạo tài khoản customer.
     public function register(RegisterRequest $request)
     {
         $user = User::create([
@@ -28,7 +22,6 @@ class AuthController extends Controller
             'role' => 'customer',
         ]);
 
-        // Gửi email xác thực (đăng ký bằng email/password).
         $user->sendEmailVerificationNotification();
 
         $token = Auth::guard('api')->login($user);
@@ -44,7 +37,6 @@ class AuthController extends Controller
         ], 201)->withCookie(JwtCookie::make($token));
     }
 
-    // [POST] /api/login — đăng nhập bằng username HOẶC email.
     public function login(LoginRequest $request)
     {
         $login = $request->input('login');
@@ -75,7 +67,6 @@ class AuthController extends Controller
         ], 200)->withCookie(JwtCookie::make($token));
     }
 
-    // [GET] /api/me — thông tin user hiện tại.
     public function me(Request $request)
     {
         $user = Auth::guard('api')->user();
@@ -86,7 +77,6 @@ class AuthController extends Controller
         ], 200);
     }
 
-    // [POST] /api/logout
     public function logout(Request $request)
     {
         Auth::guard('api')->logout();

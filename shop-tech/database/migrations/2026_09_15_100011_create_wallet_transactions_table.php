@@ -14,7 +14,7 @@ return new class extends Migration
             $table->enum('type', ['hold', 'release', 'debit', 'credit', 'refund'])->index();
             $table->decimal('amount', 15, 2);
             $table->decimal('balance_after', 15, 2)->default(0);
-            $table->string('reference_type')->nullable(); // vd seller_order / withdrawal_request
+            $table->string('reference_type')->nullable();
             $table->unsignedBigInteger('reference_id')->nullable();
             $table->string('description')->nullable();
             $table->timestamps();

@@ -13,11 +13,6 @@ interface FormModalProps {
   children: React.ReactNode;
 }
 
-/**
- * Khung modal dùng chung cho các form thêm/sửa (sản phẩm, danh mục, ...):
- * tiêu đề + nút đóng, nội dung form tùy biến qua `children`, và hàng nút
- * submit/hủy bỏ ở cuối.
- */
 export default function FormModal({
   open,
   onClose,

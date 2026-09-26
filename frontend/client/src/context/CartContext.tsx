@@ -13,7 +13,6 @@ import { type CartSummary } from "../types/cart";
 interface CartContextValue {
   cart: CartSummary | null;
   loading: boolean;
-  /** Tải lại giỏ hàng từ server (gọi sau mọi thao tác thêm/sửa/xóa). */
   refresh: () => Promise<void>;
   addItem: (productId: number, sku: string | null, quantity: number) => Promise<void>;
   updateItem: (itemId: number, quantity: number) => Promise<void>;
@@ -43,7 +42,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [user]);
 
-  // Nạp giỏ hàng khi đăng nhập; xóa khỏi state khi đăng xuất (KHÔNG tạo cart cho guest).
   useEffect(() => {
     refresh();
   }, [refresh]);

@@ -8,38 +8,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
 
-/**
- * Chuyển trạng thái SellerOrder và xử lý ví/hoa hồng/vận chuyển/kho đi kèm.
- *
- * QUYẾT ĐỊNH 2026-09-19: seller TỰ giao hàng (không thuê GHN thật nữa) — GHN
- * sandbox chỉ còn dùng để ƯỚC TÍNH phí/ETA lúc đặt hàng (xem ShippingService::
- * quoteCart, KHÔNG đổi). handover() không gọi API tạo vận đơn nữa (sandbox
- * GHN giới hạn 3 đơn/nhiều lỗi dữ liệu test, chặn luồng seller); Shipment vẫn
- * được tạo (provider='self') để lưu phí/COD/trạng thái, chỉ là không có
- * tracking_number của hãng vận chuyển ngoài.
- * - shipping: seller bấm "Bàn giao vận chuyển" (handover()) — không side-effect
- *   gọi API ngoài nữa nhưng vẫn tách riêng khỏi updateStatus() vì tạo Shipment,
- *   trừ kho THẬT và giữ tiền vào ví (pending) — pending/confirmed hoàn toàn
- *   KHÔNG đụng tới kho/ví (xem OrderService::place, đã bỏ trừ kho/giữ ví lúc
- *   đặt hàng).
- * - delivered/completed từ 'shipping': seller (tự làm shipper) tự báo kết quả
- *   giao hàng qua markDeliveredByDriver()/markCancelledByDriver() — ĐÂY LÀ LUỒNG
- *   CHUẨN, không còn là chế độ test (tên method giữ nguyên để đỡ phải sửa
- *   route/FE, không còn gate theo APP_DRIVER_MODE). markDeliveredByDriver()
- *   CHỈ chuyển 'shipping' -> 'delivered' — KHÔNG phân biệt COD/online, ví
- *   luôn đứng ở "đang chờ" tới khi khách tự xác nhận (complete()) mới release
- *   sang "có thể rút" — xem doc-block của method.
- * - markDelivered()/markDeliveryFailed(): dự phòng cho GHN webhook nếu sau này
- *   quay lại dùng vận chuyển thật — hiện không có shipment nào mang
- *   tracking_number nên webhook sẽ không khớp được gì.
- * - completed: chốt commission_amount/seller_amount theo rate snapshot, chuyển
- *   ví pending -> withdrawable.
- * - cancelled: hoàn kho (products.stock/variant) + hoàn phần đã giữ trong ví
- *   (nếu chưa hoàn thành).
- */
 class SellerOrderService
 {
-    /** Các bước chuyển trạng thái hợp lệ. */
     private const TRANSITIONS = [
         'pending' => ['confirmed', 'cancelled'],
         'confirmed' => ['shipping', 'cancelled'],
@@ -54,12 +24,6 @@ class SellerOrderService
         private StockService $stockService,
     ) {}
 
-    /**
-     * Dùng cho các bước KHÔNG có side-effect đặc biệt: seller xác nhận
-     * (pending->confirmed) hoặc hủy (->cancelled). `shipping`/`delivered`/
-     * `completed` có action riêng (handover/markDelivered/complete) vì cần gọi
-     * API ngoài hoặc yêu cầu đúng actor (chỉ webhook GHN / chỉ customer).
-     */
     public function updateStatus(SellerOrder $sellerOrder, string $newStatus): SellerOrder
     {
         if (! in_array($newStatus, ['confirmed', 'cancelled'], true)) {
@@ -81,19 +45,6 @@ class SellerOrderService
         });
     }
 
-    /**
-     * Seller bấm "Bàn giao vận chuyển" — chỉ hợp lệ từ `confirmed`. KHÔNG gọi
-     * GHN nữa (seller tự giao) — chỉ ghi nhận Shipment nội bộ (phí/COD đã biết
-     * từ lúc đặt hàng) rồi chuyển seller_order sang `shipping`.
-     *
-     * QUYẾT ĐỊNH 2026-09-19: đây là nơi DUY NHẤT trừ kho thật (products.stock/
-     * variant) VÀ giữ tiền vào ví (pending) — không còn trừ kho/giữ ví lúc đặt
-     * hàng nữa (xem OrderService::place). Trước lúc bàn giao, seller_order còn
-     * 'pending'/'confirmed' thì "Kho hàng" và "Ví" đều KHÔNG được đụng tới,
-     * chỉ khi hàng thật sự rời kho (bàn giao) mới trừ kho + giữ tiền. Ném lỗi
-     * (không đủ hàng) sẽ rollback toàn bộ transaction, seller_order giữ
-     * nguyên 'confirmed'.
-     */
     public function handover(SellerOrder $sellerOrder): SellerOrder
     {
         $this->assertTransition($sellerOrder->status, 'shipping');
@@ -136,12 +87,6 @@ class SellerOrderService
         });
     }
 
-    /**
-     * Số tiền seller cần thu hộ (COD) khi tự giao — chỉ áp dụng payment_method=
-     * 'cod' (các phương thức online khách đã trả trước). Đơn multi-seller tách
-     * COD theo tỷ lệ subtotal của từng seller_order, trừ phần giảm giá phân bổ
-     * tương ứng, để tổng COD các gian hàng cộng lại đúng bằng order.total_amount.
-     */
     private function codAmountFor(SellerOrder $sellerOrder): int
     {
         $order = $sellerOrder->order;
@@ -157,10 +102,6 @@ class SellerOrderService
         return max(0, (int) round((float) $sellerOrder->subtotal + (float) $sellerOrder->shipping_fee - $discountShare));
     }
 
-    /**
-     * GHN webhook báo Status=delivered — CHỈ nguồn tin cậy để set trạng thái này
-     * (xem GhnWebhookController), không có route cho seller tự bấm.
-     */
     public function markDelivered(SellerOrder $sellerOrder): SellerOrder
     {
         $this->assertTransition($sellerOrder->status, 'delivered');
@@ -173,10 +114,6 @@ class SellerOrderService
         });
     }
 
-    /**
-     * Customer xác nhận đã nhận hàng — CHỈ hợp lệ từ `delivered` (không cho
-     * seller/webhook nhảy thẳng shipping->completed).
-     */
     public function complete(SellerOrder $sellerOrder): SellerOrder
     {
         $this->assertTransition($sellerOrder->status, 'completed');
@@ -196,7 +133,6 @@ class SellerOrderService
 
             $wallet = $sellerOrder->sellerProfile->wallet;
             if ($wallet) {
-                // Phần đã giữ (net) chuyển sang withdrawable.
                 $this->walletService->release($wallet, $sellerAmount, 'seller_order', $sellerOrder->id);
             }
 
@@ -206,14 +142,6 @@ class SellerOrderService
         });
     }
 
-    /**
-     * GHN webhook báo trạng thái THẤT BẠI VĨNH VIỄN (returned/lost/damage/
-     * scrap/exception/cancel — theo đúng "Mã trạng thái đơn hàng" GHN, các
-     * trạng thái đánh dấu "Cuối"). CHỈ áp dụng khi seller_order đang 'shipping'
-     * — hàng coi như không tới tay khách, hoàn kho + hoàn ví giống hủy đơn.
-     * KHÔNG xử lý các trạng thái tạm thời (delivery_fail, waiting_to_return,
-     * return, return_transporting...) — GHN có thể còn giao lại/đang xử lý.
-     */
     public function markDeliveryFailed(SellerOrder $sellerOrder, string $ghnStatus): SellerOrder
     {
         $this->assertTransition($sellerOrder->status, 'cancelled');
@@ -231,20 +159,6 @@ class SellerOrderService
         });
     }
 
-    /**
-     * Seller (tự đóng vai shipper) báo ĐÃ GIAO cho khách — LUỒNG CHUẨN, không
-     * còn giới hạn theo APP_DRIVER_MODE. Tên method giữ nguyên "ByDriver" để
-     * không phải sửa route/controller/FE.
-     *
-     * QUYẾT ĐỊNH 2026-09-19 (đồng bộ, không phân biệt COD/online nữa): "đã
-     * giao" chỉ chuyển sang `delivered`, KHÔNG tự chốt `completed`/release ví
-     * — tiền vẫn đứng ở ví "đang chờ" (sàn giữ hộ) cho tới khi CHÍNH KHÁCH tự
-     * xác nhận đã nhận hàng (complete(), qua OrderController::
-     * completeSellerOrder). Giữ đúng logic: chủ sàn cầm tiền, seller chỉ được
-     * tạo yêu cầu rút khi tiền đã thật sự về "có thể rút". Nếu đơn bị hủy khi
-     * còn 'shipping' (markCancelledByDriver/markDeliveryFailed), phần tiền
-     * đang giữ này bị hoàn lại (reverseHold) chứ không mất — xem cancel().
-     */
     public function markDeliveredByDriver(SellerOrder $sellerOrder): SellerOrder
     {
         $this->assertTransition($sellerOrder->status, 'delivered');
@@ -256,8 +170,6 @@ class SellerOrderService
                     'delivered_at' => now(),
                 ]);
             } else {
-                // Đơn shipping nhưng không có shipment = bất thường (không đi
-                // qua handover()?). Cảnh báo, vẫn cho qua.
                 Log::warning('markDeliveredByDriver: SO đang shipping nhưng không có shipment', [
                     'seller_order_id' => $sellerOrder->id,
                 ]);
@@ -270,11 +182,6 @@ class SellerOrderService
         });
     }
 
-    /**
-     * Seller (tự đóng vai shipper) báo giao THẤT BẠI / hủy — LUỒNG CHUẨN,
-     * không còn giới hạn theo APP_DRIVER_MODE. Cho phép từ 'shipping' (đã bàn
-     * giao) hoặc 'confirmed' (chưa bàn giao) — hoàn kho + reverseHold ví.
-     */
     public function markCancelledByDriver(SellerOrder $sellerOrder): SellerOrder
     {
         if (! in_array($sellerOrder->status, ['confirmed', 'shipping'], true)) {
@@ -302,9 +209,6 @@ class SellerOrderService
 
     private function cancel(SellerOrder $sellerOrder): void
     {
-        // Kho VÀ ví chỉ bị trừ/giữ lúc bàn giao (handover(), status 'shipping')
-        // — hủy từ 'pending'/'confirmed' (chưa bàn giao) thì chưa có gì để
-        // hoàn, hoàn nhầm sẽ CỘNG THÊM kho ảo/tiền ảo chưa từng bị trừ/giữ.
         if ($sellerOrder->status === 'shipping') {
             foreach ($sellerOrder->items as $item) {
                 $this->stockService->restore((int) $item->product_id, $item->sku, (int) $item->quantity);
@@ -322,7 +226,6 @@ class SellerOrderService
         $sellerOrder->update(['status' => 'cancelled']);
     }
 
-    /** Đồng bộ trạng thái Order cha khi các SellerOrder thay đổi. */
     private function syncParentOrderStatus(SellerOrder $sellerOrder): void
     {
         $order = $sellerOrder->order;

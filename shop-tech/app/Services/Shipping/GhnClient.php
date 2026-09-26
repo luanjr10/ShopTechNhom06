@@ -6,14 +6,6 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
 
-/**
- * HTTP client mỏng cho GHN (Giao Hàng Nhanh) — dùng chung cho LocationService
- * (tra cứu tỉnh/quận/phường) và GhnProvider (tính phí/tạo vận đơn), tránh lặp
- * lại header Token/ShopId + xử lý lỗi ở nhiều nơi.
- *
- * Xác thực theo tài liệu chính thức developer.ghn.vn: header `Token` (mọi API)
- * + `ShopId` (API cần biết shop nào) — KHÔNG phải Bearer/Basic Auth.
- */
 class GhnClient
 {
     private string $baseUrl;
@@ -28,9 +20,6 @@ class GhnClient
         $this->token = (string) config('services.ghn.token');
         $this->shopId = config('services.ghn.shop_id') ? (string) config('services.ghn.shop_id') : null;
 
-        // Chặn cứng gọi nhầm sang GHN Production khi app đang chạy môi trường
-        // dev/local — 1 lần nhầm đã tạo vận đơn THẬT ngoài đời. Đặt
-        // GHN_ALLOW_PRODUCTION=true trong .env production thật khi go-live.
         $isProductionHost = str_contains($this->baseUrl, 'online-gateway.ghn.vn')
             && ! str_contains($this->baseUrl, 'dev-online-gateway.ghn.vn');
         $allowProduction = filter_var(config('services.ghn.allow_production'), FILTER_VALIDATE_BOOLEAN);
@@ -44,28 +33,16 @@ class GhnClient
         }
     }
 
-    /**
-     * @param  array<string, mixed>  $query
-     * @return array<string, mixed>
-     */
     public function get(string $path, array $query = [], bool $requiresShopId = true): array
     {
         return $this->send('GET', $path, $query, $requiresShopId);
     }
 
-    /**
-     * @param  array<string, mixed>  $body
-     * @return array<string, mixed>
-     */
     public function post(string $path, array $body = [], bool $requiresShopId = true): array
     {
         return $this->send('POST', $path, $body, $requiresShopId);
     }
 
-    /**
-     * @param  array<string, mixed>  $params
-     * @return array<string, mixed>
-     */
     private function send(string $method, string $path, array $params, bool $requiresShopId): array
     {
         if (! $this->token) {

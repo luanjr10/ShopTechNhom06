@@ -7,7 +7,6 @@ interface ReturnRequestResponse {
   data: ReturnRequest;
 }
 
-/** Gửi yêu cầu hoàn trả/bảo hành cho 1 dòng sản phẩm — bắt buộc kèm ảnh minh chứng. */
 export const submitReturnRequest = async (
   orderItemId: number,
   payload: { type: ReturnRequestType; reason: string; images: File[] },

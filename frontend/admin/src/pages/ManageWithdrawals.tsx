@@ -67,8 +67,6 @@ export default function ManageWithdrawalsPage() {
 
   useEffect(load, [status]);
 
-  // Đọc kết quả sau khi trình duyệt quay về từ sandbox thanh toán (xem
-  // WithdrawalPaymentController::redirectToAdmin) — báo toast rồi dọn query string.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const payout = params.get("payout");
@@ -84,8 +82,6 @@ export default function ManageWithdrawalsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // COD duyệt trực tiếp (không cổng thanh toán). Kênh online (momo/vnpay/
-  // onepay/sepay) phải sang sandbox thật trước — xem WithdrawalPaymentController.
   const handleApprove = async (w: Withdrawal) => {
     if (w.method === "cod") {
       try {

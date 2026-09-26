@@ -10,7 +10,6 @@ export interface CategoryItem {
   description: string;
   icon: string;
   color: string;
-  /** "icon" (mặc định) hoặc "image" (ảnh thật upload Cloudinary). */
   display_type?: "icon" | "image";
   image?: string | null;
   status: number;

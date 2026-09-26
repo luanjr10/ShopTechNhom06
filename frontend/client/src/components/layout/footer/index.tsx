@@ -79,7 +79,6 @@ function FooterColumn({
 function Footer() {
   return (
     <footer className="mt-10 bg-[#141821] text-white">
-      {/* Cam kết */}
       <div className="border-b border-white/10">
         <div className="mx-auto grid w-full max-w-[1220px] grid-cols-2 gap-3 px-4 py-5 sm:gap-4 sm:py-6 md:grid-cols-4">
           {COMMITMENTS.map(({ icon: Icon, label }) => (
@@ -95,16 +94,9 @@ function Footer() {
         </div>
       </div>
 
-      {/* Nội dung chính */}
       <div className="mx-auto grid w-full max-w-[1220px] grid-cols-2 gap-x-6 gap-y-8 px-4 py-8 sm:grid-cols-3 sm:py-10 lg:grid-cols-5">
-        {/* Giới thiệu + liên hệ */}
         <div className="col-span-2 sm:col-span-3 lg:col-span-2">
           <Link to="/" className="inline-block">
-            {/* <img
-              src="https://res.cloudinary.com/dirnxnena/image/upload/v1790158329/Screenshot_2026-09-23_171157_jn666t.png"
-              alt="ShopTech"
-              className="h-8 w-auto brightness-0 invert"
-            /> */}
           </Link>
           <p className="mt-4 max-w-sm font-sans text-[13px] leading-relaxed text-gray-400">
             ShopTech — hệ thống bán lẻ công nghệ &amp; marketplace đa gian
@@ -139,7 +131,6 @@ function Footer() {
         <FooterColumn title="Hỗ trợ khách hàng" links={SUPPORT_LINKS} />
       </div>
 
-      {/* Thanh dưới cùng */}
       <div className="border-t border-white/10">
         <div className="mx-auto flex w-full max-w-[1220px] flex-col items-center justify-between gap-3 px-4 py-5 font-sans text-[12px] text-gray-500 sm:flex-row">
           <p className="text-center sm:text-left">© {new Date().getFullYear()} ShopTech. Đồ án minh họa — không phải doanh nghiệp thật.</p>

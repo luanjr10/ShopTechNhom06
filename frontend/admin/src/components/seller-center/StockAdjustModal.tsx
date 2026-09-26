@@ -13,8 +13,6 @@ interface Props {
   onSaved: () => void;
 }
 
-/** Modal nhập/xuất kho — thay cho window.prompt() cũ, dùng chung FormModal
- * (khung style giống các modal khác trong admin: tạo gian hàng, sản phẩm...). */
 export default function StockAdjustModal({ open, storeId, item, onClose, onSaved }: Props) {
   const [direction, setDirection] = useState<"in" | "out">("in");
   const [quantity, setQuantity] = useState("1");

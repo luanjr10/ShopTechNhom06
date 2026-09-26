@@ -7,7 +7,6 @@ interface Props {
   data: SellerWalletSummary;
 }
 
-/** Số dư ví hiện tại (tổng/đang giữ/có thể rút) — bản seller của PlatformFundsCard (admin). */
 export default function WalletSummaryCard({ data }: Props) {
   const rows = [
     { icon: WalletIcon, label: "Tổng số dư", value: data.balance, color: "bg-violet-500" },

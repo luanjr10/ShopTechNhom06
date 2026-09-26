@@ -6,14 +6,6 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 
-/**
- * KHÔNG dùng RefreshDatabase ở đây: nó chạy lại toàn bộ migrations trên sqlite
- * :memory:, và migration cũ 2026_09_12_160000_fix_product_images_string_field
- * đọc model Mongo (ProductImage::all()) ngay trong up() — CLI test này không có
- * ext-mongodb (xem tests/TestCase.php) nên migrate thật sẽ luôn throw. Test này
- * chỉ cần users/seller_profiles/stores nên tự tạo schema tối giản, tách biệt
- * khỏi bộ migrations thật.
- */
 beforeEach(function () {
     Schema::dropIfExists('stores');
     Schema::dropIfExists('seller_profiles');
@@ -109,8 +101,6 @@ function makeSellerWithStore(string $status = 'active'): array
     return [$user, $profile, $store];
 }
 
-// --- Unauthenticated cannot mutate catalog (the Postman scenario) ---
-
 test('unauthenticated cannot create a product', function () {
     $this->postJson('/api/products', ['name' => 'hack'])->assertStatus(401);
 });
@@ -131,8 +121,6 @@ test('a logged in customer cannot create a product', function () {
     $this->postJson('/api/products', ['name' => 'hack'])->assertStatus(403);
 });
 
-// --- Seller cannot reach admin routes ---
-
 test('seller cannot access admin seller-applications route', function () {
     actingAsRole('seller');
 
@@ -150,8 +138,6 @@ test('admin cannot use seller-only routes (not a seller profile)', function () {
 
     $this->getJson('/api/seller/stores')->assertStatus(403);
 });
-
-// --- Seller A cannot touch seller B's store ---
 
 test('a seller cannot view or update another sellers store', function () {
     [, , $storeA] = makeSellerWithStore();

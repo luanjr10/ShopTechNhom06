@@ -5,12 +5,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-/**
- * Chỉ test tầng validate của POST /api/orders (không dựng schema đầy đủ
- * seller_profiles/stores/wallet cho happy-path — đã verify qua browser thật,
- * xem memory "cart-checkout"/"shipping-cod"). Validate chạy TRƯỚC khi đụng DB
- * nghiệp vụ nên không cần bảng products/orders thật ở đây.
- */
 beforeEach(function () {
     Schema::dropIfExists('products');
     Schema::dropIfExists('users');
@@ -27,8 +21,6 @@ beforeEach(function () {
         $table->timestamps();
     });
 
-    // Chỉ cần tồn tại để pass rule exists:products,id — happy-path thật (trừ
-    // stock/tạo SellerOrder) đã verify qua browser, không lặp lại ở đây.
     Schema::create('products', function ($table) {
         $table->id();
         $table->string('name')->default('x');

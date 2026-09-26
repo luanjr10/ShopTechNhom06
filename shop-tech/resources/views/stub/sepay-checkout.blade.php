@@ -146,7 +146,6 @@
 
             <div class="qr-box">
                 <div class="qr-placeholder">
-{{-- Tạo ASCII art giả QR --}}
 ██████  ████  ██████      ████  ██████
 ██  ██  ██  ██  ██  ██  ██  ██  ██  ██
 ██  ██  ██████  ██  ██      ██████  ██

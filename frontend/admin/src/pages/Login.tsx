@@ -57,7 +57,6 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950">
-      {/* Panel thương hiệu — chỉ hiện từ md trở lên */}
       <div className="relative hidden w-1/2 flex-col justify-between overflow-hidden bg-gradient-to-br from-violet-700 via-violet-600 to-indigo-700 p-12 text-white md:flex">
         <div className="pointer-events-none absolute -top-24 -right-24 size-96 rounded-full bg-white/10 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-32 -left-16 size-96 rounded-full bg-indigo-400/20 blur-3xl" />
@@ -90,7 +89,6 @@ export default function LoginPage() {
         <p className="relative text-xs text-violet-200/70">© {new Date().getFullYear()} ShopTech</p>
       </div>
 
-      {/* Panel form */}
       <div className="flex w-full flex-1 items-center justify-center px-4 py-10 md:w-1/2">
         <div className="w-full max-w-sm">
           <div className="mb-8 flex flex-col items-center gap-2 text-center md:items-start md:text-left">

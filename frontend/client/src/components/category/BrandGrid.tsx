@@ -8,7 +8,6 @@ interface BrandGridProps {
   onSelect: (brandId: number | null) => void;
 }
 
-/** Lưới thương hiệu thật thuộc danh mục (logo lấy từ DB). */
 export function BrandGrid({
   title,
   brands,

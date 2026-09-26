@@ -4,9 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Cấu hình dạng key-value cho toàn hệ thống (VD: thời điểm kết thúc flash sale).
- */
 class SiteSetting extends Model
 {
     protected $fillable = ['key', 'value'];

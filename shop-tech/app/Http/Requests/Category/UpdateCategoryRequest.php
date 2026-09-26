@@ -56,11 +56,6 @@ class UpdateCategoryRequest extends ApiFormRequest
         ];
     }
 
-    /**
-     * Cây danh mục không giới hạn số cấp (danh mục con vẫn có thể có danh mục
-     * con riêng). Chỉ cần chặn VÒNG LẶP: không được chọn chính danh mục này,
-     * hoặc bất kỳ danh mục con/cháu nào của nó, làm danh mục cha của nó.
-     */
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator) {
@@ -71,8 +66,6 @@ class UpdateCategoryRequest extends ApiFormRequest
                 return;
             }
 
-            // Đi ngược từ danh mục cha vừa chọn lên tổ tiên — nếu gặp lại
-            // chính danh mục đang sửa thì đây là vòng lặp (không hợp lệ).
             $ancestor = Category::find((int) $parentId);
             $guard = 0;
 

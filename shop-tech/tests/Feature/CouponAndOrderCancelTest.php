@@ -33,9 +33,7 @@ afterEach(function () {
 
 test('a percent coupon is capped by max_discount', function () {
     $coupon = new Coupon(['type' => 'percent', 'value' => 10, 'max_discount' => 5000, 'min_order_amount' => 0]);
-    // resolveDiscount logic lives in CouponService::apply, but that needs a DB row —
-    // recompute the same formula here directly against the in-memory model instead.
-    $subtotal = 1000000; // 10% = 100k, nhưng max_discount chặn ở 5k
+    $subtotal = 1000000;
     $discount = min($subtotal * ((float) $coupon->value / 100), (float) $coupon->max_discount);
     expect($discount)->toBe(5000.0);
 });
@@ -50,7 +48,6 @@ test('CouponService rejects an unknown code', function () {
 test('CouponService rejects when subtotal is below min_order_amount', function () {
     $service = app(CouponService::class);
 
-    // GIAM50K seed sẵn: fixed 50k, min_order_amount 300k.
     expect(fn () => $service->apply('GIAM50K', 100000))
         ->toThrow(RuntimeException::class);
 });
@@ -58,7 +55,7 @@ test('CouponService rejects when subtotal is below min_order_amount', function (
 test('CouponService applies a fixed discount when eligible', function () {
     $service = app(CouponService::class);
 
-    $result = $service->apply('giam50k', 500000); // không phân biệt hoa/thường
+    $result = $service->apply('giam50k', 500000);
 
     expect($result['discount_amount'])->toBe(50000.0);
 });

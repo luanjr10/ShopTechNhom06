@@ -23,10 +23,6 @@ interface AddHighlightProductModalProps {
   onAdded: () => void;
 }
 
-/**
- * Picker tìm + tick chọn nhiều sản phẩm để thêm vào Flash sale / Hot trend,
- * cùng khung Modal (flowbite) như các form thêm/sửa khác trong admin.
- */
 export default function AddHighlightProductModal({
   open,
   highlight,

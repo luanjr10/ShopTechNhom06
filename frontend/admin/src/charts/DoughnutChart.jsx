@@ -60,16 +60,13 @@ function DoughnutChart({
           afterUpdate(c, args, options) {
             const ul = legend.current;
             if (!ul) return;
-            // Remove old legend items
             while (ul.firstChild) {
               ul.firstChild.remove();
             }
-            // Reuse the built-in legendItems generator
             const items = c.options.plugins.legend.labels.generateLabels(c);
             items.forEach((item) => {
               const li = document.createElement('li');
               li.style.margin = '4px';
-              // Button element
               const button = document.createElement('button');
               button.classList.add('btn-xs', 'bg-white', 'dark:bg-gray-700', 'text-gray-500', 'dark:text-gray-400', 'shadow-xs', 'shadow-black/[0.08]', 'rounded-full');
               button.style.opacity = item.hidden ? '.3' : '';
@@ -77,7 +74,6 @@ function DoughnutChart({
                 c.toggleDataVisibility(item.index);
                 c.update();
               };
-              // Color box
               const box = document.createElement('span');
               box.style.display = 'block';
               box.style.width = '8px';
@@ -86,7 +82,6 @@ function DoughnutChart({
               box.style.borderRadius = '4px';
               box.style.marginRight = '4px';
               box.style.pointerEvents = 'none';
-              // Label
               const label = document.createElement('span');
               label.style.display = 'flex';
               label.style.alignItems = 'center';

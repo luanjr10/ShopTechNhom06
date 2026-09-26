@@ -67,9 +67,7 @@ function Header() {
   return (
     <header className="sticky top-0 right-0 left-0 z-1000 flex flex-col items-center bg-linear-to-b from-primary500 to-primary300 text-white shadow-[0_4px_16px_rgba(215,0,24,0.25)]">
       <div className="w-full max-w-[1220px] px-3 sm:px-4">
-        {/* Thanh tiện ích trên cùng */}
         <div className="hidden flex-row items-center gap-6 border-b border-white/15 py-2 md:flex">
-          {/* Marquee chạy liền mạch */}
           <div className="relative flex-1 overflow-hidden">
             <div className="animate-scroll-left-infinite flex w-max gap-8 pr-8">
               {Array.from({ length: 2 }).map((_, copy) => (
@@ -88,7 +86,6 @@ function Header() {
             </div>
           </div>
 
-          {/* Link tiện ích */}
           <div className="hidden items-center gap-4 font-sans text-[13px] md:flex">
             <Link
               to="/gian-hang"
@@ -113,10 +110,6 @@ function Header() {
           </div>
         </div>
 
-        {/* Thanh chính: logo + danh mục + tìm kiếm + giỏ hàng.
-            < lg: 2 hàng (logo + giỏ/tài khoản | danh mục + khu vực + tìm kiếm)
-            nhờ flex-wrap + order; >= lg: 1 hàng như cũ. `relative` để dropdown
-            khu vực trên mobile bám theo bề ngang cả hàng thay vì theo nút. */}
         <div className="relative flex flex-wrap items-center gap-2 py-2 sm:gap-x-3 lg:flex-nowrap lg:py-3">
           <Link to="/" title="ShopTech" className="order-1 shrink-0">
             <img
@@ -126,7 +119,6 @@ function Header() {
             />
           </Link>
 
-          {/* Ngắt dòng < lg: ép danh mục/khu vực/tìm kiếm xuống hàng 2 */}
           <div className="order-3 h-0 basis-full lg:hidden" aria-hidden />
 
           <div className="order-4 shrink-0 lg:order-2">
@@ -163,7 +155,6 @@ function Header() {
             </InputGroup>
           </form>
 
-          {/* Giỏ hàng + tài khoản — mobile nằm bên phải logo ở hàng 1 */}
           <div className="order-2 ml-auto flex shrink-0 items-center gap-1 sm:gap-1.5 lg:order-3 lg:ml-0">
             <Button
               variant="ghost"

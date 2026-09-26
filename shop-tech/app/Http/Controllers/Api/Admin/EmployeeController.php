@@ -12,15 +12,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
-/**
- * Quản lý nhân viên (role=employee) + phân quyền theo module — CHỈ role=admin
- * thật mới vào được các route này (xem routes/api/admin.php, không bọc bởi
- * middleware `permission:` như các module khác — tránh nhân viên tự cấp
- * quyền leo thang cho chính mình).
- */
 class EmployeeController extends Controller
 {
-    // [GET] /api/admin/employees
     public function index(Request $request)
     {
         $query = User::where('role', 'employee');
@@ -42,7 +35,6 @@ class EmployeeController extends Controller
         ], 200);
     }
 
-    // [GET] /api/admin/employees/{employee}
     public function show(User $employee)
     {
         abort_unless($employee->role === 'employee', 404, 'Không tìm thấy nhân viên');
@@ -56,7 +48,6 @@ class EmployeeController extends Controller
         ], 200);
     }
 
-    // [POST] /api/admin/employees — mật khẩu mặc định "password", nhân viên tự đổi sau.
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -80,13 +71,10 @@ class EmployeeController extends Controller
         ], 201);
     }
 
-    // [PATCH] /api/admin/employees/{employee}
     public function update(Request $request, User $employee)
     {
         abort_unless($employee->role === 'employee', 404, 'Không tìm thấy nhân viên');
 
-        // Chỉ tra DNS khi email thay đổi — không chặn việc sửa các trường khác
-        // nếu email hiện tại của nhân viên trót không còn resolve được.
         $emailChanged = $request->input('email') !== $employee->email;
 
         $validated = $request->validate([
@@ -104,7 +92,6 @@ class EmployeeController extends Controller
         return response()->json(['success' => true, 'message' => 'Đã cập nhật nhân viên', 'data' => $employee], 200);
     }
 
-    // [DELETE] /api/admin/employees/{employee}
     public function destroy(Request $request, User $employee)
     {
         abort_unless($employee->role === 'employee', 404, 'Không tìm thấy nhân viên');
@@ -118,13 +105,11 @@ class EmployeeController extends Controller
         return response()->json(['success' => true, 'message' => 'Đã xoá nhân viên'], 200);
     }
 
-    // [GET] /api/admin/permission-modules — danh sách module + abilities chuẩn (render lưới checkbox).
     public function modules()
     {
         return response()->json(['success' => true, 'data' => AdminModules::list()], 200);
     }
 
-    // [PUT] /api/admin/employees/{employee}/permissions
     public function updatePermissions(Request $request, User $employee)
     {
         abort_unless($employee->role === 'employee', 404, 'Không tìm thấy nhân viên');
@@ -157,11 +142,6 @@ class EmployeeController extends Controller
         ], 200);
     }
 
-    /**
-     * Trộn danh sách module CHUẨN với quyền hiện có của nhân viên — module
-     * chưa có dòng nào trong DB vẫn hiện ra (mặc định false) để FE render đủ
-     * lưới checkbox ngay cả với nhân viên hoàn toàn mới.
-     */
     private function mergedPermissions(User $employee): array
     {
         $existing = $employee->permissions()->get()->keyBy('module');

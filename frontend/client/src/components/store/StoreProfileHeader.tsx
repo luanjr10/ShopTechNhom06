@@ -45,7 +45,6 @@ function Stat({
   );
 }
 
-/** Header hồ sơ gian hàng: cover, logo lớn, cấp độ, nút hành động, hàng chỉ số. */
 export function StoreProfileHeader({ store }: StoreProfileHeaderProps) {
   const { user } = useAuth();
   const [following, setFollowing] = useState(!!store.is_following);
@@ -68,11 +67,9 @@ export function StoreProfileHeader({ store }: StoreProfileHeaderProps) {
 
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-[0_2px_16px_rgba(0,0,0,0.06)]">
-      {/* Cover */}
       <div className="relative h-40 bg-linear-to-br from-gray-900 via-gray-800 to-primary500/60 sm:h-48">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(215,0,24,0.35),transparent_45%)]" />
 
-        {/* Nút hành động */}
         <div className="absolute right-3 top-3 flex flex-wrap items-center justify-end gap-2 sm:right-4 sm:top-4">
           <button
             type="button"
@@ -104,7 +101,6 @@ export function StoreProfileHeader({ store }: StoreProfileHeaderProps) {
           </button>
         </div>
 
-        {/* Tên + handle + badge */}
         <div className="absolute bottom-12 left-4 right-4 text-white sm:bottom-4 sm:pl-40">
           <div className="flex min-w-0 items-center gap-2">
             <h1 className="line-clamp-1 font-sans text-[21px] font-bold text-white drop-shadow sm:text-[26px]">
@@ -122,13 +118,11 @@ export function StoreProfileHeader({ store }: StoreProfileHeaderProps) {
         </div>
       </div>
 
-      {/* Logo lớn (overlap) */}
       <div className="relative">
         <div className="absolute -top-10 left-3 origin-top-left scale-[0.62] rounded-full bg-white p-1.5 shadow-lg sm:-top-16 sm:left-5 sm:scale-100">
           <StoreLogo name={store.name} logo={store.logo} size={112} />
         </div>
 
-        {/* Badge cấp độ + bảo hành (dưới, cạnh logo) */}
         <div className="flex flex-wrap items-center gap-2 pl-[96px] pr-3 pt-2 sm:pl-40 sm:pr-5 sm:pt-3">
           <span className="flex items-center gap-1 rounded-lg border border-amber-300 bg-amber-50 px-2.5 py-1 font-sans text-[12px] font-semibold text-amber-600">
             <ShoppingBag className="size-3.5" />
@@ -140,7 +134,6 @@ export function StoreProfileHeader({ store }: StoreProfileHeaderProps) {
           </span>
         </div>
 
-        {/* Hàng chỉ số */}
         <div className="mt-4 grid grid-cols-2 divide-gray-100 border-t border-gray-100 max-sm:[&>*:nth-child(odd)]:border-r max-sm:[&>*:nth-child(-n+2)]:border-b [&>*]:border-gray-100 sm:mt-3 sm:flex sm:flex-wrap sm:items-center sm:divide-x sm:pl-40">
           <Stat
             icon={Star}

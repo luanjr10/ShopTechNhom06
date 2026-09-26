@@ -8,17 +8,10 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\URL;
 
-/**
- * Mail xác thực email — link signed trỏ về API. Sau khi bấm, backend đánh dấu
- * verified rồi redirect về client React.
- */
 class VerifyEmailNotification extends Notification
 {
     use Queueable;
 
-    /**
-     * @return array<int, string>
-     */
     public function via(object $notifiable): array
     {
         return ['mail'];
@@ -36,9 +29,6 @@ class VerifyEmailNotification extends Notification
             ->line('Nếu bạn không tạo tài khoản, hãy bỏ qua email này.');
     }
 
-    /**
-     * Tạo signed URL tới route 'verification.verify'.
-     */
     protected function verificationUrl(object $notifiable): string
     {
         return URL::temporarySignedRoute(

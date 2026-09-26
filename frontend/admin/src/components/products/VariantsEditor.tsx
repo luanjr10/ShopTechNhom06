@@ -1,7 +1,6 @@
 import { Button, Label, TextInput } from "flowbite-react";
 import { Trash } from "lucide-react";
 
-/** Một dòng variant đang nhập trong form (attributes để phẳng cho dễ nhập). */
 export interface VariantRow {
   sku: string;
   color: string;
@@ -29,11 +28,6 @@ interface VariantsEditorProps {
   onRemove: (index: number) => void;
 }
 
-/**
- * Nhập các phiên bản (variant) người dùng có thể chọn: màu/dung lượng/RAM/CPU,
- * mỗi phiên bản có SKU, giá và tồn kho riêng. Để trống hoàn toàn thì backend sẽ
- * tự tạo 1 variant mặc định từ giá/tồn kho của sản phẩm.
- */
 export default function VariantsEditor({
   variants,
   onChange,

@@ -12,18 +12,11 @@ return new class extends Migration
         Schema::table('coupons', function (Blueprint $table) {
             $table->string('title')->nullable()->after('code');
             $table->string('description')->nullable()->after('title');
-            // null = áp dụng cho MỌI hạng khách hàng; nếu set, khách phải đạt
-            // TỐI THIỂU hạng này mới được nhận/dùng (xem CustomerTierService).
             $table->string('target_tier')->nullable()->after('type');
             $table->boolean('is_free_ship')->default(false)->after('target_tier');
-            // Số lần TỐI ĐA 1 khách được dùng mã này (null = không giới hạn riêng
-            // từng khách, chỉ còn bị chặn bởi usage_limit tổng toàn sàn).
             $table->unsignedInteger('per_user_limit')->nullable()->after('usage_limit');
         });
 
-        // `type` vốn là enum cứng ['percent','fixed'] — cần thêm 'free_ship'.
-        // Đổi bằng add-copy-drop-rename (portable mysql/sqlite, không cần
-        // doctrine/dbal mà Schema::table()->change() yêu cầu).
         Schema::table('coupons', function (Blueprint $table) {
             $table->string('type_v2')->default('percent')->after('type');
         });
@@ -35,7 +28,6 @@ return new class extends Migration
             $table->renameColumn('type_v2', 'type');
         });
 
-        // Voucher hạng thành viên demo — miễn phí ship 3 lần cho khách Bạc trở lên.
         DB::table('coupons')->insert([
             [
                 'code' => 'FREESHIP-BAC',

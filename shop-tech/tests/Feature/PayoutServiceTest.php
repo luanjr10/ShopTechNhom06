@@ -8,12 +8,6 @@ use App\Services\PayoutService;
 use App\Services\WalletService;
 use Illuminate\Support\Facades\Schema;
 
-/**
- * PayoutService: 'cod' duyệt trực tiếp (approveCod), 4 kênh online chỉ chốt
- * qua finalizeOnlinePayout() SAU KHI admin đã hoàn tất checkout trên sandbox
- * thật (xem WithdrawalPaymentController) — không còn tự sinh mã ngay lúc
- * bấm "Duyệt" như thiết kế cũ.
- */
 beforeEach(function () {
     foreach (['withdrawal_requests', 'wallet_transactions', 'seller_wallets', 'seller_profiles', 'users'] as $table) {
         Schema::dropIfExists($table);
@@ -96,8 +90,6 @@ function makeWithdrawal(string $method): array
         'bank_account' => '0123456789',
         'bank_name' => 'Test',
     ]);
-    // Mô phỏng đúng lúc tạo yêu cầu (Seller\WithdrawalController::store) — giữ
-    // chỗ khỏi withdrawable để không rút trùng.
     app(WalletService::class)->reserveForWithdrawal($wallet, 300000, 'withdrawal_request', $withdrawal->id);
 
     return [$withdrawal, $wallet];

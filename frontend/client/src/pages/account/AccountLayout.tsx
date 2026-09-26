@@ -47,7 +47,6 @@ function AccountLayout() {
   return (
     <div className="mx-auto w-full max-w-[1100px] px-3 py-4 sm:px-4 sm:py-6">
       <div className="flex flex-col gap-4 md:flex-row md:gap-6">
-        {/* Sidebar */}
         <aside className="w-full shrink-0 md:w-[260px]">
           <div className="rounded-2xl border border-gray-100 bg-white p-3 shadow-sm md:p-4">
             <div className="mb-3 flex items-center gap-3 border-b border-gray-100 pb-3 md:mb-4 md:pb-4">
@@ -82,7 +81,6 @@ function AccountLayout() {
               </div>
             </div>
 
-            {/* Mobile: menu tab cuộn ngang để nội dung tab hiện ngay, không bị đẩy xuống */}
             <nav className="-mx-1 flex gap-1 overflow-x-auto px-1 [scrollbar-width:none] md:mx-0 md:flex-col md:overflow-visible md:px-0 [&::-webkit-scrollbar]:hidden">
               {navItems.map(({ to, end, icon: Icon, label }) => (
                 <NavLink
@@ -105,7 +103,6 @@ function AccountLayout() {
           </div>
         </aside>
 
-        {/* Nội dung tab */}
         <section className="min-w-0 flex-1">
           <Outlet />
         </section>

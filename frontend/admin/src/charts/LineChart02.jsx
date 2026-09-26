@@ -7,7 +7,6 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-moment';
 
-// Import utilities
 import { formatValue } from '../utils/Utils';
 
 Chart.register(LineController, LineElement, Filler, PointElement, LinearScale, TimeScale, Tooltip);
@@ -78,7 +77,7 @@ function LineChart02({
           },
           tooltip: {
             callbacks: {
-              title: () => false, // Disable tooltip title
+              title: () => false,
               label: (context) => formatValue(context.parsed.y),
             },
             bodyColor: darkMode ? tooltipBodyColor.dark : tooltipBodyColor.light,
@@ -99,15 +98,12 @@ function LineChart02({
           afterUpdate(c, args, options) {
             const ul = legend.current;
             if (!ul) return;
-            // Remove old legend items
             while (ul.firstChild) {
               ul.firstChild.remove();
             }
-            // Reuse the built-in legendItems generator
             const items = c.options.plugins.legend.labels.generateLabels(c);
             items.slice(0, 2).forEach((item) => {
               const li = document.createElement('li');
-              // Button element
               const button = document.createElement('button');
               button.style.display = 'inline-flex';
               button.style.alignItems = 'center';
@@ -116,7 +112,6 @@ function LineChart02({
                 c.setDatasetVisibility(item.datasetIndex, !c.isDatasetVisible(item.datasetIndex));
                 c.update();
               };
-              // Color box
               const box = document.createElement('span');
               box.style.display = 'block';
               box.style.width = '12px';
@@ -126,7 +121,6 @@ function LineChart02({
               box.style.borderWidth = '3px';
               box.style.borderColor = c.data.datasets[item.datasetIndex].borderColor;
               box.style.pointerEvents = 'none';
-              // Label
               const label = document.createElement('span');
               label.classList.add('text-gray-500', 'dark:text-gray-400');
               label.style.fontSize = '14px';
@@ -181,7 +175,6 @@ function LineChart02({
           </div>
         </div>
       </div>
-      {/* Chart built with Chart.js 3 */}
       <div className="grow">
         <canvas ref={canvas} width={width} height={height}></canvas>
       </div>

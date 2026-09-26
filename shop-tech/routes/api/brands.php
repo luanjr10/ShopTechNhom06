@@ -8,7 +8,6 @@ Route::prefix('brands')->group(function () {
     Route::get('/all', [BrandController::class, 'getAll']);
     Route::get('/{id}', [BrandController::class, 'getBrandDetail']);
 
-    // Ghi — admin hoặc nhân viên có quyền module "brands" (xem CheckModulePermission).
     Route::middleware(['auth:api', 'role:admin,employee'])->group(function () {
         Route::post('/', [BrandController::class, 'createBrand'])->middleware('permission:brands,create');
         Route::patch('/{id}', [BrandController::class, 'updateBrand'])->middleware('permission:brands,edit');

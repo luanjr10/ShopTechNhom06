@@ -6,12 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\StoreFollow;
 use Illuminate\Http\Request;
 
-/**
- * Admin xem người theo dõi TOÀN SÀN (mọi gian hàng) — chỉ xem.
- */
 class StoreFollowController extends Controller
 {
-    // [GET] /api/admin/store-follows
     public function index(Request $request)
     {
         $query = StoreFollow::with(['user:id,name,email', 'store:id,name,slug'])->latest();

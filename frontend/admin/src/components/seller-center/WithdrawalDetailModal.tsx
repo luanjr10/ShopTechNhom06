@@ -65,7 +65,6 @@ export default function WithdrawalDetailModal({ open, withdrawal, wallet, onClos
             </button>
           </div>
 
-          {/* Số dư ví hiện tại — để seller biết còn rút hợp lệ được bao nhiêu */}
           <div className="grid grid-cols-1 gap-3 rounded-xl border border-gray-100 bg-gray-50 p-4 dark:border-gray-800 dark:bg-white/[0.03] sm:grid-cols-3">
             <div>
               <div className="text-xs text-gray-500 dark:text-gray-400">Tổng số dư</div>

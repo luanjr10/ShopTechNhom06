@@ -1,4 +1,3 @@
-// Banner tạm cho danh mục (có thể truyền props để đổi theo từng danh mục).
 const DEFAULT_BANNERS = [
   "https://cdn2.cellphones.com.vn/insecure/rs:fill:1036:450/q:100/plain/https://media-asset.cellphones.com.vn/dashboard-v1/manage-banner/advaSVasaa.png",
   "https://cdn2.cellphones.com.vn/insecure/rs:fill:1036:450/q:100/plain/https://media-asset.cellphones.com.vn/dashboard-v1/manage-banner/advaSVasaa.png",
@@ -8,7 +7,6 @@ interface CategoryBannerProps {
   banners?: string[];
 }
 
-/** Dải banner đầu trang danh mục. */
 export function CategoryBanner({ banners = DEFAULT_BANNERS }: CategoryBannerProps) {
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">

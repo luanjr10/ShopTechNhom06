@@ -4,15 +4,6 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-/**
- * Thêm quận/huyện (mã GHN) vào Address — GHN vẫn dùng hệ 3 cấp (tỉnh/quận-huyện/
- * phường) cho API Tính phí, khác hệ 2 cấp provinces.open-api.vn cũ.
- *
- * `province_code`/`ward_code` cũ (provinces.open-api.vn) GIỮ NGUYÊN, không xoá,
- * nhưng KHÔNG còn được ghi mới — không có bảng chuyển đổi 1-1 đáng tin cậy giữa
- * 2 hệ mã khác nhau (tự suy luận sẽ là đoán mò, rủi ro sai). Từ nay
- * `district_id`/`ward_code_ghn` mới là nguồn DUY NHẤT dùng để tính phí/tạo vận đơn.
- */
 return new class extends Migration
 {
     public function up(): void

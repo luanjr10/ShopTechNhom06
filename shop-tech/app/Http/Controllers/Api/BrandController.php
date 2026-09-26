@@ -17,7 +17,6 @@ class BrandController extends Controller
 {
     private const PER_PAGE = 6;
 
-    // [GET] /api/brands
     public function index(Request $request)
     {
         $search = trim((string) $request->input('search', ''));
@@ -51,7 +50,6 @@ class BrandController extends Controller
         ], 200);
     }
 
-    // [GET] /api/brands // No pagination
     public function getAll()
     {
         $brands = Brands::query()->get();
@@ -62,11 +60,9 @@ class BrandController extends Controller
         ], 200);
     }
 
-    // [GET] /api/brands/id
     public function getBrandDetail($id)
     {
         try {
-            // Lấy sản phẩm từ MySQL
             $brand = Brands::findOrFail($id);
 
             return response()->json([
@@ -92,11 +88,9 @@ class BrandController extends Controller
         }
     }
 
-    // [POST] /api/brands
     public function createBrand(StoreBrandRequest $request, CloudinaryService $cloudinaryService)
     {
         try {
-            // Upload toàn bộ ảnh lên Cloudinary
             $imageUrls = $cloudinaryService->uploadMultipleImages(
                 $request->file('images')
             );
@@ -121,7 +115,6 @@ class BrandController extends Controller
 
         } catch (Throwable $e) {
 
-            // Ghi lỗi vào storage/logs/laravel.log
             Log::error('Lỗi tạo thương hiệu', [
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
@@ -136,19 +129,16 @@ class BrandController extends Controller
 
     }
 
-    // [PATCH] /api/brands
     public function updateBrand(UpdateBrandRequest $request, $id, CloudinaryService $cloudinaryService)
     {
         try {
             $brand = Brands::findOrFail($id);
 
-            // Lấy ảnh hiện tại được giữ lại
             $keptImages = json_decode(
                 $request->input('existing_images', '[]'),
                 true
             ) ?: [];
 
-            // Nếu có ảnh mới thì upload
             $newImageUrls = [];
 
             if ($request->hasFile('images')) {
@@ -157,16 +147,9 @@ class BrandController extends Controller
                 );
             }
 
-            /*
-            * Brand chỉ có 1 logo:
-            *
-            * Có ảnh mới -> dùng ảnh mới
-            * Không có ảnh mới -> giữ ảnh cũ
-            */
             $logo = $newImageUrls[0]
                 ?? ($keptImages[0] ?? null);
 
-            // Không có ảnh
             if (! $logo) {
                 return response()->json([
                     'success' => false,
@@ -214,7 +197,6 @@ class BrandController extends Controller
         }
     }
 
-    // [DELETE] /api/brands/id
     public function deleteBrand($id)
     {
         try {

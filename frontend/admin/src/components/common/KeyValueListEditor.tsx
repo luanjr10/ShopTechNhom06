@@ -19,10 +19,6 @@ interface KeyValueListEditorProps {
   valuePlaceholder?: string;
 }
 
-/**
- * Danh sách cặp tên/giá trị có thể thêm/bớt tùy ý — dùng cho thông số kỹ
- * thuật sản phẩm và các danh sách thuộc tính tương tự trong tương lai.
- */
 export default function KeyValueListEditor({
   title,
   items,

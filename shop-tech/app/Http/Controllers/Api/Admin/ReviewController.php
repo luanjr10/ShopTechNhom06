@@ -6,14 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\ProductReview;
 use Illuminate\Http\Request;
 
-/**
- * Admin xem + kiểm duyệt (xoá) đánh giá sản phẩm TOÀN SÀN — sàn cần công cụ
- * gỡ đánh giá spam/vi phạm; seller KHÔNG có quyền này (tránh seller tự xoá
- * đánh giá xấu về mình, xem Seller\ReviewController — chỉ xem).
- */
 class ReviewController extends Controller
 {
-    // [GET] /api/admin/reviews
     public function index(Request $request)
     {
         $query = ProductReview::with(['product:id,name,store_id', 'product.store:id,name', 'user:id,name,email'])
@@ -33,7 +27,6 @@ class ReviewController extends Controller
         ], 200);
     }
 
-    // [DELETE] /api/admin/reviews/{review}
     public function destroy(ProductReview $review)
     {
         $review->delete();

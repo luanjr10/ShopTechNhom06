@@ -18,7 +18,6 @@ function formatDate(value?: string): string {
   return new Date(value).toLocaleDateString("vi-VN");
 }
 
-/** Cột phải: bảng thông tin người bán (từ dữ liệu thật). */
 export function StoreSellerInfo({ store }: StoreSellerInfoProps) {
   const s = store.stats;
 

@@ -7,7 +7,6 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-moment';
 
-// Import utilities
 import { formatThousands } from '../utils/Utils';
 
 Chart.register(BarController, BarElement, LinearScale, TimeScale, Tooltip, Legend);
@@ -85,7 +84,7 @@ function BarChart03({
           },
           tooltip: {
             callbacks: {
-              title: () => false, // Disable tooltip title
+              title: () => false,
               label: (context) => formatThousands(context.parsed.y),
             },
             bodyColor: darkMode ? tooltipBodyColor.dark : tooltipBodyColor.light,
@@ -108,15 +107,12 @@ function BarChart03({
         afterUpdate(c, args, options) {
           const ul = legend.current
           if (!ul) return
-          // Remove old legend items
           while (ul.firstChild) {
             ul.firstChild.remove()
           }
-          // Reuse the built-in legendItems generator
           const items = c.options.plugins.legend.labels.generateLabels(c)
           items.forEach((item) => {
             const li = document.createElement('li')
-            // Button element
             const button = document.createElement('button')
             button.style.display = 'inline-flex';
             button.style.alignItems = 'center';
@@ -125,7 +121,6 @@ function BarChart03({
               c.setDatasetVisibility(item.datasetIndex, !c.isDatasetVisible(item.datasetIndex))
               c.update()
             };
-            // Color box
             const box = document.createElement('span')
             box.style.display = 'block';
             box.style.width = '12px';
@@ -135,7 +130,6 @@ function BarChart03({
             box.style.borderWidth = '3px';
             box.style.borderColor = item.fillStyle;
             box.style.pointerEvents = 'none';
-            // Label
             const label = document.createElement('span')
             label.classList.add('text-gray-500', 'dark:text-gray-400');
             label.style.fontSize = '14px';

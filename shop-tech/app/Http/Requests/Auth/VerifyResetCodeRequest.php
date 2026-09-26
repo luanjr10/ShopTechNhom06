@@ -6,9 +6,6 @@ use App\Http\Requests\ApiFormRequest;
 
 class VerifyResetCodeRequest extends ApiFormRequest
 {
-    /**
-     * @return array<string, string>
-     */
     public function rules(): array
     {
         return [
@@ -17,9 +14,6 @@ class VerifyResetCodeRequest extends ApiFormRequest
         ];
     }
 
-    /**
-     * @return array<string, string>
-     */
     public function messages(): array
     {
         return [

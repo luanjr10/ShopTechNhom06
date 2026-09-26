@@ -147,8 +147,6 @@
   background: #d4d4d4;
 }
 
-/* Style còn sót từ template Vite — để trong @layer base để class Tailwind
-   (text-[..], m-.., text-white…) trên h1/h2 được ưu tiên như ý đồ. */
 @layer base {
   body {
     margin: 0;
@@ -286,7 +284,6 @@
   }
 }
 
-/* iOS Safari tự zoom khi focus ô nhập có font < 16px — giữ 16px trên màn nhỏ */
 @media (max-width: 640px) {
   input:not([type="checkbox"]):not([type="radio"]),
   select,

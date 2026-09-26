@@ -6,12 +6,6 @@ export interface ShippingFeeItem {
   quantity: number;
 }
 
-/**
- * Tính phí vận chuyển THẬT qua GHN cho giỏ hàng — luôn hỏi backend (BE gọi GHN
- * thật, tự lấy weight/dimension từ Product). KHÔNG có fallback 0đ: lỗi (thiếu
- * khối lượng, gian hàng chưa có địa chỉ lấy hàng, GHN lỗi...) sẽ throw, nơi gọi
- * PHẢI chặn thanh toán khi gặp lỗi này, không tự coi là miễn phí ship.
- */
 export const calculateShippingFee = async (
   districtId: number,
   wardCode: string,

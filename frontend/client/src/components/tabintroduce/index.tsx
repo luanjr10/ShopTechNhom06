@@ -13,7 +13,6 @@ function TabIntroduce() {
 
   return (
     <div className="flex h-full w-52 shrink-0 flex-col gap-3">
-      {/* Thẻ chào mừng — đổi theo trạng thái đăng nhập thật */}
       <div className="shrink-0 rounded-2xl border border-gray-100 bg-white p-3 shadow-[0_4px_20px_-8px_rgba(0,0,0,0.35)]">
         {user ? (
           <Link to="/tai-khoan" className="flex flex-row items-center gap-2">
@@ -74,7 +73,6 @@ function TabIntroduce() {
         </a>
       </div>
 
-      {/* Thẻ ưu đãi giáo dục */}
       <div className="flex min-h-0 flex-1 flex-col gap-2 rounded-2xl border border-gray-100 bg-white p-3 shadow-[0_4px_20px_-8px_rgba(0,0,0,0.35)]">
         <div className="rounded-lg bg-primary200 py-1 text-center font-sans text-[13px] font-semibold">
           Ưu Đãi Cho Giáo Dục

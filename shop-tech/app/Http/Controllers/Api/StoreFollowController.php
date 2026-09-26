@@ -12,7 +12,6 @@ class StoreFollowController extends Controller
 {
     public function __construct(private RatingService $ratingService) {}
 
-    // [POST] /api/stores/{slug}/follow — bấm lại để bỏ theo dõi (toggle).
     public function toggle(Request $request, string $slug)
     {
         $store = Store::where('slug', $slug)->where('status', 'active')->firstOrFail();

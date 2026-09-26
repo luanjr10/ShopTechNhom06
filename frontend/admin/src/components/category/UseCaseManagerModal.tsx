@@ -33,7 +33,6 @@ interface UseCaseManagerModalProps {
 
 type View = "list" | "create" | "edit";
 
-/** Một dòng Quick Link đang nhập ở chế độ thêm nhiều cùng lúc. */
 interface DraftRow {
   name: string;
   sortOrder: string;
@@ -48,12 +47,6 @@ const emptyRow = (): DraftRow => ({
   image: null,
 });
 
-/**
- * Quản lý Quick Link NẰM TRONG danh mục: mở từ 1 danh mục cụ thể nên mọi thao
- * tác thêm/sửa/xóa đều gắn với `categoryId` đó (backend tự gán, không nhập tay).
- * - Chế độ "create": nhập NHIỀU Quick Link cùng lúc rồi lưu một lần.
- * - Chế độ "edit": sửa từng Quick Link.
- */
 export default function UseCaseManagerModal({
   open,
   categoryId,
@@ -66,11 +59,9 @@ export default function UseCaseManagerModal({
 
   const [view, setView] = useState<View>("list");
 
-  // Chế độ thêm nhiều dòng.
   const [rows, setRows] = useState<DraftRow[]>([emptyRow()]);
   const [rowErrors, setRowErrors] = useState<Record<number, string>>({});
 
-  // Chế độ sửa 1 Quick Link.
   const [editing, setEditing] = useState<UseCaseItem | null>(null);
   const [editName, setEditName] = useState("");
   const [editSortOrder, setEditSortOrder] = useState("0");
@@ -94,7 +85,6 @@ export default function UseCaseManagerModal({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, categoryId]);
 
-  // ----- Thêm nhiều -----
   const openCreateForm = () => {
     setRows([emptyRow()]);
     setRowErrors({});
@@ -117,7 +107,6 @@ export default function UseCaseManagerModal({
     e.preventDefault();
     if (!categoryId) return;
 
-    // Bỏ qua dòng để trống hoàn toàn (không tên, không ảnh).
     const filled = rows
       .map((row, index) => ({ row, index }))
       .filter(({ row }) => row.name.trim() !== "" || row.image !== null);
@@ -127,7 +116,6 @@ export default function UseCaseManagerModal({
       return;
     }
 
-    // Kiểm tra phía client: mỗi dòng phải có tên và ảnh.
     const clientErrors: Record<number, string> = {};
     filled.forEach(({ row, index }) => {
       if (row.name.trim() === "") {
@@ -145,7 +133,6 @@ export default function UseCaseManagerModal({
     setRowErrors({});
 
     let created = 0;
-    // Gửi tuần tự để slug tự sinh không bị trùng khi nhiều dòng cùng tên.
     for (const { row, index } of filled) {
       const formData = new FormData();
       formData.set("name", row.name.trim());
@@ -185,7 +172,6 @@ export default function UseCaseManagerModal({
     loadItems();
   };
 
-  // ----- Sửa 1 -----
   const openEditForm = (item: UseCaseItem) => {
     setEditing(item);
     setEditName(item.name);
@@ -227,7 +213,6 @@ export default function UseCaseManagerModal({
     }
   };
 
-  // ----- Xóa -----
   const handleDelete = (item: UseCaseItem) => {
     if (!categoryId) return;
     confirmDelete(() => deleteUseCase(categoryId, item.id), {

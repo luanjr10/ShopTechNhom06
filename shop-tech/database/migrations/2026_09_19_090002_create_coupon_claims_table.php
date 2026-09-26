@@ -4,11 +4,6 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-/**
- * "Ví voucher" của khách — khách bấm Nhận 1 voucher hạng thành viên trước khi
- * dùng được (xem CouponService::apply). Không lưu số lần dùng ở đây, xem
- * coupon_redemptions cho việc đó.
- */
 return new class extends Migration
 {
     public function up(): void

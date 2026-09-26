@@ -5,9 +5,6 @@ interface ImageGalleryProps {
   alt: string;
 }
 
-/**
- * Ảnh lớn + dải ảnh thu nhỏ để chọn ảnh xem, dùng cho các modal xem chi tiết.
- */
 export default function ImageGallery({ images, alt }: ImageGalleryProps) {
   const [activeImage, setActiveImage] = useState(0);
 

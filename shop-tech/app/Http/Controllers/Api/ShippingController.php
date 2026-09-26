@@ -11,11 +11,6 @@ class ShippingController extends Controller
 {
     public function __construct(private ShippingService $shippingService) {}
 
-    /**
-     * [POST] /api/shipping/fee — tính phí vận chuyển THẬT qua GHN cho giỏ hàng.
-     * KHÔNG có fallback 0đ: lỗi (thiếu weight/dimension, store chưa có địa chỉ,
-     * GHN lỗi...) trả 422 kèm message rõ ràng, FE PHẢI chặn thanh toán khi gặp lỗi này.
-     */
     public function fee(Request $request)
     {
         $validated = $request->validate([

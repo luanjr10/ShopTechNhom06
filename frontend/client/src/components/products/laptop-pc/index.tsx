@@ -3,7 +3,6 @@ import { ProductSection } from "../ProductSection/ProductSection";
 function ProductsLaptopPc() {
   return (
     <div className="space-y-10">
-      {/* Khối Laptop & Màn hình — tái sử dụng ProductSection, Quick Link lấy từ API */}
       <ProductSection
         categories={[
           { code: "CATE-01", label: "LAPTOP" },

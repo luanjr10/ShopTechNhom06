@@ -14,8 +14,6 @@ import RecentActivityCard from "../../partials/dashboard/RecentActivityCard";
 import WalletSummaryCard from "../../partials/dashboard/WalletSummaryCard";
 import { formatMoneyVietNam } from "../../helpers/formatMoney";
 
-/** Dashboard seller — cùng bộ card/biểu đồ với Dashboard admin, luôn scope
- * theo activeStore (đổi gian hàng ở Header sẽ tự tải lại toàn bộ số liệu). */
 export default function SellerDashboard() {
   const { activeStore } = useAuth();
   const [data, setData] = useState<SellerDashboardSummary | null>(null);

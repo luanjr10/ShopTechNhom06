@@ -105,7 +105,6 @@ export default function CheckoutPage() {
   const [addressMode, setAddressMode] = useState<"saved" | "new">("new");
   const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
 
-  // Địa chỉ mới (chỉ dùng khi addressMode === "new")
   const [receiverName, setReceiverName] = useState(user?.name ?? "");
   const [receiverPhone, setReceiverPhone] = useState("");
   const [location, setLocation] = useState<LocationPickerValue>(emptyLocation);
@@ -124,7 +123,6 @@ export default function CheckoutPage() {
   const [applyingCoupon, setApplyingCoupon] = useState(false);
   const [myVouchers, setMyVouchers] = useState<MyVoucher[]>([]);
 
-  // Voucher hạng thành viên đã nhận + đủ điều kiện — chọn nhanh thay vì gõ mã tay.
   useEffect(() => {
     getMyVouchers()
       .then(setMyVouchers)
@@ -154,8 +152,6 @@ export default function CheckoutPage() {
     [addresses, selectedAddressId],
   );
 
-  // Địa chỉ nhận hàng hiện tại (mã GHN) — dùng chung để tính phí VÀ để đặt hàng,
-  // tránh lệch giữa số đã hiển thị và số backend tính lại lúc submit.
   const toLocation =
     addressMode === "saved" && selectedAddress
       ? {
@@ -182,9 +178,6 @@ export default function CheckoutPage() {
     [items],
   );
 
-  // Tính phí ship THẬT qua GHN ngay khi có đủ địa chỉ — KHÔNG có ngưỡng free-ship
-  // nào, luôn hỏi backend. Lỗi (thiếu weight/dimension, GHN lỗi...) phải chặn
-  // thanh toán, KHÔNG tự coi là 0đ.
   useEffect(() => {
     if (!toLocation || cartItemsForFee.length === 0) {
       setShippingQuote(null);
@@ -210,7 +203,6 @@ export default function CheckoutPage() {
   const discountAmount = appliedCoupon?.discount_amount ?? 0;
   const grandTotal = Math.max(0, subtotal + shippingFee - discountAmount);
 
-  // Đổi giỏ hàng thì mã đã áp không còn chắc còn hợp lệ (số tiền đã thay đổi) — bắt áp lại.
   useEffect(() => {
     setAppliedCoupon(null);
   }, [subtotal]);
@@ -251,8 +243,6 @@ export default function CheckoutPage() {
             location.addressLine.trim(),
         );
 
-  // Chặn thanh toán nếu chưa có phí ship hợp lệ từ GHN — không cho đặt hàng
-  // với số 0đ giả do lỗi API.
   const canSubmit = isAddressValid && Boolean(shippingQuote) && !loadingShipping;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -305,8 +295,6 @@ export default function CheckoutPage() {
       await clear();
 
       if (paymentMethod === "momo" || paymentMethod === "vnpay") {
-        // Order đã tạo (stock đã trừ) — chuyển sang cổng thanh toán, kết quả xử lý ở
-        // /thanh-toan/ket-qua (BE redirect về đó sau khi verify signature return).
         const payUrl =
           paymentMethod === "momo"
             ? await createMomoPayment(order.id)
@@ -316,7 +304,6 @@ export default function CheckoutPage() {
       }
 
       if (paymentMethod === "onepay" || paymentMethod === "sepay") {
-        // OnePay/SePay: tạo URL/QR rồi redirect — return về /thanh-toan/ket-qua.
         const payUrl =
           paymentMethod === "onepay"
             ? await createOnepayPayment(order.id)
@@ -356,7 +343,6 @@ export default function CheckoutPage() {
 
       <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_380px]">
         <div className="flex flex-col gap-6">
-          {/* Thông tin giao hàng */}
           <section className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
             <h2 className="mb-4 flex items-center gap-2 font-sans text-[15px] font-bold text-gray-800">
               <MapPin className="size-4 text-primary500" /> Thông tin giao hàng
@@ -487,7 +473,6 @@ export default function CheckoutPage() {
             )}
           </section>
 
-          {/* Phương thức thanh toán */}
           <section className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
             <h2 className="mb-4 flex items-center gap-2 font-sans text-[15px] font-bold text-gray-800">
               <ShieldCheck className="size-4 text-primary500" /> Phương thức thanh toán
@@ -537,7 +522,6 @@ export default function CheckoutPage() {
           </section>
         </div>
 
-        {/* Tóm tắt đơn hàng */}
         <aside className="flex h-fit flex-col gap-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
           <h2 className="font-sans text-[15px] font-bold text-gray-800">
             Đơn hàng ({items.length} sản phẩm)
@@ -569,7 +553,6 @@ export default function CheckoutPage() {
             ))}
           </div>
 
-          {/* Mã giảm giá */}
           <div className="border-t border-gray-100 pt-3">
             {appliedCoupon ? (
               <div className="flex items-center justify-between gap-2 rounded-xl bg-emerald-50 px-3 py-2.5">

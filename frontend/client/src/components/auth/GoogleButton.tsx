@@ -1,12 +1,5 @@
 import { API_ORIGIN } from "../../libs/api";
 
-/**
- * Nút "Tiếp tục với Google".
- *
- * Điều hướng full-page (window.location) sang backend OAuth — KHÔNG dùng fetch,
- * vì luồng cần redirect qua Google rồi quay lại. Backend sẽ set JWT vào HttpOnly
- * cookie và redirect về client; React tự gọi /api/me để biết đã đăng nhập.
- */
 function GoogleButton({
   label = "Tiếp tục với Google",
   className = "",
@@ -30,7 +23,6 @@ function GoogleButton({
   );
 }
 
-/** Logo Google chính thức (4 màu). */
 function GoogleIcon({ className = "" }: { className?: string }) {
   return (
     <svg

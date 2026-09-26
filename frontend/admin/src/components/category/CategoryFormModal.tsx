@@ -26,15 +26,6 @@ interface CategoryFormModalProps {
   onSaved: () => void;
 }
 
-/**
- * Modal thêm mới / chỉnh sửa danh mục — tự lấy dữ liệu (chế độ sửa), tự
- * submit lên API và hiển thị lỗi validate ngay dưới từng ô. `CategoryList`
- * chỉ cần mở modal này với `categoryId` tương ứng.
- *
- * Hỗ trợ cây danh mục KHÔNG giới hạn số cấp (chọn bất kỳ danh mục nào làm
- * cha qua `parent_id`, danh mục con vẫn có thể có danh mục con riêng) +
- * hiển thị bằng icon (mặc định) hoặc ảnh thật upload Cloudinary (`display_type`).
- */
 export default function CategoryFormModal({
   open,
   mode,
@@ -51,7 +42,6 @@ export default function CategoryFormModal({
   const [errors, setErrors] = useState<ValidationErrors>({});
   const codeInputRef = useRef<HTMLInputElement>(null);
 
-  // TOÀN BỘ danh mục (mọi cấp, phẳng) — dựng cây lựa chọn "Danh mục cha" bên dưới.
   const [allCategories, setAllCategories] = useState<CategoryItem[]>([]);
   const [parentId, setParentId] = useState<string>("");
   const [displayType, setDisplayType] = useState<"icon" | "image">("icon");
@@ -107,9 +97,6 @@ export default function CategoryFormModal({
     }
   }, [open, mode, categoryId]);
 
-  // Dựng danh sách lựa chọn "Danh mục cha" dạng cây có thụt lề — cây không
-  // giới hạn số cấp, nhưng loại chính danh mục đang sửa VÀ toàn bộ con/cháu
-  // của nó (chọn 1 trong số đó làm cha sẽ tạo vòng lặp).
   const excludedIds = new Set<number>();
   if (categoryId) {
     excludedIds.add(categoryId);

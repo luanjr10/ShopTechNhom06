@@ -5,11 +5,6 @@ use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
-    /**
-     * Sửa lại các document `product_images` bị lưu sai kiểu dữ liệu
-     * (mảng ảnh bị json_encode thành chuỗi thay vì mảng thật) do model
-     * từng dùng cast 'array' không cần thiết với MongoDB.
-     */
     public function up(): void
     {
         ProductImage::all()->each(function (ProductImage $productImage) {
@@ -28,11 +23,7 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        // Không cần rollback dữ liệu.
     }
 };

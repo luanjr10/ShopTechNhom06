@@ -7,11 +7,9 @@ import { type Product } from "../../types/product";
 interface SimilarProductsProps {
   categoryId: number;
   excludeId: number;
-  /** Số sản phẩm tối đa (mặc định 5). */
   limit?: number;
 }
 
-/** "Có thể bạn cũng thích" — sản phẩm cùng danh mục, ngẫu nhiên, tối đa `limit`. */
 export function SimilarProducts({
   categoryId,
   excludeId,

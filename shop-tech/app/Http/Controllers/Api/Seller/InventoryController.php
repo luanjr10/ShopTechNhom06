@@ -9,15 +9,10 @@ use App\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-/**
- * Kho hàng: xem tồn kho + điều chỉnh số lượng (kèm log lịch sử) cho sản phẩm
- * trong một gian hàng cụ thể. store_id luôn ép theo route {store} (đã qua store.owner).
- */
 class InventoryController extends Controller
 {
     private const LOW_STOCK_THRESHOLD = 10;
 
-    // [GET] /api/seller/stores/{store}/inventory
     public function index(Request $request, Store $store)
     {
         $query = Product::where('store_id', $store->id);
@@ -47,7 +42,6 @@ class InventoryController extends Controller
         ], 200);
     }
 
-    // [POST] /api/seller/stores/{store}/products/{product}/stock-adjustments
     public function adjust(Request $request, Store $store, Product $product)
     {
         if ($product->store_id !== $store->id) {
@@ -55,7 +49,6 @@ class InventoryController extends Controller
         }
 
         $validated = $request->validate([
-            // change: số dương (nhập thêm) hoặc âm (xuất/hao hụt).
             'change' => 'required|integer|not_in:0',
             'reason' => 'nullable|string|max:255',
         ]);
@@ -87,7 +80,6 @@ class InventoryController extends Controller
         ], 200);
     }
 
-    // [GET] /api/seller/stores/{store}/products/{product}/stock-adjustments
     public function history(Store $store, Product $product)
     {
         if ($product->store_id !== $store->id) {

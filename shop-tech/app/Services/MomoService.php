@@ -7,18 +7,8 @@ use App\Models\WithdrawalRequest;
 use Illuminate\Support\Facades\Http;
 use RuntimeException;
 
-/**
- * Cổng thanh toán MoMo (sandbox test-payment.momo.vn, API v2 payWithMethod).
- * Chữ ký (signature) dùng CHUNG 1 công thức cho cả tạo giao dịch, return và IPN
- * theo đúng tài liệu MoMo — KHÔNG tự chế công thức khác nhau cho từng bước.
- */
 class MomoService
 {
-    /**
-     * Tạo yêu cầu thanh toán, lưu payment_ref vào order và trả về payUrl để FE
-     * redirect. orderId gửi cho MoMo PHẢI duy nhất mỗi lần gọi (khác order.id
-     * nội bộ vì có thể tạo lại yêu cầu cho cùng 1 order khi thử lại thanh toán).
-     */
     public function createPaymentUrl(Order $order): string
     {
         $partnerCode = config('services.momo.partner_code');
@@ -74,12 +64,6 @@ class MomoService
         return $result['payUrl'];
     }
 
-    /**
-     * Cùng luồng như createPaymentUrl() nhưng cho ADMIN duyệt rút tiền (không
-     * có Order) — admin bấm "Duyệt" -> sang thẳng trang MoMo sandbox thật,
-     * nhập ví/OTP test giống hệt khách hàng checkout, xem WithdrawalPaymentController.
-     * Lưu tham chiếu vào `withdrawal.payout_reference` thay vì order.payment_ref.
-     */
     public function createWithdrawalPaymentUrl(WithdrawalRequest $withdrawal): string
     {
         $partnerCode = config('services.momo.partner_code');
@@ -92,7 +76,7 @@ class MomoService
         $orderInfo = "Giai ngan rut tien ShopTech #{$withdrawal->id}";
         $extraData = '';
         $redirectUrl = route('payments.momo.withdrawal-return');
-        $ipnUrl = route('payments.momo.withdrawal-return'); // Không có IPN riêng cho luồng admin — xác nhận ngay ở return (xem doc-block controller).
+        $ipnUrl = route('payments.momo.withdrawal-return');
 
         $rawHash = "accessKey={$accessKey}"
             ."&amount={$amount}"
@@ -135,11 +119,6 @@ class MomoService
         return $result['payUrl'];
     }
 
-    /**
-     * Đúng công thức MoMo dùng cho CẢ return (redirect trình duyệt) VÀ IPN
-     * (server-to-server) — accessKey/amount/extraData/message/orderId/orderInfo/
-     * orderType/partnerCode/payType/requestId/responseTime/resultCode/transId.
-     */
     public function verifySignature(array $data): bool
     {
         $accessKey = config('services.momo.access_key');

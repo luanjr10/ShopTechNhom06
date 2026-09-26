@@ -5,7 +5,6 @@ interface Props {
   data: TopCustomerItem[];
 }
 
-/** Top 5 khách hàng theo tổng chi tiêu — thay DashboardCard10 gốc (Customers). */
 export default function TopCustomersTable({ data }: Props) {
   return (
     <div className="col-span-full xl:col-span-6 bg-white dark:bg-gray-800 shadow-xs rounded-xl">

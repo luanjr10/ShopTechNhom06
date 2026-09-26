@@ -18,17 +18,10 @@ import {
 } from "../../../types/product";
 
 interface ProductSectionProps {
-  /** Bốn danh mục chính hiển thị dạng tab, tra cứu theo `code` trong DB. */
   categories: MainCategoryRef[];
-  /** 2 ảnh banner dọc bên trái. */
   banners: [string, string];
 }
 
-/**
- * Khối sản phẩm tái sử dụng: 2 tab danh mục chính, brand thật của danh mục,
- * Quick Link lấy từ API và danh sách sản phẩm tự đổ lại mỗi khi chuyển tab
- * hoặc bấm Quick Link.
- */
 export function ProductSection({ categories, banners }: ProductSectionProps) {
   const navigate = useNavigate();
   const { selectedProvince } = useLocationContext();
@@ -44,7 +37,6 @@ export function ProductSection({ categories, banners }: ProductSectionProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [productsLoading, setProductsLoading] = useState(true);
 
-  // Tải danh mục + thương hiệu 1 lần.
   useEffect(() => {
     let ignore = false;
 
@@ -62,7 +54,6 @@ export function ProductSection({ categories, banners }: ProductSectionProps) {
     };
   }, []);
 
-  // Ánh xạ 2 tab (theo code) sang danh mục thật đã tải về.
   const resolvedCategories = useMemo(
     () =>
       categories.map((ref) =>
@@ -73,7 +64,6 @@ export function ProductSection({ categories, banners }: ProductSectionProps) {
 
   const activeCategory = resolvedCategories[activeIndex];
 
-  // Tải Quick Link theo danh mục đang chọn.
   useEffect(() => {
     if (!activeCategory) return;
 
@@ -93,9 +83,6 @@ export function ProductSection({ categories, banners }: ProductSectionProps) {
     };
   }, [activeCategory]);
 
-  // Đổ lại sản phẩm mỗi khi đổi danh mục (widget này không tự lọc theo Quick
-  // Link nữa — bấm Quick Link sẽ điều hướng sang trang danh mục, xem
-  // `handleSelectUseCase`).
   useEffect(() => {
     if (!activeCategory) return;
 
@@ -124,8 +111,6 @@ export function ProductSection({ categories, banners }: ProductSectionProps) {
     setSelectedBrandId(null);
   };
 
-  // Bấm 1 Quick Link -> sang trang danh mục tương ứng, lọc sẵn theo Quick Link
-  // đó (giống hệt hành vi bấm vào 1 danh mục ở sidebar).
   const handleSelectUseCase = (slug: string) => {
     if (!activeCategory) return;
     navigate(`/danh-muc/${activeCategory.slug}?useCase=${slug}`);
@@ -135,7 +120,6 @@ export function ProductSection({ categories, banners }: ProductSectionProps) {
 
   return (
     <div className="flex flex-row gap-2">
-      {/* Banner bên trái */}
       <div className="hidden w-50 shrink-0 flex-col gap-2 lg:flex">
         <img
           className="w-full rounded-lg object-cover"
@@ -149,7 +133,6 @@ export function ProductSection({ categories, banners }: ProductSectionProps) {
         />
       </div>
 
-      {/* Khối bên phải */}
       <div className="flex min-w-0 flex-1 flex-col items-stretch rounded-xl border border-gray-100 bg-white/60 p-2 sm:p-3 shadow-[0_2px_16px_rgba(0,0,0,0.05)]">
         <CategoryTabs
           tabs={tabs}

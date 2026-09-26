@@ -1,4 +1,3 @@
-/** Đồng bộ với App\Services\CustomerTierService ở backend. */
 export interface TierMeta {
   key: string;
   label: string;
@@ -21,7 +20,6 @@ export interface LoyaltySummary {
   tiers: TierMeta[];
 }
 
-/** Voucher hạng thành viên trong "ví" của khách — chỉ hiện khi đủ điều kiện hạng. */
 export interface MyVoucher {
   id: number;
   code: string;

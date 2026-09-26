@@ -75,7 +75,6 @@ export function TabAds() {
 
   return (
     <div className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-[0_4px_20px_-8px_rgba(0,0,0,0.35)]">
-      {/* TAB tiêu đề */}
       <Carousel setApi={setTabApi} className="w-full border-b border-gray-100">
         <CarouselContent className="ml-0">
           {tabs.map((tab, index) => {
@@ -114,7 +113,6 @@ export function TabAds() {
         </CarouselContent>
       </Carousel>
 
-      {/* BANNER lớn */}
       <div className="relative">
         <Carousel
           setApi={setApi}
@@ -135,7 +133,6 @@ export function TabAds() {
           </CarouselContent>
         </Carousel>
 
-        {/* Chấm chỉ mục */}
         <div className="absolute inset-x-0 bottom-3 flex justify-center gap-1.5">
           {banners.map((_, index) => (
             <button
@@ -154,7 +151,6 @@ export function TabAds() {
         </div>
       </div>
 
-      {/* 3 BANNER nhỏ */}
       <div className="grid grid-cols-3 gap-1.5 p-1.5 sm:gap-2 sm:p-2">
         {subBanners.map((banner, index) => (
           <img

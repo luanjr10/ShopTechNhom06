@@ -8,10 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class EnsureRole
 {
-    /**
-     * Chặn truy cập nếu user hiện tại không có 1 trong các role cho phép.
-     * Dùng: ->middleware('role:admin') hoặc 'role:seller,admin'.
-     */
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
         $user = $request->user();

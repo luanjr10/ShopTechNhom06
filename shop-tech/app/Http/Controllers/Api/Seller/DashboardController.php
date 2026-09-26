@@ -12,14 +12,8 @@ use App\Models\Store;
 use App\Models\StoreFollow;
 use Carbon\Carbon;
 
-/**
- * Tổng quan MỘT gian hàng cho trang Dashboard seller — cùng cấu trúc số liệu
- * với Api\Admin\DashboardController nhưng luôn scope theo `$store->id`
- * (KHÔNG đụng dữ liệu của gian hàng khác, kể cả cùng 1 seller).
- */
 class DashboardController extends Controller
 {
-    // [GET] /api/seller/stores/{store}/dashboard
     public function summary(Store $store)
     {
         $now = Carbon::now();
@@ -30,7 +24,6 @@ class DashboardController extends Controller
 
         $completedOrders = SellerOrder::where('store_id', $store->id)->where('status', 'completed');
 
-        // Khách hàng distinct cần join sang `orders` để lấy user_id (seller_orders không có cột này).
         $completedOrdersWithUser = SellerOrder::where('seller_orders.store_id', $store->id)
             ->where('seller_orders.status', 'completed')
             ->join('orders', 'orders.id', '=', 'seller_orders.order_id');
@@ -105,7 +98,6 @@ class DashboardController extends Controller
         return $this->fillDailyRange($rows, $start, $end);
     }
 
-    /** Chuỗi theo ngày đếm SỐ LƯỢNG GIÁ TRỊ PHÂN BIỆT (VD: số khách hàng mới/ngày). */
     private function dailyDistinctSeries($query, string $dateColumn, string $distinctColumn, Carbon $start, Carbon $end): array
     {
         $rows = (clone $query)
@@ -182,7 +174,6 @@ class DashboardController extends Controller
         return $result;
     }
 
-    /** Top 5 sản phẩm bán chạy nhất (theo doanh thu) của gian hàng. */
     private function topProducts(Store $store): array
     {
         $completedSellerOrderIds = SellerOrder::where('store_id', $store->id)->where('status', 'completed')->pluck('id');
@@ -202,7 +193,6 @@ class DashboardController extends Controller
         ])->all();
     }
 
-    /** Top 5 khách hàng của RIÊNG gian hàng này (subtotal seller_orders completed). */
     private function topCustomers(Store $store): array
     {
         $rows = SellerOrder::where('seller_orders.store_id', $store->id)
@@ -257,7 +247,6 @@ class DashboardController extends Controller
         return ['labels' => $labels, 'completed' => $completed, 'cancelled' => $cancelled];
     }
 
-    /** Trộn 3 nguồn hoạt động gần đây của gian hàng: đơn hoàn tất, người theo dõi mới, đánh giá mới. */
     private function recentActivity(Store $store): array
     {
         $orders = SellerOrder::where('store_id', $store->id)

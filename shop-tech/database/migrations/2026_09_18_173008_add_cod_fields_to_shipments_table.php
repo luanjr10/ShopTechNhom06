@@ -4,11 +4,6 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-/**
- * Thu hộ (COD) — số tiền GHN cần thu từ khách khi giao (chỉ >0 với
- * payment_method='cod', xem ShippingService::createShipmentForSellerOrder) và
- * thời điểm GHN đã chuyển khoản COD đó về cho platform (webhook Type='cod').
- */
 return new class extends Migration
 {
     public function up(): void

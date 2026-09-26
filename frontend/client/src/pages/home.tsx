@@ -9,8 +9,6 @@ function Home() {
   return (
     <>
       <div className="mx-auto flex w-full max-w-[1220px] flex-col gap-2 px-3 py-2 sm:px-4">
-        {/* Mobile/tablet chỉ giữ banner — danh mục đã có ở nút "Danh Mục" trên
-            header; thẻ chào mừng hiện từ md. */}
         <div className="mb-2 flex flex-row items-stretch gap-3">
           <div className="hidden lg:flex">
             <TabCategory />

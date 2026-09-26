@@ -7,13 +7,8 @@ use App\Models\SellerWallet;
 use App\Models\WalletTransaction;
 use Illuminate\Http\Request;
 
-/**
- * Ví seller: số dư (tổng/pending/withdrawable) + lịch sử giao dịch.
- * Ví thuộc SellerProfile (1-1), dùng chung cho mọi store của seller.
- */
 class WalletController extends Controller
 {
-    // [GET] /api/seller/wallet
     public function show(Request $request)
     {
         $profile = $request->user()->sellerProfile;
@@ -25,7 +20,6 @@ class WalletController extends Controller
         ], 200);
     }
 
-    // [GET] /api/seller/wallet/transactions
     public function transactions(Request $request)
     {
         $profile = $request->user()->sellerProfile;

@@ -18,7 +18,6 @@ import {
 } from "../../services/catalog";
 import { type Category, type Product } from "../../types/product";
 
-/** Nhóm danh mục thật trong DB thành 3 tab con hiển thị dưới banner Flash sale. */
 const CATEGORY_GROUPS = [
   { label: "Điện thoại, Tablet", codes: ["CATE-02", "CATE-012"] },
   { label: "Laptop, PC, Phụ kiện", codes: ["CATE-01", "CAT-018", "CATE-06", "CATE-05", "CATE-04"] },
@@ -27,7 +26,6 @@ const CATEGORY_GROUPS = [
 
 const TOP_TABS = ["FLASHSALE", "SĂN DEAL CÔNG NGHỆ", "HOT SALE CUỐI TUẦN"];
 
-/** Khối Flash sale ngay dưới banner trang chủ — sản phẩm do admin đánh dấu ở "Nổi bật trang chủ". */
 function FlashSaleSection() {
   const [endsAt, setEndsAt] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -76,14 +74,12 @@ function FlashSaleSection() {
 
   const isCountdownRunning = Boolean(endsAt) && new Date(endsAt as string).getTime() > Date.now();
 
-  // Chưa cấu hình flash sale (admin chưa đặt giờ) hoặc chưa đánh dấu SP nào -> ẩn cả khối.
   if (!loading && (!isCountdownRunning || allFlashProducts.length === 0)) {
     return null;
   }
 
   return (
     <div className="relative mt-2">
-      {/* Ruy băng trang trí 2 góc, giống viền sale thật. */}
       <div className="absolute -top-3 -left-2 z-20 hidden h-9 w-9 sm:flex -rotate-12 items-center justify-center rounded-lg bg-yellow-400 shadow-[0_4px_10px_rgba(0,0,0,0.25)] ring-2 ring-white">
         <Percent size={16} className="text-primary500" strokeWidth={3} />
       </div>
@@ -92,7 +88,6 @@ function FlashSaleSection() {
       </div>
 
       <div className="overflow-hidden rounded-2xl bg-gradient-to-b from-primary500 to-red-700 pt-2 shadow-[0_8px_28px_rgba(215,0,24,0.3)] ring-2 ring-yellow-300/80 ring-offset-2 ring-offset-white">
-        {/* Tab trên cùng */}
         <div className="flex flex-row px-2 sm:px-3">
           {TOP_TABS.map((tab, index) => (
             <button
@@ -113,7 +108,6 @@ function FlashSaleSection() {
 
         <div className="bg-white/10 p-2 backdrop-blur-sm sm:p-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            {/* Tab danh mục con */}
             <div className="flex flex-wrap gap-2">
               {CATEGORY_GROUPS.map((group, index) => (
                 <button
@@ -138,7 +132,6 @@ function FlashSaleSection() {
             </div>
           </div>
 
-          {/* Sản phẩm — carousel để sau thêm nhiều SP vẫn kéo ngang xem được. */}
           <Carousel opts={{ align: "start", dragFree: true }} className="mt-3 px-1">
             <CarouselContent className="-ml-3">
               {loading

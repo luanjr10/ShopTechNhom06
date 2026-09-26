@@ -75,7 +75,6 @@ function ProductDetailPage() {
     <div className="mx-auto flex w-full max-w-[1220px] flex-col gap-6 px-3 py-3 sm:px-4 sm:py-4">
       <Breadcrumb items={[{ label: product.name }]} />
 
-      {/* Khối chính: ảnh + mua hàng */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="lg:sticky lg:top-4 lg:self-start">
           <ProductGallery images={product.images} name={product.name} />
@@ -86,17 +85,14 @@ function ProductDetailPage() {
         </div>
       </div>
 
-      {/* Cam kết + thông số */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <ProductCommitments />
         <ProductSpecifications specifications={product.specifications} />
       </div>
 
-      {/* Đánh giá + Hỏi & đáp */}
       <ProductReviews productId={product.id} productName={product.name} />
       <ProductQA productId={product.id} />
 
-      {/* Gợi ý cùng danh mục */}
       <SimilarProducts
         categoryId={product.category_id}
         excludeId={product.id}

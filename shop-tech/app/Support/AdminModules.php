@@ -2,20 +2,6 @@
 
 namespace App\Support;
 
-/**
- * Danh mục CHUẨN các "mục quản lý" trong admin — khớp 1-1 với ADMIN_SECTIONS
- * ở sidebar FE (trừ Dashboard/Tin nhắn/Cài đặt — không phải dữ liệu quản lý).
- * Đây là nguồn sự thật DUY NHẤT cho middleware `permission:` + màn phân quyền
- * (GET /api/admin/permission-modules) — sửa module ở đây là đủ, không cần
- * sửa danh sách ở FE.
- *
- * `abilities` chỉ liệt kê thao tác THỰC SỰ có ở module đó (VD: Khách hàng chỉ
- * xem được — không có create/delete vì khách tự quản lý hồ sơ của họ).
- *
- * LƯU Ý: "employees" (chính mục Nhân viên + phân quyền) KHÔNG nằm trong danh
- * sách này — CHỈ role=admin thật mới được quản lý nhân viên/phân quyền, để
- * tránh nhân viên tự cấp quyền leo thang cho chính mình.
- */
 class AdminModules
 {
     public const MODULES = [
@@ -49,9 +35,6 @@ class AdminModules
         return in_array($ability, self::MODULES[$module]['abilities'] ?? [], true);
     }
 
-    /**
-     * @return array<int, array{key:string,label:string,abilities:array<int,string>}>
-     */
     public static function list(): array
     {
         return collect(self::MODULES)

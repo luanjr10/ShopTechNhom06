@@ -14,10 +14,6 @@ use Illuminate\Support\Facades\Hash;
 
 class PasswordResetController extends Controller
 {
-    /**
-     * [POST] /api/forgot-password — gửi mã OTP 6 số về email (hết hạn 60 giây).
-     * Luôn trả về thông báo chung để không lộ email nào đã đăng ký.
-     */
     public function forgot(ForgotPasswordRequest $request)
     {
         $email = (string) $request->input('email');
@@ -41,10 +37,6 @@ class PasswordResetController extends Controller
         ]);
     }
 
-    /**
-     * [POST] /api/verify-reset-code — kiểm tra mã hợp lệ (KHÔNG tiêu thụ mã).
-     * Dùng cho bước xác minh trước khi cho người dùng nhập mật khẩu mới.
-     */
     public function verify(VerifyResetCodeRequest $request)
     {
         $error = $this->codeError(
@@ -66,9 +58,6 @@ class PasswordResetController extends Controller
         ]);
     }
 
-    /**
-     * [POST] /api/reset-password — xác minh mã OTP và đặt mật khẩu mới.
-     */
     public function reset(ResetPasswordRequest $request)
     {
         $email = (string) $request->input('email');
@@ -88,7 +77,6 @@ class PasswordResetController extends Controller
 
         $user->password = $request->input('password');
         $user->save();
-        // Đổi mật khẩu → vô hiệu mọi phiên đã đăng nhập trước đó.
         $user->increment('token_version');
 
         DB::table('password_reset_tokens')->where('email', $email)->delete();
@@ -99,10 +87,6 @@ class PasswordResetController extends Controller
         ]);
     }
 
-    /**
-     * Trả về thông báo lỗi nếu mã không hợp lệ/hết hạn, hoặc null nếu hợp lệ.
-     * Mã hết hạn sẽ bị xoá khỏi bảng.
-     */
     private function codeError(string $email, string $code): ?string
     {
         $row = DB::table('password_reset_tokens')->where('email', $email)->first();
@@ -126,9 +110,6 @@ class PasswordResetController extends Controller
         return null;
     }
 
-    /**
-     * Sinh mã OTP gồm N chữ số (không lộ ra ngoài, chỉ lưu bản băm).
-     */
     private function generateCode(): string
     {
         $length = (int) config('auth.reset_code.length', 6);

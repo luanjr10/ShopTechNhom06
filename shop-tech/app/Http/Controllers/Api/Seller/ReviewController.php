@@ -8,15 +8,10 @@ use App\Models\Store;
 use App\Services\RatingService;
 use Illuminate\Http\Request;
 
-/**
- * Seller xem đánh giá của các sản phẩm trong gian hàng mình — CHỈ XEM (không
- * xoá được, tránh xung đột lợi ích khi tự xoá đánh giá xấu về mình).
- */
 class ReviewController extends Controller
 {
     public function __construct(private RatingService $ratingService) {}
 
-    // [GET] /api/seller/stores/{store}/reviews
     public function index(Request $request, Store $store)
     {
         $query = ProductReview::whereHas('product', fn ($q) => $q->where('store_id', $store->id))

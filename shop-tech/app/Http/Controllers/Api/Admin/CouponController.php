@@ -8,17 +8,10 @@ use App\Services\CustomerTierService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-/**
- * Admin tạo/quản lý voucher — bao gồm voucher hạng thành viên (target_tier),
- * VD: khách đã mua trên 10 triệu (hạng Bạc trở lên) được tạo voucher áp dụng
- * cho toàn bộ khách hạng đó, trên MỌI gian hàng (voucher do sàn chịu, xem
- * OrderService::place — không trừ vào tiền seller nhận).
- */
 class CouponController extends Controller
 {
     public function __construct(private CustomerTierService $tierService) {}
 
-    // [GET] /api/admin/coupons
     public function index(Request $request)
     {
         $query = Coupon::query()->withCount(['claims', 'redemptions'])->latest();
@@ -36,7 +29,6 @@ class CouponController extends Controller
         ], 200);
     }
 
-    // [POST] /api/admin/coupons
     public function store(Request $request)
     {
         $validated = $this->validated($request);
@@ -46,7 +38,6 @@ class CouponController extends Controller
         return response()->json(['success' => true, 'message' => 'Đã tạo voucher', 'data' => $coupon], 201);
     }
 
-    // [PATCH] /api/admin/coupons/{coupon}
     public function update(Request $request, Coupon $coupon)
     {
         $validated = $this->validated($request, $coupon);
@@ -56,7 +47,6 @@ class CouponController extends Controller
         return response()->json(['success' => true, 'message' => 'Đã cập nhật voucher', 'data' => $coupon], 200);
     }
 
-    // [DELETE] /api/admin/coupons/{coupon}
     public function destroy(Coupon $coupon)
     {
         $coupon->delete();

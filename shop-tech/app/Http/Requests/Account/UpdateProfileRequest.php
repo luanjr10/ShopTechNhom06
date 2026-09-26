@@ -8,16 +8,10 @@ use Illuminate\Validation\Rule;
 
 class UpdateProfileRequest extends ApiFormRequest
 {
-    /**
-     * @return array<string, mixed>
-     */
     public function rules(): array
     {
         $userId = $this->user()->id;
 
-        // Chỉ tra DNS (kiểm tra domain có thật, MX/A record tồn tại) khi email
-        // THAY ĐỔI so với hiện tại — tránh chặn việc lưu hồ sơ của user cũ nếu
-        // email cũ trót không còn resolve được; email mới nhập luôn bị soi kỹ.
         $emailChanged = $this->input('email') !== $this->user()->email;
 
         return [
@@ -34,9 +28,6 @@ class UpdateProfileRequest extends ApiFormRequest
         ];
     }
 
-    /**
-     * @return array<string, string>
-     */
     public function messages(): array
     {
         return [

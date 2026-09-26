@@ -12,16 +12,12 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-/**
- * Xem thông tin gian hàng (public, chỉ store đang active) + thống kê người bán.
- */
 class PublicStoreController extends Controller
 {
     private const PER_PAGE = 12;
 
     public function __construct(private RatingService $ratingService) {}
 
-    // [GET] /api/stores — danh sách gian hàng để khách khám phá ("Kênh người bán").
     public function index(Request $request)
     {
         $search = trim((string) $request->input('search', ''));
@@ -36,7 +32,6 @@ class PublicStoreController extends Controller
             $query->where('name', 'like', "%{$search}%");
         }
 
-        // Lọc theo tỉnh/thành khách đang chọn ở header (kho lấy hàng của gian hàng).
         if ($provinceId !== null && $provinceId !== '') {
             $query->where('province_id', (int) $provinceId);
         }
@@ -76,7 +71,6 @@ class PublicStoreController extends Controller
         ], 200);
     }
 
-    // [GET] /api/stores/{slug}
     public function show(string $slug)
     {
         try {
@@ -98,7 +92,6 @@ class PublicStoreController extends Controller
                 default => 'New Seller',
             };
 
-            // Danh mục shop đang bán (từ sản phẩm thật).
             $categoryIds = Product::where('store_id', $store->id)
                 ->distinct()->pluck('category_id')->filter()->all();
             $categories = Category::whereIn('id', $categoryIds)
@@ -112,8 +105,6 @@ class PublicStoreController extends Controller
                     ...$store->toArray(),
                     'joined_at' => $store->sellerProfile?->created_at ?? $store->created_at,
                     'categories' => $categories,
-                    // JwtCookieToHeader chạy global nên user đăng nhập được nhận diện
-                    // kể cả trên route public này (không cần middleware auth:api).
                     'is_following' => $this->ratingService->isFollowing(Auth::guard('api')->user(), $store->id),
                     'stats' => [
                         'completed_orders' => $completed,

@@ -18,7 +18,6 @@ class CategoryController extends Controller
 {
     private const PER_PAGE = 6;
 
-    // [GET] /api/categories
     public function index(Request $request)
     {
         $search = trim((string) $request->input('search', ''));
@@ -32,8 +31,6 @@ class CategoryController extends Controller
         }
 
         if ($request->boolean('with_children')) {
-            // Chỉ eager-load 2 cấp con (đủ cho flyout ở storefront); cây danh
-            // mục vẫn có thể sâu hơn — cấp sâu hơn tự tải khi vào trang danh mục đó.
             $query->with(['children' => function ($q) {
                 $q->where('status', 1)->orderBy('status_order')
                     ->withCount('children')
@@ -41,8 +38,6 @@ class CategoryController extends Controller
             }]);
         }
 
-        // parent_id=null (hoặc 'top_level'/'0') -> chỉ danh mục cấp cao nhất;
-        // parent_id=<id> -> chỉ danh mục con của id đó. Không truyền -> lấy tất cả.
         if ($parentId !== null) {
             $query->where('parent_id', in_array($parentId, ['null', 'top_level', '0'], true) ? null : (int) $parentId);
         }
@@ -77,7 +72,6 @@ class CategoryController extends Controller
         ], 200);
     }
 
-    // [GET] /api/categories/{id}
     public function getCategoryById($id)
     {
         try {
@@ -103,12 +97,6 @@ class CategoryController extends Controller
         }
     }
 
-    /**
-     * Gắn `image` (từ MongoDB `category_images`) vào từng danh mục — kể cả
-     * danh mục con đã eager-load qua `with_children`/`with(['children'])`.
-     *
-     * @return array<int, array<string, mixed>>
-     */
     private function attachImages(Collection $categories): array
     {
         $ids = collect();
@@ -140,7 +128,6 @@ class CategoryController extends Controller
         return $categories->map($mapCategory)->all();
     }
 
-    // [POST] /api/categories/{id}/image — upload ảnh đại diện (thay icon) lên Cloudinary.
     public function uploadImage(Request $request, $id, CloudinaryService $cloudinaryService)
     {
         try {
@@ -186,7 +173,6 @@ class CategoryController extends Controller
         }
     }
 
-    // [DELETE] /api/categories/{id}/image — gỡ ảnh, quay lại hiển thị bằng icon.
     public function deleteImage($id)
     {
         try {
@@ -209,7 +195,6 @@ class CategoryController extends Controller
         }
     }
 
-    // [POST] /api/categories
     public function store(StoreCategoryRequest $request)
     {
         $category = Category::create([
@@ -233,7 +218,6 @@ class CategoryController extends Controller
         ], 201);
     }
 
-    // [PATCH] /api/categories/{id}
     public function editCategory(UpdateCategoryRequest $request, $id)
     {
         try {
@@ -275,7 +259,6 @@ class CategoryController extends Controller
         }
     }
 
-    // [DELETE] /api/categories/{id}
     public function deleteCategory($id)
     {
         try {

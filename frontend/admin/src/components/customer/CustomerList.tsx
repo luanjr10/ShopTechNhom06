@@ -21,10 +21,6 @@ const TIER_TABS = [
   { value: "kim_cuong", label: "Kim Cương" },
 ];
 
-/**
- * Khách hàng đăng ký trên sàn tự quản lý hồ sơ của họ (xem /tai-khoan bên
- * client) — admin CHỈ XEM danh sách/chi tiết, không có sửa/xoá ở đây.
- */
 export default function CustomerList() {
   const [items, setItems] = useState<CustomerRow[]>([]);
   const [tier, setTier] = useState("");

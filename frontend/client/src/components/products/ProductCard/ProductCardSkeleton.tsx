@@ -1,4 +1,3 @@
-/** Khung xương hiển thị trong lúc chờ tải sản phẩm. */
 export function ProductCardSkeleton() {
   return (
     <div className="flex h-full flex-col rounded-2xl border border-gray-100/60 bg-white p-2 sm:p-3 shadow-[0_2px_12px_rgba(0,0,0,0.04)]">

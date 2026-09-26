@@ -36,11 +36,6 @@ class SellerApplication extends Model
         return $this->belongsTo(User::class, 'reviewed_by');
     }
 
-    /**
-     * Tên các danh mục kinh doanh đã chọn (để hiển thị ở admin).
-     *
-     * @return array<int, string>
-     */
     public function getCategoryNamesAttribute(): array
     {
         $ids = $this->category_ids ?? [];

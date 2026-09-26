@@ -57,7 +57,6 @@ export function ProductReviews({ productId, productName }: Props) {
       <h2 className="mb-4 font-sans text-[16px] font-bold text-gray-900">Đánh giá {productName}</h2>
 
       <div className="flex flex-col gap-6 sm:flex-row">
-        {/* Tổng quan */}
         <div className="flex shrink-0 flex-col items-center justify-center gap-1 sm:w-[180px]">
           <div className="flex items-baseline gap-1">
             <span className="font-sans text-[30px] sm:text-[36px] font-bold text-gray-900">{(stats?.average ?? 0).toFixed(1)}</span>
@@ -76,7 +75,6 @@ export function ProductReviews({ productId, productName }: Props) {
           )}
         </div>
 
-        {/* Breakdown */}
         <div className="flex-1 space-y-1.5">
           {[5, 4, 3, 2, 1].map((star) => {
             const count = stats?.breakdown?.[star] ?? 0;
@@ -94,7 +92,6 @@ export function ProductReviews({ productId, productName }: Props) {
         </div>
       </div>
 
-      {/* Bộ lọc */}
       <div className="mt-5 flex flex-wrap gap-2 border-t border-gray-100 pt-4">
         <button
           type="button"
@@ -128,7 +125,6 @@ export function ProductReviews({ productId, productName }: Props) {
         </button>
       </div>
 
-      {/* Danh sách */}
       <div className="mt-4 divide-y divide-gray-100">
         {loading ? (
           <div className="flex justify-center py-10">

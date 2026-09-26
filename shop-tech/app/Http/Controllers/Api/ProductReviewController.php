@@ -10,10 +10,6 @@ use App\Services\CloudinaryService;
 use App\Services\RatingService;
 use Illuminate\Http\Request;
 
-/**
- * Đánh giá sao + bình luận cho 1 sản phẩm — public xem, cần đăng nhập để gửi.
- * 1 khách chỉ có 1 đánh giá/sản phẩm (gửi lại = sửa, xem store()).
- */
 class ProductReviewController extends Controller
 {
     public function __construct(
@@ -21,7 +17,6 @@ class ProductReviewController extends Controller
         private RatingService $ratingService,
     ) {}
 
-    // [GET] /api/products/{product}/reviews
     public function index(Request $request, Product $product)
     {
         $query = ProductReview::where('product_id', $product->id)
@@ -43,7 +38,6 @@ class ProductReviewController extends Controller
         ], 200);
     }
 
-    // [POST] /api/products/{product}/reviews
     public function store(Request $request, Product $product)
     {
         $validated = $request->validate([
@@ -69,8 +63,6 @@ class ProductReviewController extends Controller
             'comment' => $validated['comment'] ?? null,
         ];
 
-        // Chỉ ghi đè ảnh khi khách gửi ảnh mới — gửi lại KHÔNG kèm ảnh (sửa
-        // rating/comment) sẽ giữ nguyên ảnh cũ thay vì xoá mất.
         if ($request->hasFile('images')) {
             $attributes['images'] = $this->cloudinaryService->uploadMultipleImages($request->file('images'), 'reviews-shoptech');
         }

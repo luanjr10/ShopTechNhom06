@@ -72,7 +72,6 @@ export default function SellerApplicationDetailModal({
   const [reason, setReason] = useState("");
   const { canEdit } = useModulePermission("seller_applications");
 
-  // Reset khi mở đơn khác.
   useEffect(() => {
     setRejecting(false);
     setReason("");
@@ -87,7 +86,6 @@ export default function SellerApplicationDetailModal({
       <ModalHeader />
       <ModalBody>
         <div className="space-y-6">
-          {/* Tiêu đề */}
           <div className="flex items-center justify-between border-b border-slate-800 pb-4">
             <h3 className="text-xl font-semibold text-white">
               Chi tiết đơn đăng ký người bán
@@ -101,7 +99,6 @@ export default function SellerApplicationDetailModal({
             </button>
           </div>
 
-          {/* Người đăng ký */}
           <div className="flex items-center justify-between rounded-xl border border-slate-800 bg-white/[0.02] p-4">
             <div className="flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-full bg-indigo-500/15 text-indigo-400">
@@ -123,7 +120,6 @@ export default function SellerApplicationDetailModal({
             </span>
           </div>
 
-          {/* Chi tiết */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <DetailRow
               icon={Store}
@@ -139,7 +135,6 @@ export default function SellerApplicationDetailModal({
             />
           </div>
 
-          {/* Danh mục kinh doanh đã chọn */}
           {application.category_names && application.category_names.length > 0 && (
             <div>
               <div className="mb-2 text-xs text-gray-500">
@@ -158,7 +153,6 @@ export default function SellerApplicationDetailModal({
             </div>
           )}
 
-          {/* Lý do từ chối (nếu có) */}
           {application.status === "rejected" && application.reject_reason && (
             <div className="rounded-lg border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-300">
               <span className="font-medium">Lý do từ chối: </span>
@@ -166,7 +160,6 @@ export default function SellerApplicationDetailModal({
             </div>
           )}
 
-          {/* Nhập lý do khi bấm từ chối */}
           {isPending && rejecting && (
             <div>
               <label className="mb-1 block text-sm font-medium text-gray-300">
@@ -182,7 +175,6 @@ export default function SellerApplicationDetailModal({
             </div>
           )}
 
-          {/* Hành động */}
           <div className="flex justify-end gap-2 border-t border-slate-800 pt-4">
             {!canEdit ? (
               <span className="text-sm text-gray-500">Bạn không có quyền duyệt/từ chối đơn đăng ký.</span>

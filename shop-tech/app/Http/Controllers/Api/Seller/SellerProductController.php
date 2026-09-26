@@ -16,21 +16,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Throwable;
 
-/**
- * Seller quản lý sản phẩm TRONG một gian hàng cụ thể. store_id luôn ép theo route
- * {store} (đã qua middleware store.owner). Tái dùng CloudinaryService + các model Mongo
- * (ProductImage/ProductSpecification) giống ProductController; phần đọc chi tiết + variant
- * mặc định vẫn do ProductController@getProductDetail xử lý (route public, không cần bản
- * riêng cho seller). Chuẩn hoá variants/Quick Link dùng chung trait NormalizesProductCatalog
- * để cùng cấu trúc dữ liệu với catalog admin.
- */
 class SellerProductController extends Controller
 {
     use NormalizesProductCatalog;
 
     private const PER_PAGE = 15;
 
-    // [GET] /api/seller/stores/{store}/products
     public function index(Request $request, Store $store)
     {
         $search = trim((string) $request->input('search', ''));
@@ -82,7 +73,6 @@ class SellerProductController extends Controller
         ], 200);
     }
 
-    // [POST] /api/seller/stores/{store}/products
     public function store(SellerProductRequest $request, Store $store, CloudinaryService $cloudinaryService)
     {
         try {
@@ -97,7 +87,7 @@ class SellerProductController extends Controller
                 'stock' => $request->stock,
                 'status' => $request->status,
                 'category_id' => $request->category_id,
-                'store_id' => $store->id, // ép theo gian hàng đang chọn
+                'store_id' => $store->id,
             ]);
 
             $this->syncMongo($product, $imageUrls, $request);
@@ -116,7 +106,6 @@ class SellerProductController extends Controller
         }
     }
 
-    // [POST|PATCH] /api/seller/stores/{store}/products/{product}
     public function update(SellerProductRequest $request, Store $store, Product $product, CloudinaryService $cloudinaryService)
     {
         if ($product->store_id !== $store->id) {
@@ -167,7 +156,6 @@ class SellerProductController extends Controller
         }
     }
 
-    // [DELETE] /api/seller/stores/{store}/products/{product}
     public function destroy(Store $store, Product $product)
     {
         if ($product->store_id !== $store->id) {
@@ -182,10 +170,6 @@ class SellerProductController extends Controller
         return response()->json(['success' => true, 'message' => 'Xóa sản phẩm thành công'], 200);
     }
 
-    /**
-     * Lưu ảnh + specifications + variants (chuẩn hoá) + Quick Link sang MongoDB,
-     * cùng cấu trúc dữ liệu với ProductController (admin) qua trait dùng chung.
-     */
     private function syncMongo(Product $product, array $images, SellerProductRequest $request): void
     {
         ProductImage::updateOrCreate(['productId' => $product->id], ['images' => $images]);

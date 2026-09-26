@@ -27,10 +27,6 @@ class Store extends Model
         'address_line',
     ];
 
-    /**
-     * Store đã khai đủ địa chỉ lấy hàng GHN chưa (dùng khi seller bàn giao vận
-     * chuyển — SellerOrderService::handover() chặn nếu thiếu).
-     */
     public function hasPickupAddress(): bool
     {
         return $this->district_id !== null && $this->ward_code !== null;
@@ -56,7 +52,6 @@ class Store extends Model
         return $this->hasMany(StoreFollow::class);
     }
 
-    /** Đánh giá sao của TẤT CẢ sản phẩm thuộc gian hàng — dùng tính rating trung bình hàng loạt (withAvg). */
     public function reviews(): HasManyThrough
     {
         return $this->hasManyThrough(ProductReview::class, Product::class);

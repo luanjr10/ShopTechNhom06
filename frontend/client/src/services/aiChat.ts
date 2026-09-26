@@ -27,10 +27,6 @@ interface AiChatResponse {
   };
 }
 
-/**
- * Gửi lịch sử hội thoại (đã gồm câu hỏi mới nhất của khách) tới chatbot AI tư
- * vấn sản phẩm. Public — không cần đăng nhập.
- */
 export async function sendAiChatMessage(
   messages: AiChatMessage[],
 ): Promise<{ reply: string; products: AiChatProduct[] }> {

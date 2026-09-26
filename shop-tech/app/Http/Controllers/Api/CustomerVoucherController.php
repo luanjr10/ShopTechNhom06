@@ -9,17 +9,10 @@ use App\Models\CouponRedemption;
 use App\Services\CustomerTierService;
 use Illuminate\Http\Request;
 
-/**
- * "Ví voucher" của khách — chỉ liệt kê voucher HẠNG THÀNH VIÊN (target_tier
- * khác null) mà khách ĐỦ ĐIỀU KIỆN nhận theo hạng hiện tại (xem
- * CustomerTierService). Mã giảm giá công khai (GIAM10...) không hiện ở đây,
- * khách tự nhập ở checkout như trước.
- */
 class CustomerVoucherController extends Controller
 {
     public function __construct(private CustomerTierService $tierService) {}
 
-    // [GET] /api/vouchers/mine
     public function index(Request $request)
     {
         $user = $request->user();
@@ -74,7 +67,6 @@ class CustomerVoucherController extends Controller
         return response()->json(['success' => true, 'data' => $data], 200);
     }
 
-    // [POST] /api/vouchers/{coupon}/claim
     public function claim(Request $request, Coupon $coupon)
     {
         $user = $request->user();

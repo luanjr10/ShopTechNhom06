@@ -7,7 +7,6 @@ interface Props {
   data: OrderStatusByMonth;
 }
 
-/** Đơn hoàn tất vs huỷ theo tháng — thay DashboardCard09 gốc (Sales VS Refunds). */
 export default function OrderStatusChart({ data }: Props) {
   const totalCompleted = data.completed.reduce((s, v) => s + v, 0);
   const totalCancelled = data.cancelled.reduce((s, v) => s + v, 0);

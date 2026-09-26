@@ -1,7 +1,5 @@
 import { PayoutMethod } from "../types/seller.types";
 
-/** Cùng danh sách payment_method đã có ở checkout (frontend/client) — dùng
- * chung cho phiếu tạo yêu cầu rút tiền, để seller chọn kênh nhận tiền. */
 export const PAYOUT_METHODS: { id: PayoutMethod; label: string; accountLabel: string; accountPlaceholder: string }[] = [
   {
     id: "cod",

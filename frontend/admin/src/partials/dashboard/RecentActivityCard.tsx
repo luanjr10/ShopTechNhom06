@@ -14,8 +14,6 @@ const ICONS: Record<RecentActivityItem["type"], { icon: typeof CheckCircle2; bg:
   review: { icon: Star, bg: "bg-amber-500" },
 };
 
-/** Trộn 3 nguồn hoạt động gần đây (đơn hoàn tất/gian hàng mới/đánh giá mới) —
- * thay DashboardCard12 gốc (Recent Activity, toàn link giả "Nick Mark mentioned..."). */
 export default function RecentActivityCard({ data }: Props) {
   return (
     <div className="col-span-full xl:col-span-6 bg-white dark:bg-gray-800 shadow-xs rounded-xl">

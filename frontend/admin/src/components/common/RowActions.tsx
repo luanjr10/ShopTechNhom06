@@ -4,7 +4,6 @@ interface RowActionsProps {
   onView?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
-  /** Thao tác phụ (VD: quản lý Quick Link của danh mục). */
   onManage?: () => void;
   manageTitle?: string;
 }

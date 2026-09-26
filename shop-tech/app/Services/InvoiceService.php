@@ -9,17 +9,6 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Barryvdh\DomPDF\PDF as PdfDocument;
 use Illuminate\Support\Facades\Mail;
 
-/**
- * Hóa đơn KHÔNG phải 1 bảng riêng — chỉ là 1 cách trình bày lại Order/SellerOrder
- * đã có, luôn phản ánh ĐÚNG trạng thái hiện tại của đơn (kể cả đã hoàn tất hay
- * đã hủy) vì dữ liệu lấy trực tiếp từ Order/SellerOrder, không lưu snapshot.
- *
- * - buildFromOrder(): hóa đơn ĐẦY ĐỦ (admin xem) — gồm mọi seller trong đơn.
- * - buildFromSellerOrder(): hóa đơn RIÊNG của 1 seller (seller chỉ xem/gửi
- *   được phần hàng của MÌNH, không thấy hàng của seller khác trong cùng đơn).
- *
- * Cả 2 trả về CÙNG 1 cấu trúc mảng để dùng chung 1 view PDF/email.
- */
 class InvoiceService
 {
     private const ORDER_STATUS_LABELS = [

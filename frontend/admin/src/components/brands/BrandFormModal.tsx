@@ -22,11 +22,6 @@ interface BrandFormModalProps {
   onSaved: () => void;
 }
 
-/**
- * Modal thêm mới / chỉnh sửa danh mục — tự lấy dữ liệu (chế độ sửa), tự
- * submit lên API và hiển thị lỗi validate ngay dưới từng ô. `CategoryList`
- * chỉ cần mở modal này với `categoryId` tương ứng.
- */
 export default function BrandFormModal({
   open,
   mode,
@@ -67,7 +62,6 @@ export default function BrandFormModal({
 
     setNewImages(file);
   };
-
 
   const removeExistingImage = () => {
     setExistingImages(null);

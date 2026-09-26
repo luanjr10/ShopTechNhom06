@@ -43,8 +43,6 @@ const MODULE_ICON: Record<string, typeof Package> = {
   platform_funds: Landmark,
 };
 
-// Nhóm module theo đúng cấu trúc sidebar (Quản lý / Sàn TMĐT) để nhân viên/admin
-// dễ đối chiếu quyền với menu thật họ sẽ thấy.
 const SECTION_MAP: Record<string, string> = {
   products: "Quản lý",
   categories: "Quản lý",
@@ -107,13 +105,11 @@ export default function PermissionMatrixModal({ open, employee, onClose }: Props
       prev.map((m) => {
         if (m.key !== moduleKey) return m;
         const next = { ...m, [field]: !m[field] };
-        // Bỏ "Xem" thì các quyền thao tác khác cũng vô nghĩa — tắt luôn cho nhất quán.
         if (field === "can_view" && !next.can_view) {
           next.can_create = false;
           next.can_edit = false;
           next.can_delete = false;
         }
-        // Bật bất kỳ quyền thao tác nào thì tự bật "Xem" (không thể sửa mà không xem được).
         if (field !== "can_view" && next[field]) {
           next.can_view = true;
         }
@@ -163,7 +159,6 @@ export default function PermissionMatrixModal({ open, employee, onClose }: Props
       <ModalHeader />
       <ModalBody className="max-h-[85vh] overflow-y-auto">
         <div className="space-y-6">
-          {/* Header */}
           <div className="flex items-center justify-between gap-3 border-b border-slate-800 pb-4">
             <div className="flex items-center gap-3">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-indigo-500 to-violet-600 text-white">
@@ -185,7 +180,6 @@ export default function PermissionMatrixModal({ open, employee, onClose }: Props
             </button>
           </div>
 
-          {/* Trạng thái tải */}
           {loading && (
             <div className="flex flex-col items-center justify-center gap-3 py-16 text-gray-400">
               <Loader2 className="h-7 w-7 animate-spin text-indigo-400" />
@@ -209,7 +203,6 @@ export default function PermissionMatrixModal({ open, employee, onClose }: Props
 
           {!loading && !loadError && (
             <>
-              {/* Tóm tắt */}
               <div className="flex items-center justify-between rounded-xl border border-slate-800 bg-white/[0.02] px-4 py-3">
                 <div className="flex items-center gap-2 text-sm text-gray-300">
                   <User className="h-4 w-4 text-indigo-400" />
@@ -232,7 +225,6 @@ export default function PermissionMatrixModal({ open, employee, onClose }: Props
                 </div>
               </div>
 
-              {/* Danh sách module theo nhóm */}
               <div className="space-y-6">
                 {Object.entries(sections).map(([sectionName, sectionModules]) => (
                   <div key={sectionName}>
@@ -301,7 +293,6 @@ export default function PermissionMatrixModal({ open, employee, onClose }: Props
             </>
           )}
 
-          {/* Footer */}
           <div className="flex justify-end gap-2 border-t border-slate-800 pt-4">
             <button
               type="button"

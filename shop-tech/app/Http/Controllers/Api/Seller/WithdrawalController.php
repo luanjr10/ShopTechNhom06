@@ -9,14 +9,10 @@ use App\Services\WalletService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-/**
- * Seller tạo yêu cầu rút tiền từ số dư withdrawable. Admin duyệt ở Admin\WithdrawalController.
- */
 class WithdrawalController extends Controller
 {
     public function __construct(private WalletService $walletService) {}
 
-    // [GET] /api/seller/withdrawals
     public function index(Request $request)
     {
         $profile = $request->user()->sellerProfile;
@@ -29,14 +25,10 @@ class WithdrawalController extends Controller
         ], 200);
     }
 
-    // [POST] /api/seller/withdrawals
     public function store(Request $request)
     {
         $validated = $request->validate([
             'amount' => 'required|numeric|min:1',
-            // Kênh nhận tiền — cùng danh sách payment_method của checkout (xem
-            // App\Services\PayoutService). bank_account/bank_name dùng chung cho
-            // mọi kênh: số tài khoản/SĐT ví + tên ngân hàng/ví tương ứng.
             'method' => 'required|in:cod,momo,vnpay,onepay,sepay',
             'bank_account' => 'required|string|max:50',
             'bank_name' => 'required|string|max:100',
@@ -64,7 +56,6 @@ class WithdrawalController extends Controller
                 'note' => $validated['note'] ?? null,
             ]);
 
-            // Giữ chỗ khỏi withdrawable để không rút trùng.
             $this->walletService->reserveForWithdrawal(
                 $wallet, (float) $validated['amount'], 'withdrawal_request', $withdrawal->id
             );

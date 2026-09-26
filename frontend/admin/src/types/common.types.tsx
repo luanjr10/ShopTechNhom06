@@ -10,5 +10,4 @@ export interface SortOption<TSort extends string> {
   label: string;
 }
 
-/** Định dạng lỗi validate trả về từ Laravel: { field: [message, ...] } */
 export type ValidationErrors = Record<string, string[]>;

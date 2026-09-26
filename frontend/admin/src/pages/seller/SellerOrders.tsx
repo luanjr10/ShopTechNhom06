@@ -68,9 +68,6 @@ export default function SellerOrders() {
     }
   };
 
-  // Bàn giao vận chuyển: BE gọi GHN tạo vận đơn THẬT — khác hẳn "chuyển trạng
-  // thái" đơn thuần, có thể lỗi (thiếu địa chỉ kho, GHN lỗi...) nên báo message
-  // thật từ BE thay vì "Cập nhật thất bại" chung chung.
   const handover = async (order: SellerOrderItem) => {
     if (!activeStore) return;
     setBusyId(order.id);
@@ -99,9 +96,6 @@ export default function SellerOrders() {
     }
   };
 
-  // Seller tự làm shipper — luồng chuẩn sau khi bàn giao (không còn GHN thật).
-  // Ấn "Đã giao": chốt đơn completed, release ví pending → withdrawable, set
-  // shipment.delivered.
   const driverDeliver = async (order: SellerOrderItem) => {
     if (!activeStore) return;
     if (!window.confirm("Xác nhận đã giao đơn hàng này cho khách?")) return;
@@ -117,9 +111,6 @@ export default function SellerOrders() {
     }
   };
 
-  // Tương tự cho huỷ — dùng khi shipper thấy không giao được (khách vắng nhà,
-  // sai địa chỉ, ...). BE hoàn kho + refund ví pending. Cần confirm kỹ vì
-  // đơn sẽ đóng vĩnh viễn.
   const driverCancel = async (order: SellerOrderItem) => {
     if (!activeStore) return;
     if (
@@ -252,9 +243,6 @@ export default function SellerOrders() {
               </button>
             </div>
           )}
-          {/* shipping: seller tự giao hàng nên tự báo kết quả — "Đã giao" chốt
-              đơn hoàn tất luôn, "Đã hủy" dùng khi giao thất bại (khách vắng
-              nhà, sai địa chỉ...). */}
           {o.status === "shipping" && (
             <div className="flex flex-col items-center gap-1.5">
               <button

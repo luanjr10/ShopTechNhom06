@@ -16,10 +16,6 @@ use Throwable;
 
 class UseCaseController extends Controller
 {
-    /**
-     * [GET] /api/use-cases?categoryId=xxx
-     * Danh sách Quick Link đang hiển thị của một danh mục (dùng cho storefront).
-     */
     public function index(Request $request)
     {
         $categoryId = $request->input('categoryId', $request->input('category_id'));
@@ -42,10 +38,6 @@ class UseCaseController extends Controller
         ], 200);
     }
 
-    /**
-     * [GET] /api/categories/{categoryId}/use-cases
-     * Danh sách Quick Link (mọi trạng thái) của một danh mục — dùng cho admin.
-     */
     public function indexByCategory($categoryId)
     {
         try {
@@ -68,10 +60,6 @@ class UseCaseController extends Controller
         }
     }
 
-    /**
-     * [POST] /api/categories/{categoryId}/use-cases
-     * Tạo Quick Link cho danh mục hiện tại — categoryId lấy từ route, không cho nhập tay.
-     */
     public function store(StoreUseCaseRequest $request, $categoryId, CloudinaryService $cloudinaryService)
     {
         try {
@@ -115,10 +103,6 @@ class UseCaseController extends Controller
         }
     }
 
-    /**
-     * [POST|PATCH] /api/categories/{categoryId}/use-cases/{useCaseId}
-     * Cập nhật Quick Link — bắt buộc Quick Link phải thuộc đúng danh mục hiện tại.
-     */
     public function update(UpdateUseCaseRequest $request, $categoryId, $useCaseId, CloudinaryService $cloudinaryService)
     {
         try {
@@ -164,9 +148,6 @@ class UseCaseController extends Controller
         }
     }
 
-    /**
-     * [DELETE] /api/categories/{categoryId}/use-cases/{useCaseId}
-     */
     public function destroy($categoryId, $useCaseId)
     {
         try {
@@ -193,9 +174,6 @@ class UseCaseController extends Controller
         }
     }
 
-    /**
-     * Tìm Quick Link và đảm bảo nó thuộc đúng danh mục đang thao tác.
-     */
     private function findInCategory($categoryId, $useCaseId): UseCase
     {
         return UseCase::where('_id', $useCaseId)
@@ -203,9 +181,6 @@ class UseCaseController extends Controller
             ->firstOrFail();
     }
 
-    /**
-     * Sinh slug duy nhất trong phạm vi một danh mục (bỏ qua chính bản ghi khi sửa).
-     */
     private function uniqueSlug(string $name, int $categoryId, ?string $ignoreId = null): string
     {
         $base = Str::slug($name);

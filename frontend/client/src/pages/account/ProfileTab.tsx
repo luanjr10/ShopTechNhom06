@@ -106,7 +106,6 @@ function ProfileTab() {
           </div>
         )}
 
-        {/* Banner xác thực email */}
         {!verified && (
           <div className="mb-5 flex flex-col gap-2 rounded-xl border border-amber-200 bg-amber-50 p-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-2">
@@ -130,7 +129,6 @@ function ProfileTab() {
         )}
 
         <div className="flex flex-col gap-6 md:flex-row">
-          {/* Avatar */}
           <div className="flex flex-col items-center gap-3">
             <div className="relative">
               {user?.avatar_url ? (
@@ -175,7 +173,6 @@ function ProfileTab() {
             </p>
           </div>
 
-          {/* Form thông tin */}
           <form onSubmit={handleSave} className="flex flex-1 flex-col gap-4">
             {fields.map((f) => (
               <div key={f.name}>

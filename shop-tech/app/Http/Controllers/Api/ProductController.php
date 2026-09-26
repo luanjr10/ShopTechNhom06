@@ -59,8 +59,6 @@ class ProductController extends Controller
             $query->where('store_id', (int) $storeId);
         }
 
-        // Lọc theo tỉnh/thành khách đang chọn ở header — chỉ hiện sản phẩm của
-        // gian hàng có kho lấy hàng (pickup address) ở đúng tỉnh đó.
         if ($provinceId !== null && $provinceId !== '') {
             $query->whereHas('store', fn ($storeQuery) => $storeQuery->where('province_id', (int) $provinceId));
         }
@@ -73,8 +71,6 @@ class ProductController extends Controller
             $query->where('is_flash_sale', filter_var($isFlashSale, FILTER_VALIDATE_BOOLEAN));
         }
 
-        // Lọc theo Quick Link: chỉ lấy sản phẩm được gán UseCase tương ứng,
-        // đồng thời UseCase phải đúng danh mục đang lọc.
         if (($useCase !== null && $useCase !== '') || ($useCaseId !== null && $useCaseId !== '')) {
             $productIds = $this->productIdsForUseCase($useCase, $useCaseId, $categoryId);
             $query->whereIn('id', $productIds);
@@ -90,7 +86,6 @@ class ProductController extends Controller
         $perPage = min((int) $request->input('per_page', self::PER_PAGE), 100);
         $paginator = $query->paginate($perPage ?: self::PER_PAGE);
 
-        // Lấy toàn bộ ảnh sản phẩm của trang hiện tại từ MongoDB trong 1 lần truy vấn
         $imagesByProductId = ProductImage::whereIn(
             'productId',
             collect($paginator->items())->pluck('id')->all()
@@ -119,12 +114,6 @@ class ProductController extends Controller
         ], 200);
     }
 
-    /**
-     * Trả về danh sách id sản phẩm được gán một Quick Link (theo slug hoặc _id).
-     * Nếu có categoryId thì UseCase phải thuộc đúng danh mục đó.
-     *
-     * @return array<int, int>
-     */
     private function productIdsForUseCase(?string $useCaseSlug, ?string $useCaseId, $categoryId): array
     {
         $useCaseQuery = UseCase::query();
@@ -145,9 +134,6 @@ class ProductController extends Controller
             return [];
         }
 
-        // Ép về string: `$useCase->id` là BSON ObjectId, còn `useCaseIds` lưu trong
-        // ProductUseCase là mảng string (xem NormalizesProductCatalog::sanitizeUseCaseIds)
-        // — so sánh khác kiểu BSON khiến Mongo không bao giờ khớp, lọc luôn trả rỗng.
         return ProductUseCase::where('useCaseIds', (string) $useCase->id)
             ->get()
             ->pluck('productId')
@@ -157,7 +143,6 @@ class ProductController extends Controller
     public function getProductDetail($id, RatingService $ratingService)
     {
         try {
-            // Cho phép tra cứu theo id (số) hoặc slug (chuỗi) để URL thân thiện.
             $product = is_numeric($id)
                 ? Product::findOrFail($id)
                 : Product::where('slug', $id)->firstOrFail();
@@ -166,13 +151,11 @@ class ProductController extends Controller
 
             $productId = (int) $product->id;
 
-            // Lấy thông số kỹ thuật + variants từ MongoDB
             $productSpecification = ProductSpecification::where(
                 'productId',
                 $productId
             )->first();
 
-            // Lấy hình ảnh sản phẩm từ MongoDB
             $productImage = ProductImage::where(
                 'productId',
                 $productId
@@ -180,10 +163,8 @@ class ProductController extends Controller
 
             $images = $productImage?->images ?? [];
 
-            // Danh sách Quick Link đã gán cho sản phẩm (dùng cho form sửa).
             $productUseCase = ProductUseCase::where('productId', $productId)->first();
 
-            // Variants: nếu chưa có (dữ liệu cũ) thì trả 1 variant mặc định từ sản phẩm.
             $variants = $this->resolveVariants(
                 $productSpecification?->variants ?? [],
                 $product
@@ -230,12 +211,10 @@ class ProductController extends Controller
     public function createProduct(StoreProductRequest $request, CloudinaryService $cloudinaryService)
     {
         try {
-            // Upload toàn bộ ảnh lên Cloudinary
             $imageUrls = $cloudinaryService->uploadMultipleImages(
                 $request->file('images')
             );
 
-            // Tạo sản phẩm trong MySQL (không còn lưu ảnh ở đây nữa)
             $product = Product::create([
                 'code' => $request->code,
                 'name' => $request->name,
@@ -247,7 +226,6 @@ class ProductController extends Controller
                 'category_id' => $request->category_id,
             ]);
 
-            // Lưu danh sách ảnh vào MongoDB
             ProductImage::updateOrCreate(
                 [
                     'productId' => $product->id,
@@ -277,7 +255,6 @@ class ProductController extends Controller
                 ]
             );
 
-            // Gán Quick Link — chỉ giữ lại UseCase thuộc đúng danh mục sản phẩm.
             $this->syncUseCases(
                 $product->id,
                 json_decode($request->input('use_case_ids', '[]'), true) ?: [],
@@ -297,7 +274,6 @@ class ProductController extends Controller
 
         } catch (Throwable $e) {
 
-            // Ghi lỗi vào storage/logs/laravel.log
             Log::error('Lỗi tạo sản phẩm', [
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
@@ -317,10 +293,8 @@ class ProductController extends Controller
         try {
             $product = Product::findOrFail($id);
 
-            // Ảnh cũ được giữ lại (đường dẫn Cloudinary đã upload trước đó)
             $keptImages = json_decode($request->input('existing_images', '[]'), true) ?: [];
 
-            // Upload thêm ảnh mới (nếu có) lên Cloudinary
             $newImageUrls = $request->hasFile('images')
                 ? $cloudinaryService->uploadMultipleImages($request->file('images'))
                 : [];
@@ -343,7 +317,6 @@ class ProductController extends Controller
                 'category_id' => $request->category_id,
             ]);
 
-            // Cập nhật lại danh sách ảnh trong MongoDB
             ProductImage::updateOrCreate(
                 [
                     'productId' => $product->id,
@@ -373,7 +346,6 @@ class ProductController extends Controller
                 ]
             );
 
-            // Cập nhật Quick Link — chỉ giữ lại UseCase thuộc đúng danh mục sản phẩm.
             $this->syncUseCases(
                 $product->id,
                 json_decode($request->input('use_case_ids', '[]'), true) ?: [],

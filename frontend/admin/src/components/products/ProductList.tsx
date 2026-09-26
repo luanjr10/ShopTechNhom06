@@ -24,12 +24,6 @@ const SORT_OPTIONS: SortOption<ProductSort>[] = [
   { value: "discount_desc", label: "Giảm giá nhiều nhất" },
 ];
 
-/**
- * Danh sách sản phẩm — chỉ lo việc hiển thị bảng + phân trang/sort/search.
- * Toàn bộ logic thêm/sửa nằm trong `ProductFormModal`, xem chi tiết nằm
- * trong `ProductDetailModal`, xóa dùng chung `confirmDelete`. Component này
- * chỉ giữ state "đang mở modal nào cho id nào".
- */
 export default function ProductsList() {
   const {
     items: products,

@@ -7,14 +7,10 @@ use App\Models\Order;
 use App\Services\InvoiceService;
 use Illuminate\Http\Request;
 
-/**
- * Admin xem toàn bộ đơn hàng của hệ thống.
- */
 class OrderController extends Controller
 {
     public function __construct(private InvoiceService $invoiceService) {}
 
-    // [GET] /api/admin/orders
     public function index(Request $request)
     {
         $query = Order::with(['user:id,name,username', 'sellerOrders.store:id,name'])
@@ -30,7 +26,6 @@ class OrderController extends Controller
         ], 200);
     }
 
-    // [GET] /api/admin/orders/{order}
     public function show(Order $order)
     {
         return response()->json([
@@ -39,7 +34,6 @@ class OrderController extends Controller
         ], 200);
     }
 
-    // [GET] /api/admin/orders/{order}/invoice/pdf — xem/tải hóa đơn ĐẦY ĐỦ (mọi seller trong đơn).
     public function invoicePdf(Order $order)
     {
         $invoice = $this->invoiceService->buildFromOrder($order);
@@ -47,7 +41,6 @@ class OrderController extends Controller
         return $this->invoiceService->renderPdf($invoice)->stream("{$invoice['invoice_no']}.pdf");
     }
 
-    // [POST] /api/admin/orders/{order}/invoice/email — gửi hóa đơn PDF về email khách hàng.
     public function emailInvoice(Request $request, Order $order)
     {
         $validated = $request->validate(['email' => 'nullable|email:rfc,dns']);

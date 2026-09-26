@@ -10,11 +10,6 @@ use App\Models\User;
 use App\Services\SellerOrderService;
 use Illuminate\Support\Facades\Schema;
 
-/**
- * Test quyết định 2026-09-19: kho chỉ bị trừ lúc seller bàn giao vận chuyển
- * (SellerOrderService::handover()), KHÔNG còn trừ lúc đặt hàng (OrderService::
- * place, xem OrderCancelTest). Hoàn kho chỉ xảy ra khi hủy đơn ĐÃ bàn giao.
- */
 beforeEach(function () {
     foreach (['shipments', 'order_items', 'seller_orders', 'orders', 'wallet_transactions', 'seller_wallets', 'stores', 'seller_profiles', 'products', 'users'] as $table) {
         Schema::dropIfExists($table);
@@ -183,14 +178,14 @@ function makeConfirmedSellerOrder(int $stock = 10, int $quantity = 2): array
 test('handover deducts stock and holds the wallet only when seller hands off for shipping', function () {
     [$sellerOrder, $product, $wallet] = makeConfirmedSellerOrder(stock: 10, quantity: 2);
 
-    expect($product->refresh()->stock)->toBe(10); // chưa đụng tới lúc còn 'confirmed'
+    expect($product->refresh()->stock)->toBe(10);
     expect((float) $wallet->refresh()->pending_balance)->toBe(0.0);
 
     app(SellerOrderService::class)->handover($sellerOrder);
 
     expect($sellerOrder->refresh()->status)->toBe('shipping');
     expect($product->refresh()->stock)->toBe(8);
-    expect((float) $wallet->refresh()->pending_balance)->toBe(180000.0); // 200k - 10% hoa hồng
+    expect((float) $wallet->refresh()->pending_balance)->toBe(180000.0);
 });
 
 test('handover fails and does not touch stock or wallet when not enough inventory', function () {

@@ -137,7 +137,6 @@ export default function ManageCommissionsPage() {
         Quản Lý Hoa Hồng
       </h2>
 
-      {/* Form cấu hình */}
       {canCreate && (
       <form
         onSubmit={handleSubmit}

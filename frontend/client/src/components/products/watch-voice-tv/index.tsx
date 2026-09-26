@@ -3,7 +3,6 @@ import { ProductSection } from "../ProductSection/ProductSection";
 function ProductsWatchVoiceTv() {
   return (
     <div className="space-y-10">
-      {/* Khối Laptop & Màn hình — tái sử dụng ProductSection, Quick Link lấy từ API */}
       <ProductSection
         categories={[
           { code: "CATE-019", label: "ĐỒNG HỒ" },

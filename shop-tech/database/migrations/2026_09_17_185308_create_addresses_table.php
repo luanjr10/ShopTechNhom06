@@ -13,10 +13,10 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('recipient_name');
             $table->string('phone', 20);
-            $table->string('province');   // Tỉnh/Thành phố
-            $table->string('district');   // Quận/Huyện
-            $table->string('ward');       // Phường/Xã
-            $table->string('address_line'); // Số nhà, tên đường
+            $table->string('province');
+            $table->string('district');
+            $table->string('ward');
+            $table->string('address_line');
             $table->boolean('is_default')->default(false);
             $table->timestamps();
 

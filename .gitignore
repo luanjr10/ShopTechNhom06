@@ -71,3 +71,18 @@ lerna-debug.log*
 
 .DS_Store
 Thumbs.db
+
+# =========================================================
+# AI tooling (local only)
+# =========================================================
+
+.claude/
+CLAUDE.md
+AGENTS.md
+.mcp.json
+boost.json
+.junie/
+.ai/
+
+shop-tech/shoptech
+shop-tech/test_eta.php

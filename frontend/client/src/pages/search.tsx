@@ -9,7 +9,6 @@ import { type PaginationMeta, type Product, type ProductSort } from "../types/pr
 
 const PER_PAGE = 20;
 
-/** Trang kết quả tìm kiếm — đọc từ khóa ở ?q= trên URL (Header điều hướng tới đây). */
 function SearchPage() {
   const [searchParams] = useSearchParams();
   const keyword = (searchParams.get("q") ?? "").trim();

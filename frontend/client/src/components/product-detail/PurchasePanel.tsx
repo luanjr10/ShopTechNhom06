@@ -11,7 +11,6 @@ interface PurchasePanelProps {
   product: ProductDetail;
 }
 
-/** Cột phải trang chi tiết: giá, chọn phiên bản, số lượng và nút mua. */
 export function PurchasePanel({ product }: PurchasePanelProps) {
   const { user } = useAuth();
   const { addItem } = useCart();
@@ -22,7 +21,6 @@ export function PurchasePanel({ product }: PurchasePanelProps) {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  // Đổi sản phẩm thì chọn lại phiên bản đầu.
   useEffect(() => {
     setSelected(product.variants[0]);
     setQuantity(1);
@@ -101,7 +99,6 @@ export function PurchasePanel({ product }: PurchasePanelProps) {
         </div>
       </div>
 
-      {/* Khối giá */}
       <div className="rounded-2xl border border-primary500/15 bg-primary500/5 p-4">
         <div className="flex flex-wrap items-baseline gap-3">
           <span className="font-sans text-[20px] sm:text-[24px] sm:text-[28px] font-bold text-primary500">
@@ -123,7 +120,6 @@ export function PurchasePanel({ product }: PurchasePanelProps) {
         </p>
       </div>
 
-      {/* Chọn phiên bản (chỉ hiện thuộc tính thực sự có) */}
       {selected && (
         <VariantSelector
           variants={product.variants}
@@ -132,7 +128,6 @@ export function PurchasePanel({ product }: PurchasePanelProps) {
         />
       )}
 
-      {/* Số lượng + tồn kho */}
       <div className="flex items-center gap-4">
         <span className="font-sans text-[13px] font-medium text-gray-500">
           Số lượng
@@ -182,7 +177,6 @@ export function PurchasePanel({ product }: PurchasePanelProps) {
         </div>
       )}
 
-      {/* 2 nút mua */}
       <div className="flex flex-col gap-3 sm:flex-row">
         <button
           type="button"

@@ -4,11 +4,6 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-/**
- * Phân quyền theo module cho nhân viên (role=employee) — admin (role=admin)
- * luôn có full quyền, KHÔNG cần dòng ở đây (xem User::hasModulePermission()).
- * Nhân viên mới tạo chưa có dòng nào -> mặc định KHÔNG có quyền gì (an toàn).
- */
 return new class extends Migration
 {
     public function up(): void

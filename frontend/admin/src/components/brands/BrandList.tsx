@@ -1,6 +1,4 @@
 import { useState } from "react";
-// import * as LucideIcons from "lucide-react";
-// import { Folder } from "lucide-react";
 import { Button } from "flowbite-react";
 import { ToastContainer } from "react-toastify";
 import DataTable, { Column } from "../common/DataTable";
@@ -22,11 +20,6 @@ const SORT_OPTIONS: SortOption<BrandSort>[] = [
   { value: "name_desc", label: "Tên: Z đến A" },
 ];
 
-/**
- * Danh sách thương hiệu — chỉ lo việc hiển thị bảng + phân trang/sort/search.
- * Thêm/sửa nằm trong `CategoryFormModal`, xóa dùng chung `confirmDelete`.
- * Cùng cấu trúc với `ProductsList` để các mục quản lý sau này theo mẫu này.
- */
 export default function BrandList() {
   const {
     items: brands,

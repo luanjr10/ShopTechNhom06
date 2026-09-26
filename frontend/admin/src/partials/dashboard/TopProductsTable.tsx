@@ -5,7 +5,6 @@ interface Props {
   data: TopProductItem[];
 }
 
-/** Top 5 sản phẩm bán chạy nhất của gian hàng — bản seller của TopStoresTable (admin). */
 export default function TopProductsTable({ data }: Props) {
   return (
     <div className="col-span-full xl:col-span-8 bg-white dark:bg-gray-800 shadow-xs rounded-xl">

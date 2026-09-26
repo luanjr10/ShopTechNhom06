@@ -7,13 +7,8 @@ use App\Models\Category;
 use App\Models\CategoryComment;
 use Illuminate\Http\Request;
 
-/**
- * "Hỏi & đáp" theo danh mục — ai đăng nhập cũng bình luận/trả lời được, public
- * xem không cần đăng nhập. Cùng khuôn mẫu với ProductCommentController.
- */
 class CategoryCommentController extends Controller
 {
-    // [GET] /api/categories/{category}/comments
     public function index(Category $category)
     {
         $comments = CategoryComment::where('category_id', $category->id)
@@ -28,7 +23,6 @@ class CategoryCommentController extends Controller
         return response()->json(['success' => true, 'data' => $this->presentThread($comments)], 200);
     }
 
-    // [POST] /api/categories/{category}/comments
     public function store(Request $request, Category $category)
     {
         $validated = $request->validate([
@@ -40,8 +34,6 @@ class CategoryCommentController extends Controller
 
         if (! empty($validated['parent_id'])) {
             $parent = CategoryComment::where('category_id', $category->id)->findOrFail($validated['parent_id']);
-            // Luôn "làm phẳng" về tối đa 2 cấp: trả lời 1 reply thì gắn vào
-            // đúng comment GỐC của reply đó, không tạo chuỗi lồng sâu thêm.
             $parentId = $parent->parent_id ?? $parent->id;
         }
 

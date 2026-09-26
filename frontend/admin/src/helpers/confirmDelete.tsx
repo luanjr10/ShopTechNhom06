@@ -8,11 +8,6 @@ interface ConfirmDeleteOptions {
   errorText?: string;
 }
 
-/**
- * Hiển thị hộp thoại xác nhận xóa, thực thi `action` nếu người dùng đồng ý,
- * rồi hiển thị thông báo kết quả. Dùng chung cho mọi màn hình quản lý (sản
- * phẩm, danh mục, ...).
- */
 export async function confirmDelete(
   action: () => Promise<{ success?: boolean }>,
   options: ConfirmDeleteOptions = {},

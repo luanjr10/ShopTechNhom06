@@ -14,7 +14,6 @@ const SORT_OPTIONS: { value: StoreSort; label: string }[] = [
   { value: "name_asc", label: "Tên: A đến Z" },
 ];
 
-/** "Kênh người bán" — khám phá toàn bộ gian hàng đang hoạt động trên sàn. */
 function StoresPage() {
   const { selectedProvince } = useLocationContext();
   const [keyword, setKeyword] = useState("");
@@ -71,7 +70,6 @@ function StoresPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-[1220px] flex-col gap-6 px-3 py-4 sm:px-4 sm:py-6">
-      {/* Banner */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary500 to-red-700 px-6 py-8 text-white shadow-[0_8px_28px_rgba(215,0,24,0.25)] sm:px-10 sm:py-10">
         <div className="relative z-10 flex flex-col gap-4">
           <div className="flex items-center gap-3">
@@ -108,11 +106,9 @@ function StoresPage() {
           </form>
         </div>
 
-        {/* Trang trí góc */}
         <StoreIcon className="pointer-events-none absolute -right-6 -top-6 size-36 rotate-12 text-white/10" />
       </div>
 
-      {/* Thanh sắp xếp */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="font-sans text-[14px] text-gray-500">
           {meta ? `${meta.total} gian hàng` : "Đang tải..."}
@@ -136,7 +132,6 @@ function StoresPage() {
         </div>
       </div>
 
-      {/* Lưới gian hàng */}
       {loading ? (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {Array.from({ length: 8 }).map((_, i) => (

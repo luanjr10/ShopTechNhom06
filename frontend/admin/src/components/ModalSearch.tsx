@@ -12,7 +12,6 @@ function ModalSearch({
   const modalContent = useRef(null);
   const searchInput = useRef(null);
 
-  // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }) => {
       if (!modalOpen || modalContent.current.contains(target)) return
@@ -22,7 +21,6 @@ function ModalSearch({
     return () => document.removeEventListener('click', clickHandler);
   });
 
-  // close if the esc key is pressed
   useEffect(() => {
     const keyHandler = ({ keyCode }) => {
       if (!modalOpen || keyCode !== 27) return;
@@ -38,7 +36,6 @@ function ModalSearch({
 
   return (
     <>
-      {/* Modal backdrop */}
       <Transition
         className="fixed inset-0 bg-gray-900/30 z-50 transition-opacity"
         show={modalOpen}
@@ -50,7 +47,6 @@ function ModalSearch({
         leaveEnd="opacity-0"
         aria-hidden="true"
       />
-      {/* Modal dialog */}
       <Transition
         id={id}
         className="fixed inset-0 z-50 overflow-hidden flex items-start top-20 mb-4 justify-center px-4 sm:px-6"
@@ -68,7 +64,6 @@ function ModalSearch({
           ref={modalContent}
           className="bg-white dark:bg-gray-800 border border-transparent dark:border-gray-700/60 overflow-auto max-w-2xl w-full max-h-full rounded-lg shadow-lg"
         >
-          {/* Search form */}
           <form className="border-b border-gray-200 dark:border-gray-700/60">
             <div className="relative">
               <label htmlFor={searchId} className="sr-only">
@@ -96,7 +91,6 @@ function ModalSearch({
             </div>
           </form>
           <div className="py-4 px-2">
-            {/* Recent searches */}
             <div className="mb-3 last:mb-0">
               <div className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase px-2 mb-2">Recent searches</div>
               <ul className="text-sm">
@@ -204,7 +198,6 @@ function ModalSearch({
                 </li>
               </ul>
             </div>
-            {/* Recent pages */}
             <div className="mb-3 last:mb-0">
               <div className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase px-2 mb-2">Recent pages</div>
               <ul className="text-sm">

@@ -26,10 +26,8 @@ function Header({
       <div className="px-4 sm:px-6 lg:px-8">
         <div className={`flex items-center justify-between h-16 ${variant === 'v2' || variant === 'v3' ? '' : 'lg:border-b border-gray-200 dark:border-gray-700/60'}`}>
 
-          {/* Header: Left side */}
           <div className="flex min-w-0 items-center gap-3">
 
-            {/* Hamburger button */}
             <button
               className="shrink-0 text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 lg:hidden"
               aria-controls="sidebar"
@@ -44,7 +42,6 @@ function Header({
               </svg>
             </button>
 
-            {/* Chọn gian hàng — luôn hiện (cả mobile) để seller đổi gian hàng được */}
             {user?.role === 'seller' && stores.length > 0 && (
               <div className="flex min-w-0 items-center gap-2">
                 <StoreIcon className="hidden h-4 w-4 shrink-0 text-gray-400 sm:block" />
@@ -68,7 +65,6 @@ function Header({
 
           </div>
 
-          {/* Header: Right side */}
           <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
             <div>
               <button
@@ -95,7 +91,6 @@ function Header({
               <Help align="right" />
             </div>
             <ThemeToggle />
-            {/*  Divider */}
             <hr className="hidden sm:block w-px h-6 bg-gray-200 dark:bg-gray-700/60 border-none" />
             <UserMenu align="right" />
 

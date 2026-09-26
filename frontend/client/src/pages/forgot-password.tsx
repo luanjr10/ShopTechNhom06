@@ -18,7 +18,7 @@ import {
 import { type ApiError } from "../libs/api";
 
 const CODE_LENGTH = 6;
-const RESEND_COOLDOWN = 60; // giây, trước khi cho gửi lại mã
+const RESEND_COOLDOWN = 60;
 type Step = "email" | "code" | "password";
 const STEPS: { key: Step; label: string }[] = [
   { key: "email", label: "Email" },
@@ -46,7 +46,6 @@ function ForgotPassword() {
   const codeComplete = code.length === CODE_LENGTH;
   const activeIndex = STEPS.findIndex((s) => s.key === step);
 
-  // Đếm ngược cooldown trước khi cho gửi lại mã.
   useEffect(() => {
     if (resendIn <= 0) return;
     const t = setInterval(() => setResendIn((c) => c - 1), 1000);
@@ -91,7 +90,6 @@ function ForgotPassword() {
     }
   };
 
-  // Tự xác minh khi nhập đủ 6 số.
   useEffect(() => {
     if (step === "code" && codeComplete && !loading) {
       verifyCode();
@@ -150,7 +148,6 @@ function ForgotPassword() {
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-6 px-4 py-10">
       <div className="overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-[0_10px_40px_-12px_rgba(0,0,0,0.25)]">
-        {/* Header với gradient */}
         <div className="flex flex-col items-center gap-3 bg-gradient-to-b from-primary500 to-primary300 px-6 pt-8 pb-14 text-center text-white">
           <div className="flex size-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur">
             {step === "email" && <Mail className="size-7" />}
@@ -176,7 +173,6 @@ function ForgotPassword() {
         </div>
 
         <div className="px-6 pb-6">
-          {/* Stepper nổi lên trên header */}
           <div className="-mt-7 mb-6 flex items-center justify-center gap-2">
             {STEPS.map((s, i) => {
               const done = i < activeIndex;
@@ -227,7 +223,6 @@ function ForgotPassword() {
             </div>
           )}
 
-          {/* BƯỚC 1: EMAIL */}
           {step === "email" && (
             <form
               onSubmit={(e) => {
@@ -263,7 +258,6 @@ function ForgotPassword() {
             </form>
           )}
 
-          {/* BƯỚC 2: NHẬP MÃ */}
           {step === "code" && (
             <div className="flex flex-col gap-5">
               <div
@@ -334,7 +328,6 @@ function ForgotPassword() {
             </div>
           )}
 
-          {/* BƯỚC 3: MẬT KHẨU MỚI */}
           {step === "password" && (
             <form onSubmit={handleReset} className="flex flex-col gap-4">
               <div className="flex items-center justify-center gap-1.5 rounded-lg bg-green-50 py-2 font-sans text-[13px] font-medium text-green-700">

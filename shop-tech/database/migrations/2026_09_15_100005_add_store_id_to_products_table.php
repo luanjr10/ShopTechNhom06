@@ -9,7 +9,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            // Nullable: giữ nguyên dữ liệu cũ / sản phẩm do admin quản lý (chưa gắn store).
             $table->foreignId('store_id')->nullable()->after('category_id')
                 ->constrained('stores')->nullOnDelete();
         });

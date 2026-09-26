@@ -53,7 +53,6 @@ export function ChatWidget() {
     try {
       sessionStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
     } catch {
-      // sessionStorage có thể bị chặn (private mode) — bỏ qua, không ảnh hưởng chat.
     }
   }, [messages]);
 
@@ -85,9 +84,6 @@ export function ChatWidget() {
     setLoading(true);
 
     try {
-      // Chỉ gửi lịch sử gần nhất lên server (server cũng chỉ dùng ~12 tin nhắn
-      // gần nhất để hỏi AI) — tránh việc chat càng dài càng dễ vượt giới hạn
-      // validate và bị từ chối toàn bộ.
       const history: AiChatMessage[] = nextMessages
         .filter((m) => m.content.trim() !== "")
         .slice(-16)
@@ -106,15 +102,12 @@ export function ChatWidget() {
     }
   }
 
-  // Trang giỏ/thanh toán có thanh tổng tiền dính đáy — trên mobile nút chat
-  // sẽ đè lên nút thanh toán, nên ẩn đi (vẫn hiện nếu panel đang mở).
   const { pathname } = useLocation();
   const hideLauncherOnMobile =
     !open && (pathname === "/gio-hang" || pathname === "/thanh-toan");
 
   return (
     <>
-      {/* Nút mở chat — nổi góc dưới phải, hiện trên mọi trang */}
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -133,10 +126,8 @@ export function ChatWidget() {
         )}
       </button>
 
-      {/* Panel chat */}
       {open && (
         <div className="fixed inset-x-3 bottom-[76px] z-[60] flex h-[min(75dvh,600px)] flex-col sm:inset-x-auto sm:w-[380px] overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-[0_16px_48px_rgba(0,0,0,0.18)] sm:bottom-24 sm:right-6">
-          {/* Header */}
           <div className="flex shrink-0 items-center gap-3 bg-gradient-to-r from-primary500 to-red-700 px-4 py-3.5 text-white">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20">
               <Bot size={22} />
@@ -160,7 +151,6 @@ export function ChatWidget() {
             </button>
           </div>
 
-          {/* Messages */}
           <div
             ref={scrollRef}
             className="flex-1 space-y-3 overflow-y-auto bg-gray-50 px-3 py-4"
@@ -186,7 +176,6 @@ export function ChatWidget() {
               <p className="text-center text-[12px] text-red-500">{error}</p>
             )}
 
-            {/* Gợi ý câu hỏi — chỉ hiện khi mới bắt đầu hội thoại */}
             {messages.length === 1 && !loading && (
               <div className="flex flex-wrap gap-2 pt-1">
                 {SUGGESTIONS.map((s) => (
@@ -203,7 +192,6 @@ export function ChatWidget() {
             )}
           </div>
 
-          {/* Input */}
           <form
             onSubmit={(e) => {
               e.preventDefault();

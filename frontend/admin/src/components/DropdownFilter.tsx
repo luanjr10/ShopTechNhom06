@@ -7,8 +7,6 @@ function DropdownFilter({ align }) {
   const trigger = useRef(null);
   const dropdown = useRef(null);
 
-  //Clear  filtres on click clear button 
-
   const Checkrefs = {
     DirectorIndirect: useRef(null),
     RealTimeValue: useRef(null),
@@ -26,7 +24,6 @@ function DropdownFilter({ align }) {
     });
   };
 
-  // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }) => {
       if (!dropdown.current) return;
@@ -42,7 +39,6 @@ function DropdownFilter({ align }) {
     return () => document.removeEventListener("click", clickHandler);
   });
 
-  // close if the esc key is pressed
   useEffect(() => {
     const keyHandler = ({ keyCode }) => {
       if (!dropdownOpen || keyCode !== 27) return;

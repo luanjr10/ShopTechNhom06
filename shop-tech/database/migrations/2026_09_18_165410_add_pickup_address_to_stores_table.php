@@ -5,15 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-/**
- * Địa chỉ lấy hàng (pickup/from) của từng Store — GHN cần district_id/ward_code
- * theo hệ CŨ (có quận/huyện), không dùng chung hệ province/ward mới nữa (xem
- * LocationService — đã đổi nguồn sang master-data cũ của GHN).
- *
- * Store cũ (seed trước đây) chưa có địa chỉ — seed 1 địa chỉ mặc định hợp lệ
- * (đã verify thật qua GHN API, xem down() của migration seed riêng) để không
- * chặn luồng test; seller có thể tự cập nhật lại qua Seller Center sau.
- */
 return new class extends Migration
 {
     public function up(): void
@@ -30,10 +21,6 @@ return new class extends Migration
             $table->string('address_line')->nullable()->after('ward_name');
         });
 
-        // Seed địa chỉ mặc định cho store cũ chưa có — Quận Cầu Giấy, Phường Nghĩa
-        // Tân, Hà Nội (district_id=1485, ward_code=1A0605) — verify thật qua GHN
-        // API ngày tích hợp (SupportType=3: hỗ trợ cả lấy lẫn giao). Seller cần tự
-        // cập nhật đúng địa chỉ kho thật của mình qua Seller Center.
         DB::table('stores')->whereNull('district_id')->update([
             'pickup_contact_name' => DB::raw('COALESCE(pickup_contact_name, name)'),
             'pickup_phone' => '0900000000',

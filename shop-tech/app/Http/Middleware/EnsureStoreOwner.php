@@ -9,10 +9,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class EnsureStoreOwner
 {
-    /**
-     * Đảm bảo store trên route {store} thuộc về seller đang đăng nhập.
-     * Đặt sau middleware 'role:seller'.
-     */
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();

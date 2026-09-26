@@ -5,12 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-/**
- * Thêm role 'employee' (nhân viên admin, quyền hạn do EmployeePermission quyết
- * định — xem migration create_employee_permissions_table). `role` vốn là enum
- * cứng — đổi bằng add-copy-drop-rename (portable mysql/sqlite, không cần
- * doctrine/dbal), giống cách đã làm với coupons.type.
- */
 return new class extends Migration
 {
     public function up(): void

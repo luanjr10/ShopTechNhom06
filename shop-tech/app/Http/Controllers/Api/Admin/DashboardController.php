@@ -11,15 +11,8 @@ use App\Models\SellerProfile;
 use App\Models\User;
 use Carbon\Carbon;
 
-/**
- * Tổng quan toàn sàn cho trang Dashboard admin — TOÀN BỘ số liệu tính thật từ
- * DB (không có mock), doanh thu sàn = SUM(seller_orders.commission_amount)
- * (phần hoa hồng, xem CommissionService/SellerOrderService::complete — đây là
- * số ShopTech thực nhận), chỉ tính trên seller_orders đã 'completed'.
- */
 class DashboardController extends Controller
 {
-    // [GET] /api/admin/dashboard
     public function summary()
     {
         $now = Carbon::now();
@@ -76,9 +69,6 @@ class DashboardController extends Controller
         ], 200);
     }
 
-    /**
-     * KPI dạng "hiện tại 30 ngày vs 30 ngày trước" + chuỗi theo ngày (sparkline).
-     */
     private function kpi(
         $query,
         string $dateColumn,
@@ -114,10 +104,6 @@ class DashboardController extends Controller
         ];
     }
 
-    /**
-     * Chuỗi giá trị theo NGÀY trong khoảng [start,end] — tự điền 0 cho ngày
-     * không có dữ liệu (biểu đồ sparkline/line cần đủ điểm, không được nhảy cóc).
-     */
     private function dailySeries($query, string $dateColumn, $sumExpr, Carbon $start, Carbon $end): array
     {
         $rows = (clone $query)
@@ -139,10 +125,6 @@ class DashboardController extends Controller
         return ['labels' => $labels, 'values' => $values];
     }
 
-    /**
-     * Doanh thu (subtotal seller_orders completed) theo tháng, tách COD vs
-     * thanh toán online (momo/vnpay/onepay/sepay) — 6 tháng gần nhất.
-     */
     private function revenueByPaymentMethod(): array
     {
         $start = Carbon::now()->subMonths(5)->startOfMonth();
@@ -171,10 +153,6 @@ class DashboardController extends Controller
         return ['labels' => $labels, 'cod' => $cod, 'online' => $online];
     }
 
-    /**
-     * Top 5 danh mục theo doanh thu (line_total order_items thuộc seller_orders
-     * completed), gộp phần còn lại vào "Khác" — dùng cho doughnut chart.
-     */
     private function topCategories(): array
     {
         $completedSellerOrderIds = SellerOrder::where('status', 'completed')->pluck('id');
@@ -198,7 +176,6 @@ class DashboardController extends Controller
         return $result;
     }
 
-    /** Top 5 gian hàng theo doanh thu thực nhận (seller_amount, completed). */
     private function topStores(): array
     {
         $rows = SellerOrder::where('seller_orders.status', 'completed')
@@ -218,7 +195,6 @@ class DashboardController extends Controller
         ])->all();
     }
 
-    /** Top 5 khách hàng theo tổng chi tiêu (Order.total_amount, đơn completed). */
     private function topCustomers(): array
     {
         $rows = Order::where('orders.status', 'completed')
@@ -238,10 +214,6 @@ class DashboardController extends Controller
         ])->all();
     }
 
-    /**
-     * Số đơn hoàn tất vs huỷ theo tháng (6 tháng) — huỷ dùng `updated_at` làm
-     * mốc gần đúng (bảng seller_orders không có cột `cancelled_at` riêng).
-     */
     private function orderStatusByMonth(): array
     {
         $start = Carbon::now()->subMonths(5)->startOfMonth();
@@ -273,7 +245,6 @@ class DashboardController extends Controller
         return ['labels' => $labels, 'completed' => $completed, 'cancelled' => $cancelled];
     }
 
-    /** Trộn 3 nguồn hoạt động gần đây (đơn hoàn tất, gian hàng mới duyệt, đánh giá mới) — lấy 8 mới nhất. */
     private function recentActivity(): array
     {
         $orders = SellerOrder::where('status', 'completed')
@@ -318,7 +289,6 @@ class DashboardController extends Controller
             ->all();
     }
 
-    /** Doanh thu sàn (GMV) + hoa hồng thực nhận tháng này vs tháng trước. */
     private function platformFunds(Carbon $now): array
     {
         $thisMonthStart = $now->copy()->startOfMonth();

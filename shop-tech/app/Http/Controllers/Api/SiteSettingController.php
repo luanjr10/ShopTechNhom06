@@ -7,7 +7,6 @@ use App\Models\SiteSetting;
 
 class SiteSettingController extends Controller
 {
-    // [GET] /api/settings/flash-sale — public, storefront cần biết giờ kết thúc flash sale.
     public function flashSale()
     {
         return response()->json([

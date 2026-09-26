@@ -1,6 +1,5 @@
 import api, { BACKEND_URL } from "../api/axios";
 
-// ---- Seller Applications ----
 export const getSellerApplications = async (status?: string, page = 1) => {
   const res = await api.get("admin/seller-applications", {
     params: { status: status || undefined, page, per_page: 10 },
@@ -22,7 +21,6 @@ export const rejectSellerApplication = async (id: number, reason?: string) => {
   return res.data;
 };
 
-// ---- Stores ----
 export const getAdminStores = async (status?: string) => {
   const res = await api.get("admin/stores", {
     params: { status, per_page: 50 },
@@ -37,7 +35,6 @@ export const setStoreStatus = async (
   return res.data;
 };
 
-// ---- Commissions ----
 export const getCommissions = async () => {
   const res = await api.get("admin/commissions");
   return res.data;
@@ -57,7 +54,6 @@ export const deleteCommission = async (id: number) => {
   return res.data;
 };
 
-// ---- Withdrawals ----
 export const getWithdrawals = async (status?: string) => {
   const res = await api.get("admin/withdrawals", {
     params: { status, per_page: 50 },
@@ -73,14 +69,11 @@ export const rejectWithdrawal = async (id: number, note?: string) => {
   return res.data;
 };
 
-// Duyệt rút tiền qua cổng online (momo/vnpay/onepay/sepay) — trả pay_url để
-// FE điều hướng CẢ TRANG sang sandbox thật (xem WithdrawalPaymentController).
 export const createWithdrawalPayment = async (id: number) => {
   const res = await api.post(`admin/withdrawals/${id}/pay`);
   return res.data;
 };
 
-// ---- Orders + Hóa đơn (admin xem TOÀN BỘ đơn hàng trên sàn) ----
 export const getAdminOrders = async (params: { status?: string; page?: number; per_page?: number } = {}) => {
   const res = await api.get("admin/orders", { params });
   return res.data;
@@ -95,7 +88,6 @@ export const emailAdminOrderInvoice = async (id: number, email?: string) => {
 };
 export const adminOrderInvoicePdfUrl = (id: number) => `${BACKEND_URL}/api/admin/orders/${id}/invoice/pdf`;
 
-// ---- Đánh giá sản phẩm — kiểm duyệt toàn sàn ----
 export const getAdminReviews = async (params: { rating?: number; store_id?: number; page?: number } = {}) => {
   const res = await api.get("admin/reviews", { params });
   return res.data;
@@ -105,13 +97,11 @@ export const deleteAdminReview = async (id: number) => {
   return res.data;
 };
 
-// ---- Người theo dõi gian hàng — toàn sàn ----
 export const getAdminStoreFollows = async (params: { search?: string; store_id?: number; page?: number } = {}) => {
   const res = await api.get("admin/store-follows", { params });
   return res.data;
 };
 
-// ---- Platform Funds (tiền sàn đang giữ hộ seller) ----
 export const getPlatformFundsSummary = async () => {
   const res = await api.get("admin/platform-funds/summary");
   return res.data.data;

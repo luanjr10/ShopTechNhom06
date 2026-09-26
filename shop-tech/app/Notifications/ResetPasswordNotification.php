@@ -6,18 +6,12 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-/**
- * Mail đặt lại mật khẩu — gửi mã OTP 6 số (không dùng link).
- */
 class ResetPasswordNotification extends Notification
 {
     use Queueable;
 
     public function __construct(public string $code) {}
 
-    /**
-     * @return array<int, string>
-     */
     public function via(object $notifiable): array
     {
         return ['mail'];

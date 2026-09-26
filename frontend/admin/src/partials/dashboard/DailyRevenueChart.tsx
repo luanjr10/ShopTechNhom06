@@ -11,9 +11,6 @@ interface Props {
   subtitle?: string;
 }
 
-/** Doanh thu theo ngày (30 ngày gần nhất) — thay DashboardCard05 gốc (Real
- * Time Value giả lập cập nhật mỗi 2 giây bằng dữ liệu random). Dùng chung cho
- * cả Dashboard admin (hoa hồng) lẫn seller (doanh thu thực nhận). */
 export default function DailyRevenueChart({
   data,
   title = "Hoa hồng theo ngày (30 ngày)",

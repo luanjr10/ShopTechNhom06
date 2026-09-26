@@ -12,7 +12,6 @@ interface ProductGridProps {
   emptyMessage?: string;
 }
 
-/** Lưới sản phẩm 5 cột, hỗ trợ "Xem tiếp" khi còn dữ liệu. */
 export function ProductGrid({
   products,
   loading,

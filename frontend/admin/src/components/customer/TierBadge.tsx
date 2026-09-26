@@ -1,6 +1,5 @@
 import { Gem } from "lucide-react";
 
-// Đồng bộ với App\Services\CustomerTierService::TIERS ở backend.
 const TIER_META: Record<string, { label: string; className: string }> = {
   dong: { label: "Đồng", className: "bg-amber-800/20 text-amber-500 border-amber-700/30" },
   bac: { label: "Bạc", className: "bg-slate-400/10 text-slate-300 border-slate-400/30" },

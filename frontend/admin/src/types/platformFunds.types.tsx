@@ -13,7 +13,6 @@ export interface PlatformFundOrderItem {
   line_total?: number | string;
 }
 
-/** 1 dòng tiền (SellerOrder) sàn đang giữ hoặc đã giải ngân cho seller. */
 export interface PlatformFundOrder {
   id: number;
   order_id: number;

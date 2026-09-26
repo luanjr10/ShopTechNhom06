@@ -4,13 +4,6 @@ import { useLocationContext } from "../../../context/LocationContext";
 import { matchesQuery } from "../../../libs/vietnameseSearch";
 import { Button } from "../../ui/button";
 
-/**
- * Nút "Hà Nội" ở header — bấm mở dropdown chọn tỉnh/thành (63 tỉnh cũ, dùng
- * chung nguồn dữ liệu GHN với checkout/địa chỉ, xem LocationContext). Chọn 1
- * tỉnh sẽ lọc gian hàng/sản phẩm hiển thị trên sàn theo đúng tỉnh đó (xem nơi
- * dùng `selectedProvince` ở ProductSection/category/stores/search) + là điều
- * kiện để ShippingService backend tính miễn phí ship/giao 2 giờ lúc đặt hàng.
- */
 export function LocationMenu({ className = "" }: { className?: string }) {
   const { provinces, loadingProvinces, selectedProvince, setSelectedProvince } =
     useLocationContext();

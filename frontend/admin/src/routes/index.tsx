@@ -31,11 +31,6 @@ import SellerCustomers from "../pages/seller/SellerCustomers";
 import SellerReturns from "../pages/seller/SellerReturns";
 import SellerReviews from "../pages/seller/SellerReviews";
 
-// "/mục quản lý" chỉ admin/nhân viên có quyền vào được, "/seller/mục" chỉ
-// seller vào được — kể cả gõ thẳng URL cũng bị RequireRole đá về "/". Chốt
-// chặn THẬT nằm ở backend (middleware role + permission:module,ability trong
-// routes/api/admin.php + brands/categories/products.php, role/store.owner
-// trong routes/api/seller.php).
 export const routes = [
   {
     path: "/login",
@@ -54,10 +49,8 @@ export const routes = [
     children: [
       { path: "/", element: <Home /> },
 
-      // Admin — quản lý catalog + sàn TMĐT tổng (nhân viên vào được NẾU được cấp quyền view module đó).
       { path: "/products", element: <RequireRole roles={["admin", "employee"]} module="products"><ManageProductsPage /></RequireRole> },
       { path: "/categories", element: <RequireRole roles={["admin", "employee"]} module="categories"><ManageCategoriesPage /></RequireRole> },
-      // Nhân viên + phân quyền — CHỈ admin thật, không delegate được (tránh leo thang quyền).
       { path: "/employee", element: <RequireRole roles={["admin"]}><ManageEmployeePage /></RequireRole> },
       { path: "/customers", element: <RequireRole roles={["admin", "employee"]} module="customers"><ManageCustomerPage /></RequireRole> },
       { path: "/home-highlights", element: <RequireRole roles={["admin", "employee"]} module="home_highlights"><HomeHighlightsPage /></RequireRole> },
@@ -71,7 +64,6 @@ export const routes = [
       { path: "/orders", element: <RequireRole roles={["admin", "employee"]} module="orders"><ManageOrdersPage /></RequireRole> },
       { path: "/reviews", element: <RequireRole roles={["admin", "employee"]} module="reviews"><ManageReviewsPage /></RequireRole> },
 
-      // Seller — Kênh người bán (quản lý gian hàng CỦA MÌNH)
       { path: "/seller/stores", element: <RequireRole roles={["seller"]}><SellerStores /></RequireRole> },
       { path: "/seller/products", element: <RequireRole roles={["seller"]}><SellerProducts /></RequireRole> },
       { path: "/seller/orders", element: <RequireRole roles={["seller"]}><SellerOrders /></RequireRole> },
@@ -82,13 +74,10 @@ export const routes = [
       { path: "/seller/customers", element: <RequireRole roles={["seller"]}><SellerCustomers /></RequireRole> },
       { path: "/seller/returns", element: <RequireRole roles={["seller"]}><SellerReturns /></RequireRole> },
       { path: "/seller/reviews", element: <RequireRole roles={["seller"]}><SellerReviews /></RequireRole> },
-      // Route cũ — giữ redirect để không vỡ link/bookmark có sẵn.
       { path: "/seller/settings", element: <Navigate to="/settings" replace /> },
 
-      // Cài đặt tài khoản (mọi role) + gian hàng (riêng seller, xem SettingsPage).
       { path: "/settings", element: <RequireRole roles={["admin", "seller", "employee"]}><SettingsPage /></RequireRole> },
 
-      // Giữ chỗ — chưa triển khai
       { path: "/messages", element: <ComingSoon title="Tin nhắn" /> },
     ],
   },

@@ -16,7 +16,6 @@ return new class extends Migration
             $table->enum('status', ['pending', 'confirmed', 'shipping', 'completed', 'cancelled'])
                 ->default('pending')->index();
             $table->decimal('subtotal', 15, 2)->default(0);
-            // Snapshot hoa hồng — chốt lúc tạo đơn, KHÔNG tính lại theo rate mới.
             $table->decimal('commission_rate', 5, 2)->default(0);
             $table->decimal('commission_amount', 15, 2)->default(0);
             $table->decimal('seller_amount', 15, 2)->default(0);

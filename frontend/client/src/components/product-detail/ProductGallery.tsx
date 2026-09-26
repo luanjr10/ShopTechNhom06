@@ -6,11 +6,9 @@ interface ProductGalleryProps {
   name: string;
 }
 
-/** Khung ảnh sản phẩm: ảnh lớn + dải thumbnail chọn nhanh. */
 export function ProductGallery({ images, name }: ProductGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // Reset về ảnh đầu khi đổi sản phẩm.
   useEffect(() => {
     setActiveIndex(0);
   }, [images]);

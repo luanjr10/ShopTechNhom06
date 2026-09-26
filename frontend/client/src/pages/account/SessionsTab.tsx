@@ -47,7 +47,6 @@ function SessionsTab() {
       )}
 
       <div className="flex flex-col gap-3">
-        {/* Thiết bị hiện tại */}
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-gray-100 bg-gray-50/60 p-3 sm:p-4">
           <div className="flex items-center gap-3">
             <div className="flex size-10 items-center justify-center rounded-full bg-primary500/10 text-primary500">
@@ -76,7 +75,6 @@ function SessionsTab() {
           </button>
         </div>
 
-        {/* Đăng xuất các thiết bị khác */}
         <div className="flex flex-col gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-3">
             <ShieldAlert className="mt-0.5 size-5 shrink-0 text-amber-500" />

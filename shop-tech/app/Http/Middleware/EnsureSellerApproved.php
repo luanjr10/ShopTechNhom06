@@ -8,10 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class EnsureSellerApproved
 {
-    /**
-     * Chỉ cho phép seller đã được duyệt và đang hoạt động
-     * truy cập Seller Center.
-     */
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();

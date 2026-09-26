@@ -1,20 +1,7 @@
-/**
- * Lớp gọi API dùng chung cho toàn bộ client.
- *
- * - Public GET (catalog): không cần cookie.
- * - Auth/nghiệp vụ cần đăng nhập: dùng session Sanctum SPA (cookie), nên trang
- *   phải chạy cùng host với backend. Mặc định backend ở http://localhost:8000,
- *   vì vậy hãy mở client ở http://localhost:5173 (KHÔNG dùng 127.0.0.1) để cookie
- *   session/XSRF đọc được — xem note trong bộ nhớ dự án.
- */
-// Bản build production mặc định gọi API cùng domain ("/api/..."), được Vercel
-// proxy sang backend (xem vercel.json) — cookie đăng nhập là first-party nên
-// không cần biết trước domain Vercel. Dev vẫn gọi thẳng localhost:8000.
 export const API_ORIGIN =
   (import.meta.env.VITE_API_ORIGIN as string | undefined) ??
   (import.meta.env.PROD ? "" : "http://localhost:8000");
 
-/** Trang quản trị/Kênh người bán (app admin — Seller Center đã gộp vào đây). */
 export const ADMIN_URL =
   (import.meta.env.VITE_ADMIN_URL as string | undefined) ??
   "http://localhost:5173";
@@ -24,20 +11,15 @@ const BASE_URL =
 
 type QueryValue = string | number | boolean | undefined | null;
 
-/** Lỗi API có kèm status + payload để nơi gọi xử lý (VD: 422 lấy errors). */
 export interface ApiError extends Error {
   status: number;
   payload: unknown;
 }
 
-/**
- * Gửi request GET công khai (không cookie) và trả về JSON đã parse.
- */
 export async function apiGet<T>(
   path: string,
   params?: Record<string, QueryValue>,
 ): Promise<T> {
-  // Tham số thứ 2 cho phép BASE_URL tương đối ("/api" khi production chạy qua proxy Vercel).
   const url = new URL(`${BASE_URL}${path}`, window.location.origin);
 
   if (params) {
@@ -66,7 +48,6 @@ function readCookie(name: string): string | null {
   return match ? match[1] : null;
 }
 
-/** Lấy cookie CSRF nếu chưa có (bắt buộc trước các request thay đổi dữ liệu). */
 async function ensureCsrf(): Promise<void> {
   if (readCookie("XSRF-TOKEN")) return;
   await fetch(`${API_ORIGIN}/sanctum/csrf-cookie`, {
@@ -74,10 +55,6 @@ async function ensureCsrf(): Promise<void> {
   });
 }
 
-/**
- * Các path không tự động refresh khi gặp 401 (401 ở đây là có ý nghĩa thật:
- * sai mật khẩu, hết hạn link…). Mọi path khác sẽ thử /refresh một lần rồi retry.
- */
 const NO_REFRESH_PATHS = [
   "/login",
   "/register",
@@ -87,7 +64,6 @@ const NO_REFRESH_PATHS = [
   "/logout",
 ];
 
-/** Gọi /refresh để gia hạn JWT cookie. Trả về true nếu thành công. */
 async function tryRefresh(): Promise<boolean> {
   try {
     const res = await fetch(`${BASE_URL}/refresh`, {
@@ -101,11 +77,6 @@ async function tryRefresh(): Promise<boolean> {
   }
 }
 
-/**
- * Request có xác thực bằng JWT trong HttpOnly cookie (credentials: include).
- * Khi gặp 401 trên các route cần đăng nhập, tự gọi /refresh một lần rồi retry
- * → phiên "cuộn" theo refresh_ttl mà không cần đăng nhập lại.
- */
 async function authRequest<T>(
   method: string,
   path: string,
@@ -139,7 +110,6 @@ async function authRequest<T>(
           : JSON.stringify(body),
   });
 
-  // Tự gia hạn phiên khi token hết hạn.
   if (
     response.status === 401 &&
     !isRetry &&
@@ -178,6 +148,5 @@ export const apiPut = <T>(path: string, body?: unknown): Promise<T> =>
 export const apiDelete = <T>(path: string): Promise<T> =>
   authRequest<T>("DELETE", path);
 
-/** Upload multipart (avatar…). Trình duyệt tự set Content-Type + boundary. */
 export const apiUpload = <T>(path: string, form: FormData): Promise<T> =>
   authRequest<T>("POST", path, form);

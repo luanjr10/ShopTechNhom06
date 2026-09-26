@@ -5,7 +5,6 @@ interface StoreTrustCenterProps {
   store: Store;
 }
 
-/** Cột phải: trung tâm uy tín (checklist minh bạch). */
 export function StoreTrustCenter({ store }: StoreTrustCenterProps) {
   const completed = store.stats?.completed_orders ?? 0;
 

@@ -7,15 +7,8 @@ use App\Models\ProductReview;
 use App\Models\StoreFollow;
 use App\Models\User;
 
-/**
- * Thống kê đánh giá (sản phẩm/gian hàng) + theo dõi gian hàng — dùng chung cho
- * trang public (store/product) lẫn trang quản lý (admin/seller).
- */
 class RatingService
 {
-    /**
-     * @return array{average: float, count: int, breakdown: array<int, int>}
-     */
     public function productStats(int $productId): array
     {
         $rows = ProductReview::where('product_id', $productId)
@@ -38,9 +31,6 @@ class RatingService
         ];
     }
 
-    /**
-     * @return array{average: float, count: int}
-     */
     public function storeStats(int $storeId): array
     {
         $productIds = Product::where('store_id', $storeId)->pluck('id');

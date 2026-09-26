@@ -8,20 +8,10 @@ use App\Models\CouponRedemption;
 use App\Models\User;
 use RuntimeException;
 
-/**
- * Validate + tính số tiền giảm cho 1 mã coupon. Luôn tính lại ở BE (không tin
- * discount_amount FE gửi lên) — cả lúc "áp mã xem trước" ở checkout và lúc
- * đặt hàng thật (xem OrderService::place).
- */
 class CouponService
 {
     public function __construct(private CustomerTierService $tierService) {}
 
-    /**
-     * @return array{coupon: Coupon, discount_amount: float, discount_target: string}
-     *
-     * @throws RuntimeException nếu mã không hợp lệ/hết hạn/chưa đủ điều kiện.
-     */
     public function apply(string $code, float $subtotal, ?User $user = null, float $shippingFee = 0.0): array
     {
         $coupon = Coupon::whereRaw('UPPER(code) = ?', [mb_strtoupper(trim($code))])->first();
@@ -43,7 +33,6 @@ class CouponService
             throw new RuntimeException("Đơn hàng cần tối thiểu {$min}đ để dùng mã này.");
         }
 
-        // Voucher hạng thành viên: cần đăng nhập, đủ hạng, và đã "bấm nhận" trước.
         if ($coupon->isTierRestricted()) {
             if (! $user) {
                 throw new RuntimeException('Bạn cần đăng nhập để dùng voucher này.');

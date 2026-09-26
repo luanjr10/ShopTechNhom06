@@ -4,7 +4,6 @@ interface ProductSpecificationsProps {
   specifications: ProductSpecItem[];
 }
 
-/** Bảng thông số kỹ thuật chung (không dùng để chọn phiên bản). */
 export function ProductSpecifications({
   specifications,
 }: ProductSpecificationsProps) {

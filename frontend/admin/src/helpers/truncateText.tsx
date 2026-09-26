@@ -1,4 +1,3 @@
-/** Cắt chuỗi về tối đa `maxLength` ký tự, thêm "..." nếu bị cắt bớt. */
 export function truncateText(
   text: string | null | undefined,
   maxLength: number,

@@ -13,9 +13,7 @@ export interface CartItemResponse {
   unit_price: number;
   subtotal: number;
   available_stock: number;
-  /** Sản phẩm/variant không còn tồn tại — không tính vào tổng, cần user tự xóa/điều chỉnh. */
   unavailable: boolean;
-  /** quantity trong giỏ > tồn kho hiện tại — không tính vào tổng, cần user giảm số lượng. */
   stock_insufficient: boolean;
 }
 

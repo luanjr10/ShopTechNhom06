@@ -6,9 +6,6 @@ use App\Http\Requests\ApiFormRequest;
 
 class UpdateAvatarRequest extends ApiFormRequest
 {
-    /**
-     * @return array<string, string>
-     */
     public function rules(): array
     {
         return [
@@ -16,9 +13,6 @@ class UpdateAvatarRequest extends ApiFormRequest
         ];
     }
 
-    /**
-     * @return array<string, string>
-     */
     public function messages(): array
     {
         return [

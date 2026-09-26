@@ -11,12 +11,8 @@ use App\Services\LocationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-/**
- * Seller quản lý các gian hàng CỦA MÌNH. Chỉ seller approved (có SellerProfile) mới tạo được.
- */
 class StoreController extends Controller
 {
-    // [GET] /api/seller/stores — danh sách store của seller đang đăng nhập.
     public function index(Request $request)
     {
         $profile = $request->user()->sellerProfile;
@@ -27,7 +23,6 @@ class StoreController extends Controller
         ], 200);
     }
 
-    // [POST] /api/seller/stores
     public function store(StoreStoreRequest $request, CloudinaryService $cloudinaryService)
     {
         $profile = $request->user()->sellerProfile;
@@ -42,7 +37,6 @@ class StoreController extends Controller
             'slug' => $this->uniqueSlug($request->name),
             'logo' => $logoUrl,
             'description' => $request->description,
-            // Gian hàng mới luôn chờ admin duyệt (không cho seller tự đặt trạng thái).
             'status' => 'pending',
         ]);
 
@@ -53,7 +47,6 @@ class StoreController extends Controller
         ], 201);
     }
 
-    // [GET] /api/seller/stores/{store}
     public function show(Store $store)
     {
         return response()->json([
@@ -62,10 +55,8 @@ class StoreController extends Controller
         ], 200);
     }
 
-    // [PATCH|POST] /api/seller/stores/{store}
     public function update(StoreStoreRequest $request, Store $store, CloudinaryService $cloudinaryService)
     {
-        // Seller không tự đổi trạng thái duyệt — chỉ admin approve/suspend.
         $data = [
             'name' => $request->name,
             'description' => $request->description,
@@ -84,9 +75,6 @@ class StoreController extends Controller
         ], 200);
     }
 
-    // [PUT] /api/seller/stores/{store}/pickup-address — địa chỉ GHN lấy hàng
-    // của gian hàng (bắt buộc trước khi "Bàn giao vận chuyển" — xem
-    // Store::hasPickupAddress()/SellerOrderService::handover()).
     public function updatePickupAddress(UpdateStorePickupAddressRequest $request, Store $store, LocationService $locationService)
     {
         $data = $request->validated();

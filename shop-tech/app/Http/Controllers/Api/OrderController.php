@@ -14,9 +14,6 @@ use Illuminate\Http\Request;
 use RuntimeException;
 use Throwable;
 
-/**
- * Customer đặt hàng (có thể mua từ nhiều Store trong 1 lần checkout) và xem đơn của mình.
- */
 class OrderController extends Controller
 {
     public function __construct(
@@ -25,7 +22,6 @@ class OrderController extends Controller
         private WarrantyService $warrantyService,
     ) {}
 
-    // [POST] /api/orders
     public function place(Request $request)
     {
         $validated = $request->validate([
@@ -36,7 +32,6 @@ class OrderController extends Controller
             'receiver_name' => 'required|string|max:150',
             'receiver_phone' => ['required', 'string', new VietnamesePhone],
             'shipping_address' => 'required|string|max:255',
-            // Mã GHN (hệ cũ, có quận/huyện) — bắt buộc để tính phí/tạo vận đơn thật.
             'province_id' => 'required|integer',
             'province_name' => 'required|string|max:150',
             'district_id' => 'required|integer',
@@ -78,7 +73,6 @@ class OrderController extends Controller
         ], 201);
     }
 
-    // [GET] /api/orders/mine
     public function mine(Request $request)
     {
         $orders = Order::where('user_id', $request->user()->id)
@@ -89,7 +83,6 @@ class OrderController extends Controller
         return response()->json(['success' => true, 'data' => $orders], 200);
     }
 
-    // [GET] /api/orders/{order}
     public function show(Request $request, Order $order)
     {
         if ($order->user_id !== $request->user()->id) {
@@ -102,11 +95,6 @@ class OrderController extends Controller
         ], 200);
     }
 
-    /**
-     * Gắn thông tin bảo hành (theo seller_order) + yêu cầu hoàn trả gần nhất
-     * (theo order_item) vào response — để FE hiện badge "còn hạn/hết hạn" và
-     * trạng thái yêu cầu mà không phải gọi thêm API riêng.
-     */
     private function withWarrantyAndReturns(Order $order): Order
     {
         $order->load('sellerOrders.store:id,name,slug', 'sellerOrders.items', 'sellerOrders.shipment');
@@ -130,7 +118,6 @@ class OrderController extends Controller
         return $order;
     }
 
-    // [POST] /api/orders/{order}/cancel — chỉ khi TẤT CẢ seller order còn 'pending' (chưa được xác nhận/đang giao).
     public function cancel(Request $request, Order $order)
     {
         if ($order->user_id !== $request->user()->id) {
@@ -150,9 +137,6 @@ class OrderController extends Controller
         ], 200);
     }
 
-    // [POST] /api/orders/{order}/seller-orders/{sellerOrder}/complete — customer
-    // xác nhận ĐÃ NHẬN hàng. CHỈ hợp lệ khi seller_order đang 'delivered' (do
-    // webhook GHN set) — không cho nhảy thẳng từ shipping/confirmed.
     public function completeSellerOrder(Request $request, Order $order, SellerOrder $sellerOrder)
     {
         if ($order->user_id !== $request->user()->id) {

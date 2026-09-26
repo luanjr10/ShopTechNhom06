@@ -1,4 +1,3 @@
-/** Bỏ dấu tiếng Việt để so khớp không phân biệt dấu (VD: "ninh binh" ~ "Ninh Bình"). */
 export function stripDiacritics(input: string): string {
   return input
     .normalize("NFD")

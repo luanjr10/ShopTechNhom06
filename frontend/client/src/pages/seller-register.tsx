@@ -41,7 +41,6 @@ function SellerRegister() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState<SellerApplication | null>(null);
 
-  // Danh mục kinh doanh cho phép chọn = danh mục đang có trong DB.
   useEffect(() => {
     getCategories()
       .then(setCategories)
@@ -54,7 +53,6 @@ function SellerRegister() {
     );
   };
 
-  // Lấy đơn đăng ký hiện có của user.
   useEffect(() => {
     if (!user || isSeller) {
       setLoadingApps(false);
@@ -115,7 +113,6 @@ function SellerRegister() {
       );
     }
 
-    // Chưa đăng nhập.
     if (!user) {
       return (
         <div className="flex flex-col items-center gap-3 rounded-xl bg-gray-50 p-4 sm:p-6 text-center">
@@ -141,7 +138,6 @@ function SellerRegister() {
       );
     }
 
-    // Đã là người bán.
     if (isSeller) {
       return (
         <div className="flex flex-col items-center gap-3 rounded-xl bg-green-50 p-4 sm:p-6 text-center">
@@ -172,7 +168,6 @@ function SellerRegister() {
       );
     }
 
-    // Đang có đơn chờ duyệt.
     if (pendingApp) {
       return (
         <div className="flex flex-col items-center gap-3 rounded-xl bg-amber-50 p-4 sm:p-6 text-center">
@@ -189,7 +184,6 @@ function SellerRegister() {
       );
     }
 
-    // Form đăng ký (kèm thông báo nếu đơn trước bị từ chối).
     return (
       <>
         {rejectedApp && (
@@ -319,7 +313,6 @@ function SellerRegister() {
 
   return (
     <div className="mx-auto grid w-full max-w-[1000px] grid-cols-1 gap-6 px-3 py-4 sm:px-4 sm:py-8 lg:grid-cols-2">
-      {/* Giới thiệu */}
       <div className="flex flex-col justify-center gap-4 rounded-2xl bg-linear-to-br from-primary500 to-primary300 p-5 sm:p-8 text-white">
         <Store className="size-10" />
         <h1 className="font-sans text-[21px] sm:text-[26px] font-bold leading-tight !text-[#ffffff]">
@@ -338,7 +331,6 @@ function SellerRegister() {
         </ul>
       </div>
 
-      {/* Nội dung/Form */}
       <div className="rounded-2xl border border-gray-100 bg-white p-4 sm:p-6 shadow-[0_4px_20px_-8px_rgba(0,0,0,0.35)]">
         <h2 className="mb-4 font-sans text-[18px] font-bold text-gray-800">
           Đăng ký mở gian hàng

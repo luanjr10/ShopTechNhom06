@@ -10,7 +10,6 @@ interface BreadcrumbProps {
   items: BreadcrumbItem[];
 }
 
-/** Đường dẫn điều hướng: Trang chủ / ... */
 export function Breadcrumb({ items }: BreadcrumbProps) {
   return (
     <nav className="flex min-w-0 flex-wrap items-center gap-1 font-sans text-[13px] text-gray-500">

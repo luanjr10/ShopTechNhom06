@@ -11,7 +11,6 @@ class CouponController extends Controller
 {
     public function __construct(private CouponService $couponService) {}
 
-    // [POST] /api/coupons/apply — xem trước số tiền giảm (không lưu gì, chỉ để hiển thị ở checkout).
     public function apply(Request $request)
     {
         $validated = $request->validate([

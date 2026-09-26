@@ -1,13 +1,6 @@
 import { apiGet } from "../libs/api";
 import { type District, type Province, type Ward } from "../types/location";
 
-/**
- * Dữ liệu hành chính VN — hệ CŨ của GHN (tỉnh -> quận/huyện -> phường/xã), lấy
- * từ API backend (proxy tới master-data GHN, xem LocationService phía BE).
- * KHÔNG hard-code danh sách ở FE. Cache trong bộ nhớ phiên làm việc vì dữ liệu
- * hành chính gần như không đổi.
- */
-
 interface RawProvince {
   ProvinceID: number;
   ProvinceName: string;
@@ -32,7 +25,7 @@ export function getProvinces(): Promise<Province[]> {
     provincesPromise = apiGet<{ data: RawProvince[] }>("/locations/provinces")
       .then((res) => res.data.map((p) => ({ code: p.ProvinceID, name: p.ProvinceName })))
       .catch((err) => {
-        provincesPromise = null; // cho phép thử lại nếu request lỗi
+        provincesPromise = null;
         throw err;
       });
   }

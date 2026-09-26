@@ -23,11 +23,6 @@ const SORT_OPTIONS: SortOption<CategorySort>[] = [
   { value: "name_desc", label: "Tên: Z đến A" },
 ];
 
-/**
- * Danh sách danh mục — chỉ lo việc hiển thị bảng + phân trang/sort/search.
- * Thêm/sửa nằm trong `CategoryFormModal`, xóa dùng chung `confirmDelete`.
- * Cùng cấu trúc với `ProductsList` để các mục quản lý sau này theo mẫu này.
- */
 export default function CategoriesList() {
   const {
     items: categories,

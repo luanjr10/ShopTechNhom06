@@ -10,9 +10,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
 
-/**
- * Admin duyệt/từ chối yêu cầu rút tiền của seller.
- */
 class WithdrawalController extends Controller
 {
     public function __construct(
@@ -20,7 +17,6 @@ class WithdrawalController extends Controller
         private PayoutService $payoutService,
     ) {}
 
-    // [GET] /api/admin/withdrawals?status=pending
     public function index(Request $request)
     {
         $query = WithdrawalRequest::with([
@@ -38,10 +34,6 @@ class WithdrawalController extends Controller
         ], 200);
     }
 
-    // [POST] /api/admin/withdrawals/{withdrawal}/approve — CHỈ dùng cho
-    // method='cod' (chuyển khoản thủ công). Các kênh online (momo/vnpay/
-    // onepay/sepay) phải qua WithdrawalPaymentController::create() để sang
-    // sandbox thật trước, KHÔNG duyệt trực tiếp ở đây (xem PayoutService).
     public function approve(Request $request, WithdrawalRequest $withdrawal)
     {
         if ($withdrawal->status !== 'pending') {
@@ -61,7 +53,6 @@ class WithdrawalController extends Controller
         ], 200);
     }
 
-    // [POST] /api/admin/withdrawals/{withdrawal}/reject
     public function reject(Request $request, WithdrawalRequest $withdrawal)
     {
         if ($withdrawal->status !== 'pending') {
@@ -76,7 +67,6 @@ class WithdrawalController extends Controller
                 'reviewed_at' => now(),
             ]);
 
-            // Trả lại phần đã giữ chỗ vào withdrawable.
             $wallet = $withdrawal->sellerProfile->wallet;
             if ($wallet) {
                 $this->walletService->refundWithdrawal($wallet, (float) $withdrawal->amount, 'withdrawal_request', $withdrawal->id);

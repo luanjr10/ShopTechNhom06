@@ -19,7 +19,6 @@ function pad(value: number): string {
   return String(value).padStart(2, "0");
 }
 
-/** Đếm ngược "HH:MM:SS" tới thời điểm `endsAt`, tự cập nhật mỗi giây. */
 export function CountdownTimer({ endsAt }: CountdownTimerProps) {
   const [remaining, setRemaining] = useState(() => getRemaining(endsAt));
 

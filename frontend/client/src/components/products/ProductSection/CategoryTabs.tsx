@@ -10,7 +10,6 @@ interface CategoryTabsProps {
   onChange: (index: number) => void;
 }
 
-/** Thanh chuyển danh mục chính (VD: Điện thoại / Máy tính bảng). */
 export function CategoryTabs({ tabs, activeIndex, onChange }: CategoryTabsProps) {
   return (
     <div className="flex flex-row items-stretch rounded-sm bg-white">

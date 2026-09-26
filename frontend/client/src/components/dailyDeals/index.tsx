@@ -22,7 +22,6 @@ const TABS: { key: TabKey; label: string }[] = [
   { key: "new_arrival", label: "Hàng mới về" },
 ];
 
-/** Khối tab sản phẩm nổi bật ngay dưới Flash sale — dữ liệu thật từ API. */
 function DailyDealsSection() {
   const [activeTab, setActiveTab] = useState<TabKey>("deal_shock");
   const [categories, setCategories] = useState<Category[]>([]);
@@ -81,7 +80,6 @@ function DailyDealsSection() {
 
   return (
     <div className="mt-2">
-      {/* Tab kiểu "folder" — tab đang chọn nối liền vào khung panel bên dưới */}
       <div className="flex items-end gap-1 px-1">
         {TABS.map((tab) => {
           const isActive = activeTab === tab.key;
@@ -130,8 +128,6 @@ function DailyDealsSection() {
       </div>
 
       <div className="rounded-2xl rounded-tl-none border-2 border-blue-500 bg-gradient-to-b from-blue-50/40 to-white p-2.5 sm:p-4">
-        {/* Chip danh mục — kiểu pill tròn giống Quick Link */}
-        {/* Mobile: 1 hàng cuộn ngang thay vì xếp nhiều dòng chiếm chỗ */}
         <div className="-mx-2.5 flex gap-2 overflow-x-auto px-2.5 pb-3 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:px-0 [&::-webkit-scrollbar]:hidden">
           <button
             type="button"
@@ -168,7 +164,6 @@ function DailyDealsSection() {
           })}
         </div>
 
-        {/* Sản phẩm — carousel để sau thêm nhiều SP vẫn kéo ngang xem được. */}
         <Carousel opts={{ align: "start", dragFree: true }} className="sm:px-2">
           <CarouselContent className="-ml-3">
             {loading

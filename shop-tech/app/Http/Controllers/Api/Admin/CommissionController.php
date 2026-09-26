@@ -6,13 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\CommissionSetting;
 use Illuminate\Http\Request;
 
-/**
- * Admin cấu hình hoa hồng: mặc định + mở rộng theo Category/Store.
- * KHÔNG ảnh hưởng đơn cũ (đơn đã snapshot commission_rate lúc tạo).
- */
 class CommissionController extends Controller
 {
-    // [GET] /api/admin/commissions
     public function index()
     {
         return response()->json([
@@ -23,7 +18,6 @@ class CommissionController extends Controller
         ], 200);
     }
 
-    // [POST] /api/admin/commissions — tạo/cập nhật theo scope (default 1 dòng duy nhất).
     public function upsert(Request $request)
     {
         $validated = $request->validate([
@@ -54,7 +48,6 @@ class CommissionController extends Controller
         ], 200);
     }
 
-    // [DELETE] /api/admin/commissions/{commission}
     public function destroy(CommissionSetting $commission)
     {
         if ($commission->scope === 'default') {

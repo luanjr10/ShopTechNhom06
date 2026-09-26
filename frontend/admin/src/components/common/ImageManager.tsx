@@ -11,10 +11,6 @@ interface ImageManagerProps {
   onRemoveSlot: (index: number) => void;
 }
 
-/**
- * Quản lý ảnh cho form thêm/sửa: hiển thị ảnh hiện có (chế độ sửa, có thể
- * xóa từng ảnh) và danh sách ô chọn ảnh mới (thêm/bớt ô tùy ý).
- */
 export default function ImageManager({
   mode,
   existingImages,

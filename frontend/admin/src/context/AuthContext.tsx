@@ -18,9 +18,7 @@ interface AuthState {
   loading: boolean;
   login: (loginId: string, password: string) => Promise<AuthUser>;
   logout: () => Promise<void>;
-  /** Cập nhật user trong context ngay sau khi đổi hồ sơ/avatar, không cần gọi lại /me. */
   updateUser: (user: AuthUser) => void;
-  // Chỉ có ý nghĩa với role seller — danh sách + gian hàng đang chọn.
   stores: SellerStore[];
   activeStore: SellerStore | null;
   setActiveStore: (store: SellerStore) => void;

@@ -17,11 +17,6 @@ use App\Services\WalletService;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
-/**
- * Dữ liệu mẫu để test nghiệp vụ marketplace bằng API.
- * Chỉ dùng MySQL (không đụng MongoDB) để chạy được cả khi CLI thiếu ext-mongodb.
- * Idempotent: chạy lại không nhân đôi dữ liệu.
- */
 class MarketplaceSeeder extends Seeder
 {
     public function run(): void
@@ -30,7 +25,6 @@ class MarketplaceSeeder extends Seeder
         $commissionService = new CommissionService;
         $sellerOrderService = new SellerOrderService($walletService);
 
-        // 1) Tài khoản (mật khẩu chung: "password")
         $admin = User::firstOrCreate(
             ['email' => 'admin@shoptech.test'],
             ['name' => 'Admin', 'username' => 'admin', 'role' => 'admin', 'password' => 'password'],
@@ -48,24 +42,20 @@ class MarketplaceSeeder extends Seeder
             ['name' => 'Customer', 'username' => 'customer', 'role' => 'customer', 'password' => 'password'],
         );
 
-        // 2) SellerProfile + ví
         $profile1 = SellerProfile::firstOrCreate(['user_id' => $seller1User->id], ['display_name' => 'TechZone Official', 'status' => 'active']);
         $profile2 = SellerProfile::firstOrCreate(['user_id' => $seller2User->id], ['display_name' => 'LaptopWorld', 'status' => 'active']);
         $wallet1 = SellerWallet::firstOrCreate(['seller_profile_id' => $profile1->id]);
         SellerWallet::firstOrCreate(['seller_profile_id' => $profile2->id]);
 
-        // 3) Store (seller1 có 2 store để test chuyển đổi; seller2 có 1)
         $techzone = Store::firstOrCreate(['slug' => 'techzone'], ['seller_profile_id' => $profile1->id, 'name' => 'TechZone', 'status' => 'active']);
         Store::firstOrCreate(['slug' => 'techzone-mobile'], ['seller_profile_id' => $profile1->id, 'name' => 'TechZone Mobile', 'status' => 'active']);
         $laptopworld = Store::firstOrCreate(['slug' => 'laptopworld'], ['seller_profile_id' => $profile2->id, 'name' => 'LaptopWorld', 'status' => 'active']);
 
-        // 4) Danh mục (tái dùng nếu DB đã có)
         $category = Category::first() ?? Category::create([
             'code' => 'MKT01', 'name' => 'Marketplace Demo', 'slug' => 'marketplace-demo',
             'icon' => 'Store', 'color' => '#6366f1', 'status' => 1,
         ]);
 
-        // 5) Sản phẩm gắn store
         $iphone = Product::firstOrCreate(
             ['code' => 'MKT-IP15'],
             ['name' => 'iPhone 15 (TechZone)', 'slug' => Str::slug('iPhone 15 MKT-IP15'),
@@ -79,17 +69,14 @@ class MarketplaceSeeder extends Seeder
                 'category_id' => $category->id, 'store_id' => $laptopworld->id],
         );
 
-        // 6) Hoa hồng mặc định 10%
         CommissionSetting::firstOrCreate(['scope' => 'default'], ['rate' => 10, 'is_active' => true]);
 
-        // 7) Đơn multi-seller mẫu (chỉ tạo 1 lần)
         if (! Order::where('user_id', $customer->id)->exists()) {
             $this->seedSampleOrder(
                 $customer, $techzone, $laptopworld, $iphone, $laptop,
                 $commissionService, $walletService, $sellerOrderService,
             );
 
-            // 8) Yêu cầu rút tiền mẫu cho seller1 (đã có withdrawable sau khi đơn hoàn thành)
             $wallet1->refresh();
             $amount = min(10000000, (float) $wallet1->withdrawable_balance);
             if ($amount > 0) {
@@ -115,9 +102,8 @@ class MarketplaceSeeder extends Seeder
         ]);
 
         $lines = [
-            // [store, product, qty, seller_order status ban đầu]
-            [$techzone, $iphone, 1, 'shipping'],   // sẽ hoàn thành để thấy withdrawable
-            [$laptopworld, $laptop, 1, 'pending'],  // giữ pending
+            [$techzone, $iphone, 1, 'shipping'],
+            [$laptopworld, $laptop, 1, 'pending'],
         ];
 
         $total = 0;
@@ -136,7 +122,6 @@ class MarketplaceSeeder extends Seeder
                 'unit_price' => $product->price, 'quantity' => $qty, 'line_total' => $subtotal,
             ]);
 
-            // Giữ tiền net vào ví pending
             $wallet = $store->sellerProfile->wallet;
             $net = round($subtotal * (1 - $rate / 100), 2);
             $walletService->hold($wallet, $net, 'seller_order', $sellerOrder->id);
@@ -149,7 +134,6 @@ class MarketplaceSeeder extends Seeder
 
         $order->update(['total_amount' => $total]);
 
-        // Hoàn thành 1 SellerOrder → chuyển pending sang withdrawable + chốt commission.
         if ($completeTargetId) {
             $sellerOrderService->updateStatus($order->sellerOrders()->find($completeTargetId), 'completed');
         }

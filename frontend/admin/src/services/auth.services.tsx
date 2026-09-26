@@ -1,7 +1,6 @@
 import api, { ensureCsrf } from "../api/axios";
 import type { SellerProfile } from "../types/seller.types";
 
-/** Quyền của 1 nhân viên trên 1 module — xem App\Support\AdminModules ở BE. */
 export interface EmployeePermission {
   module: string;
   can_view: boolean;
@@ -19,15 +18,12 @@ export interface AuthUser {
   phone?: string | null;
   avatar?: string | null;
   avatar_url?: string | null;
-  /** false với tài khoản tạo qua Google (chưa từng đặt mật khẩu). */
   has_password?: boolean;
   role: "customer" | "seller" | "admin" | "employee";
   seller_profile?: SellerProfile | null;
-  /** Chỉ có ý nghĩa với role=employee — admin thật luôn full quyền (không cần mảng này). */
   permissions?: EmployeePermission[];
 }
 
-/** true nếu user (admin luôn true, employee tra theo permissions) có quyền `ability` trên `module`. */
 export function hasPermission(
   user: AuthUser | null | undefined,
   module: string,
@@ -45,8 +41,6 @@ export async function login(
   password: string,
 ): Promise<AuthUser> {
   await ensureCsrf();
-  // AuthController@login trả { data: { user, access_token, token_type } },
-  // KHÔNG phải user phẳng như /me — phải lấy .user, không phải .data thẳng.
   const res = await api.post("/login", { login: loginId, password });
   return res.data.data.user as AuthUser;
 }

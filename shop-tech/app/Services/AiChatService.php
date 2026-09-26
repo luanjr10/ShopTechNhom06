@@ -12,14 +12,6 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
-/**
- * Chatbot AI tư vấn sản phẩm + giải đáp thắc mắc cho khách trên storefront.
- *
- * Dùng Groq (Chat Completions API tương thích OpenAI, miễn phí, không cần thẻ)
- * với function calling: model tự quyết định khi nào cần gọi `search_products`
- * để tra cứu catalog THẬT (MySQL) thay vì bịa tên/giá sản phẩm. Kết quả tool
- * cuối cùng được trả kèm để FE render product card.
- */
 class AiChatService
 {
     use NormalizesProductCatalog;
@@ -177,9 +169,6 @@ PROMPT;
         ];
     }
 
-    /**
-     * @return array<int, array<string, mixed>>
-     */
     private function searchProducts(array $args): array
     {
         $search = trim((string) ($args['query'] ?? ''));
@@ -188,10 +177,6 @@ PROMPT;
 
         $products = $this->buildProductQuery($args, $search, $categoryName, $brandName)->get();
 
-        // AI có thể gán category/brand theo tên "đời thường" (VD "Apple") không
-        // khớp đúng tên lưu trong DB shop (VD "Iphone") hoặc category bị lệch dữ
-        // liệu — nếu có từ khoá tên sản phẩm rõ ràng mà lọc cứng làm mất hết kết
-        // quả, thử lại chỉ với từ khoá để tránh báo "không có hàng" sai sự thật.
         if ($products->isEmpty() && $search !== '' && ($categoryName !== '' || $brandName !== '')) {
             $products = $this->buildProductQuery($args, $search, '', '')->get();
         }

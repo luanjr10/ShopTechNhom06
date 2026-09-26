@@ -21,7 +21,6 @@ import {
   type UseCase,
 } from "../types/product";
 
-// 4 hàng x 5 sản phẩm = 20 sản phẩm mỗi lần tải.
 const PER_PAGE = 20;
 
 function CategoryPage() {
@@ -44,14 +43,12 @@ function CategoryPage() {
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
 
-  // Tải danh mục (kèm brands) theo slug.
   useEffect(() => {
     if (!slug) return;
 
     let ignore = false;
     setLoadingCategory(true);
 
-    // Đổi danh mục thì bỏ chọn brand cũ.
     setSelectedBrandId(null);
 
     getCategoryBySlug(slug)
@@ -68,7 +65,6 @@ function CategoryPage() {
     };
   }, [slug]);
 
-  // Tải Quick Link của danh mục để hiển thị + lọc theo ?useCase=.
   useEffect(() => {
     if (!category) return;
 
@@ -88,7 +84,6 @@ function CategoryPage() {
     };
   }, [category]);
 
-  // Tải lại sản phẩm (trang 1) khi đổi danh mục, brand, Quick Link hoặc kiểu sắp xếp.
   useEffect(() => {
     if (!category) return;
 
@@ -147,7 +142,6 @@ function CategoryPage() {
       .finally(() => setLoadingMore(false));
   };
 
-  // Bấm Quick Link -> cập nhật ?useCase= trên URL; bấm lại chính nó -> bỏ lọc.
   const handleSelectUseCase = (nextSlug: string) => {
     setSearchParams(
       (prev) => {

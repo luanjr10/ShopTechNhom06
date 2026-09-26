@@ -35,8 +35,6 @@ function ChangeRow({ label, current, previous }: { label: string; current: numbe
   );
 }
 
-/** Doanh thu sàn (GMV) & hoa hồng thực nhận, tháng này vs tháng trước — thay
- * DashboardCard13 gốc (Income/Expenses, toàn giao dịch giả "Qonto billing"...). */
 export default function PlatformFundsCard({ data }: Props) {
   return (
     <div className="col-span-full xl:col-span-6 bg-white dark:bg-gray-800 shadow-xs rounded-xl">

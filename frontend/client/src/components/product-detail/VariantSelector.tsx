@@ -16,31 +16,23 @@ const ATTR_META = [
 
 type AttrKey = (typeof ATTR_META)[number]["key"];
 
-/**
- * Bộ chọn phiên bản: tự dựng nhóm tuỳ chọn từ `variants`, CHỈ hiển thị thuộc
- * tính nào thực sự tồn tại. Khi chọn, tìm variant khớp nhất và báo lên cha để
- * lấy đúng giá/tồn kho/SKU.
- */
 export function VariantSelector({
   variants,
   selected,
   onSelect,
 }: VariantSelectorProps) {
-  // Lấy các thuộc tính có giá trị ở ít nhất 1 variant, theo thứ tự quy ước.
   const presentAttrs = ATTR_META.filter(({ key }) =>
     variants.some((variant) => (variant.attributes[key] ?? "") !== ""),
   );
 
   if (presentAttrs.length === 0) return null;
 
-  // Chọn variant khớp nhất khi người dùng đổi 1 thuộc tính.
   const pickVariant = (attr: AttrKey, value: string): ProductVariant => {
     const candidates = variants.filter(
       (variant) => variant.attributes[attr] === value,
     );
     if (candidates.length === 0) return selected;
 
-    // Ưu tiên variant giữ được nhiều lựa chọn hiện tại nhất ở các thuộc tính khác.
     const otherAttrs = presentAttrs.filter(({ key }) => key !== attr);
     let best = candidates[0];
     let bestScore = -1;
@@ -65,7 +57,6 @@ export function VariantSelector({
   return (
     <div className="flex flex-col gap-4">
       {presentAttrs.map(({ key, label }) => {
-        // Các giá trị phân biệt theo thứ tự xuất hiện.
         const values: string[] = [];
         for (const variant of variants) {
           const value = variant.attributes[key];

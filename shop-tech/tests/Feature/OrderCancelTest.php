@@ -10,11 +10,6 @@ use App\Models\User;
 use App\Services\OrderService;
 use Illuminate\Support\Facades\Schema;
 
-/**
- * Test OrderService::cancel() — quy tắc: khách chỉ hủy được khi TẤT CẢ
- * seller_order còn 'pending'; khi đã 'confirmed'/'shipping'/... thì không.
- * Cùng cách ly schema tối giản như các test khác (không dùng RefreshDatabase).
- */
 beforeEach(function () {
     foreach (['order_items', 'seller_orders', 'orders', 'wallet_transactions', 'seller_wallets', 'stores', 'seller_profiles', 'products', 'users'] as $table) {
         Schema::dropIfExists($table);
@@ -145,10 +140,6 @@ function makeSellerStoreWithWallet(): array
 
 test('a pending order can be cancelled, stock/wallet untouched (never deducted/held)', function () {
     [$store, $wallet] = makeSellerStoreWithWallet();
-    // Kho KHÔNG bị trừ và ví KHÔNG bị giữ lúc đặt hàng nữa (chỉ xảy ra lúc
-    // seller bàn giao vận chuyển, xem SellerOrderService::handover) — 1 đơn
-    // 'pending' chưa từng đụng tới stock/wallet, nên cancel() không có gì để
-    // hoàn cả.
     $product = Product::create(['name' => 'X', 'price' => 100000, 'stock' => 10, 'status' => 1, 'store_id' => $store->id]);
     $customer = User::factory()->create(['role' => 'customer']);
 
@@ -166,7 +157,7 @@ test('a pending order can be cancelled, stock/wallet untouched (never deducted/h
 
     expect($order->refresh()->status)->toBe('cancelled');
     expect($sellerOrder->refresh()->status)->toBe('cancelled');
-    expect($product->refresh()->stock)->toBe(10); // không đổi — chưa từng bị trừ
+    expect($product->refresh()->stock)->toBe(10);
     expect((float) $wallet->refresh()->pending_balance)->toBe(0.0);
 });
 

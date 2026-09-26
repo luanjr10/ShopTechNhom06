@@ -30,18 +30,12 @@ interface ProductFormModalProps {
   categories: CategoryItem[];
   onClose: () => void;
   onSaved: () => void;
-  /** Ghi đè nơi lưu sản phẩm — Seller Center truyền hàm scope theo gian hàng đang chọn. */
   submitCreate?: (data: FormData) => Promise<unknown>;
   submitUpdate?: (id: number, data: FormData) => Promise<{ success?: boolean } | undefined>;
 }
 
 const EMPTY_SPECS: SpecificationItem[] = [];
 
-/**
- * Modal thêm mới / chỉnh sửa sản phẩm — tự lấy dữ liệu sản phẩm (chế độ sửa),
- * tự quản lý ảnh/thông số/trạng thái và submit lên API. `ProductsList` chỉ
- * cần mở modal này với `productId` tương ứng, không cần biết logic bên trong.
- */
 export default function ProductFormModal({
   open,
   mode,
@@ -62,7 +56,6 @@ export default function ProductFormModal({
   const [errors, setErrors] = useState<ValidationErrors>({});
   const codeInputRef = useRef<HTMLInputElement>(null);
 
-  // Danh mục đang chọn quyết định danh sách Quick Link được phép gán.
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
   const [useCases, setUseCases] = useState<UseCaseItem[]>([]);
   const [selectedUseCaseIds, setSelectedUseCaseIds] = useState<string[]>([]);
@@ -112,7 +105,6 @@ export default function ProductFormModal({
     }
   }, [open, mode, productId, categories]);
 
-  // Tải Quick Link theo danh mục đang chọn; loại bỏ lựa chọn không còn hợp lệ.
   useEffect(() => {
     if (!open || !selectedCategoryId) {
       setUseCases([]);
@@ -204,7 +196,6 @@ export default function ProductFormModal({
     );
     formData.set("use_case_ids", JSON.stringify(selectedUseCaseIds));
 
-    // Chỉ gửi variant có nhập; backend tự tạo variant mặc định nếu để trống.
     const variantsPayload = variants
       .filter(
         (variant) =>

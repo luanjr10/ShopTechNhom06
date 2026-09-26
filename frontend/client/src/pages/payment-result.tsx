@@ -5,12 +5,6 @@ import { getOrder } from "../services/orders";
 import { formatPrice } from "../libs/format";
 import { type Order } from "../types/order";
 
-/**
- * Trang khách quay lại sau khi thanh toán MoMo/VNPay/OnePay/SePay. Backend đã
- * verify chữ ký (hoặc webhook với SePay) và cập nhật Order TRƯỚC khi redirect
- * về đây. Query "status" là do BE quyết định, không phải echo trực tiếp tham
- * số của cổng thanh toán — trừ SePay mà "pending" = đang đợi webhook xác nhận.
- */
 export default function PaymentResultPage() {
   const [params] = useSearchParams();
   const status = params.get("status");
@@ -21,8 +15,6 @@ export default function PaymentResultPage() {
 
   useEffect(() => {
     if (!orderId) return;
-    // Poll 1 lần ngay khi mount để lấy trạng thái đơn — quan trọng cho SePay
-    // (khi webhook chưa kịp chạy, khách về đây sẽ thấy "pending").
     getOrder(Number(orderId))
       .then(setOrder)
       .finally(() => setLoading(false));

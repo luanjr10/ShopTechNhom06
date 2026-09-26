@@ -10,14 +10,6 @@ use App\Models\User;
 use App\Services\SellerOrderService;
 use Illuminate\Support\Facades\Schema;
 
-/**
- * Test quyết định 2026-09-19 (đồng bộ, không phân biệt COD/online): tiền chỉ
- * chuyển từ "đang chờ" (pending) sang "có thể rút" (withdrawable) khi khách
- * TỰ xác nhận đã nhận hàng (complete()) — markDeliveredByDriver() chỉ chuyển
- * 'shipping' -> 'delivered', KHÔNG bao giờ tự release ví, dù là đơn COD hay
- * thanh toán online. Nếu đơn bị hủy khi còn 'shipping' (đã bàn giao), phần
- * tiền đang giữ được hoàn lại (reverseHold), không mất.
- */
 beforeEach(function () {
     foreach (['shipments', 'order_items', 'seller_orders', 'orders', 'wallet_transactions', 'seller_wallets', 'stores', 'seller_profiles', 'products', 'users'] as $table) {
         Schema::dropIfExists($table);

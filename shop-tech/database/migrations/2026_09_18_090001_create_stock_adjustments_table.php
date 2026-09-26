@@ -11,7 +11,6 @@ return new class extends Migration
         Schema::create('stock_adjustments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('store_id')->constrained('stores')->cascadeOnDelete();
-            // products.id là int (bảng gốc import bằng SQL, không phải bigint unsigned).
             $table->integer('product_id');
             $table->foreign('product_id')->references('id')->on('products')->cascadeOnDelete();
             $table->foreignId('seller_profile_id')->constrained('seller_profiles')->cascadeOnDelete();

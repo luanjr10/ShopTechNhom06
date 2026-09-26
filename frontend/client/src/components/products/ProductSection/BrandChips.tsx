@@ -14,7 +14,6 @@ interface BrandChipsProps {
   onSelect: (brandId: number | null) => void;
 }
 
-/** Slider các thương hiệu thật thuộc danh mục đang chọn. */
 export function BrandChips({
   brands,
   loading,

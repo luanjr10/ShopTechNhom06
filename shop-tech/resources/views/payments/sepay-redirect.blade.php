@@ -30,9 +30,6 @@
     </style>
 </head>
 <body>
-    {{-- Endpoint /v1/checkout/init của SePay CHỈ nhận SUBMIT FORM (POST), không
-    phải link GET để redirect thẳng — trang này auto-submit form ẩn ngay khi
-    tải xong. Xem PaymentController::sepayRedirect / SePayService::buildCheckoutForm. --}}
     <div class="box">
         <div class="spinner"></div>
         <p>Đang chuyển đến cổng thanh toán SePay...</p>

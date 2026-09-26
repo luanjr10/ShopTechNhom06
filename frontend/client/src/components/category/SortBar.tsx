@@ -19,7 +19,6 @@ interface SortBarProps {
   onChange: (value: ProductSort) => void;
 }
 
-/** Thanh sắp xếp sản phẩm. */
 export function SortBar({ value, onChange }: SortBarProps) {
   return (
     <div className="flex flex-wrap items-center gap-3">

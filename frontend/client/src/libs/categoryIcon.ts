@@ -35,10 +35,6 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-/**
- * Ánh xạ tên icon (lưu trong cột `icon` của bảng categories) sang component
- * lucide. Có fallback để không bao giờ vỡ UI khi gặp tên lạ.
- */
 const ICON_MAP: Record<string, LucideIcon> = {
   Smartphone,
   Tablet,
