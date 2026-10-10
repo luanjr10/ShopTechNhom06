@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\ChatController;
 use App\Http\Controllers\Api\Admin\CommissionController;
-use App\Http\Controllers\Api\Admin\CouponController;
 use App\Http\Controllers\Api\Admin\CustomerController;
 use App\Http\Controllers\Api\Admin\DashboardController;
 use App\Http\Controllers\Api\Admin\EmployeeController;
@@ -47,11 +47,6 @@ Route::prefix('admin')->middleware(['auth:api', 'role:admin,employee'])->group(f
         Route::get('customers/{customer}', [CustomerController::class, 'show']);
     });
 
-    Route::get('coupons', [CouponController::class, 'index'])->middleware('permission:vouchers,view');
-    Route::post('coupons', [CouponController::class, 'store'])->middleware('permission:vouchers,create');
-    Route::patch('coupons/{coupon}', [CouponController::class, 'update'])->middleware('permission:vouchers,edit');
-    Route::delete('coupons/{coupon}', [CouponController::class, 'destroy'])->middleware('permission:vouchers,delete');
-
     Route::middleware('permission:withdrawals,view')->group(function () {
         Route::get('withdrawals', [WithdrawalController::class, 'index']);
     });
@@ -61,6 +56,12 @@ Route::prefix('admin')->middleware(['auth:api', 'role:admin,employee'])->group(f
         Route::post('withdrawals/{withdrawal}/pay', [WithdrawalPaymentController::class, 'create']);
         Route::get('withdrawals/{withdrawal}/sepay-redirect', [WithdrawalPaymentController::class, 'sepayRedirect'])
             ->name('admin.withdrawals.sepay-redirect');
+    });
+
+    Route::prefix('chat')->group(function () {
+        Route::get('conversations', [ChatController::class, 'index'])->middleware('permission:support_chat,view');
+        Route::get('conversations/{conversation}/messages', [ChatController::class, 'messages'])->middleware('permission:support_chat,view');
+        Route::post('conversations/{conversation}/messages', [ChatController::class, 'send'])->middleware(['permission:support_chat,edit', 'throttle:60,1']);
     });
 
     Route::middleware('permission:reviews,view')->group(function () {

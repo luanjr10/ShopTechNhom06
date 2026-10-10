@@ -18,6 +18,10 @@ class OrderService
         private CommissionService $commissionService,
         private ShippingService $shippingService,
         private CouponService $couponService,
+        private XuService $xuService,
+        private InstallmentService $installmentService,
+        private TradeInService $tradeInService,
+        private AffiliateService $affiliateService,
     ) {}
 
     public function place(User $user, array $items, array $shipping): Order
@@ -60,6 +64,7 @@ class OrderService
                     'quantity' => $quantity,
                     'line_total' => round($unitPrice * $quantity, 2),
                     'category_id' => $product->category_id,
+                    'affiliate' => $this->affiliateService->attribute($user, $product, $line['aff_code'] ?? null),
                 ];
             }
 
@@ -74,13 +79,50 @@ class OrderService
             $shippingFeeByStore = collect($shippingQuote['by_store'])->keyBy('store_id');
             $totalShippingFee = (float) $shippingQuote['total_fee'];
 
+            $rateByStore = [];
+            $commissionGroups = [];
+            foreach ($groups as $storeId => $lines) {
+                $store = $lines[0]['product']->store ?: Store::findOrFail($storeId);
+                $categoryIds = array_unique(array_column($lines, 'category_id'));
+                $categoryId = count($categoryIds) === 1 ? $categoryIds[0] : null;
+                $rateByStore[$storeId] = $this->commissionService->resolveRate($store, $categoryId);
+                $commissionGroups[$storeId] = [
+                    'store' => $store,
+                    'subtotal' => (float) array_sum(array_column($lines, 'line_total')),
+                    'category_id' => $categoryId,
+                ];
+            }
+
+            $commissionTotal = $this->commissionService->estimateTotal($commissionGroups);
             $discountAmount = 0.0;
             $coupon = null;
             $couponCode = $shipping['coupon_code'] ?? null;
             if ($couponCode) {
-                $applied = $this->couponService->apply($couponCode, (float) $productsSubtotal, $user, $totalShippingFee);
+                $applied = $this->couponService->apply(
+                    $couponCode,
+                    (float) $productsSubtotal,
+                    $user,
+                    $totalShippingFee,
+                    $commissionTotal,
+                    $shipping['receiver_phone'] ?? null,
+                    array_map(fn (array $group) => $group['subtotal'], $commissionGroups),
+                    $shippingFeeByStore->map(fn (array $row) => (float) ($row['fee'] ?? 0))->all(),
+                );
                 $coupon = $applied['coupon'];
                 $discountAmount = $applied['discount_amount'];
+            }
+
+            $isStoreFunded = $coupon !== null && $coupon->store_id !== null;
+            $platformDiscount = $isStoreFunded ? 0.0 : $discountAmount;
+
+            $xuUsed = 0;
+            if (! empty($shipping['use_xu'])) {
+                $productDiscount = ($coupon && ! $coupon->is_free_ship) ? $discountAmount : 0.0;
+                $xuUsed = $this->xuService->maxRedeemable(
+                    $user,
+                    (float) $productsSubtotal - $productDiscount,
+                    $commissionTotal - $platformDiscount,
+                );
             }
 
             $order = Order::create([
@@ -92,6 +134,7 @@ class OrderService
                 'payment_method' => $shipping['payment_method'],
                 'discount_code' => $coupon?->code,
                 'discount_amount' => $discountAmount,
+                'xu_used' => $xuUsed,
                 'receiver_name' => $shipping['receiver_name'],
                 'receiver_phone' => $shipping['receiver_phone'],
                 'shipping_address' => $shipping['shipping_address'],
@@ -110,19 +153,21 @@ class OrderService
                     'user_id' => $user->id,
                     'order_id' => $order->id,
                 ]);
+                $this->tradeInService->markUsedByOrder($coupon, $order);
+            }
+
+            if ($xuUsed > 0) {
+                $this->xuService->spendOnOrder($user, $order, $xuUsed);
             }
 
             $orderTotal = 0;
 
             foreach ($groups as $storeId => $lines) {
-                $store = $lines[0]['product']->store;
-                $store = $store ?: Store::findOrFail($storeId);
+                $store = $commissionGroups[$storeId]['store'];
 
                 $subtotal = round(array_sum(array_column($lines, 'line_total')), 2);
 
-                $categoryIds = array_unique(array_column($lines, 'category_id'));
-                $categoryId = count($categoryIds) === 1 ? $categoryIds[0] : null;
-                $rate = $this->commissionService->resolveRate($store, $categoryId);
+                $rate = $rateByStore[$storeId];
 
                 $sellerOrder = SellerOrder::create([
                     'order_id' => $order->id,
@@ -134,6 +179,8 @@ class OrderService
                     'commission_rate' => $rate,
                     'commission_amount' => 0,
                     'seller_amount' => 0,
+                    'store_discount' => ($isStoreFunded && (int) $storeId === (int) $coupon->store_id && ! $coupon->is_free_ship) ? $discountAmount : 0,
+                    'store_shipping_subsidy' => ($isStoreFunded && (int) $storeId === (int) $coupon->store_id && $coupon->is_free_ship) ? $discountAmount : 0,
                 ]);
 
                 foreach ($lines as $line) {
@@ -144,16 +191,22 @@ class OrderService
                         'unit_price' => $line['unit_price'],
                         'quantity' => $line['quantity'],
                         'line_total' => $line['line_total'],
+                        'affiliate_referrer_id' => $line['affiliate']['referrer_id'] ?? null,
+                        'affiliate_rate' => $line['affiliate']['rate'] ?? null,
                     ]);
                 }
 
                 $orderTotal += $subtotal;
             }
 
-            $grandTotal = max(0, round($orderTotal + $totalShippingFee - $discountAmount, 2));
+            $grandTotal = max(0, round($orderTotal + $totalShippingFee - $discountAmount - $xuUsed, 2));
             $order->update(['total_amount' => $grandTotal]);
 
-            return $order->load('sellerOrders.items');
+            if ($shipping['payment_method'] === 'installment') {
+                $this->installmentService->createRequest($order, $user, (int) ($shipping['installment_months'] ?? 0));
+            }
+
+            return $order->load('sellerOrders.items', 'installmentPlan.payments');
         });
     }
 
@@ -171,6 +224,9 @@ class OrderService
             }
 
             $order->update(['status' => 'cancelled']);
+            $this->xuService->refundOrder($order);
+            $this->installmentService->cancelForOrder($order);
+            $this->tradeInService->releaseForOrder($order);
 
             return $order->refresh()->load('sellerOrders.items');
         });

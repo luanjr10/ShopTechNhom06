@@ -23,6 +23,7 @@ import {
   RotateCcw,
   Star,
   Flame,
+  Recycle,
   type LucideIcon,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
@@ -73,7 +74,7 @@ const ADMIN_SECTIONS: NavSection[] = [
       { to: "/orders", label: "Đơn hàng & Hóa đơn", icon: ClipboardList, module: "orders" },
       { to: "/reviews", label: "Đánh giá & Theo dõi", icon: Star, module: "reviews" },
       { to: "/commissions", label: "Hoa hồng", icon: Percent, module: "commissions" },
-      { to: "/vouchers", label: "Voucher", icon: Ticket, module: "vouchers" },
+      { to: "/support-chat", label: "Hỗ trợ khách", icon: MessageSquare, module: "support_chat" },
       { to: "/withdrawals", label: "Rút tiền", icon: Wallet, module: "withdrawals" },
       { to: "/platform-funds", label: "Quỹ sàn", icon: Landmark, module: "platform_funds" },
     ],
@@ -99,6 +100,11 @@ const SELLER_SECTIONS: NavSection[] = [
       { to: "/seller/products", label: "Sản phẩm", icon: Package },
       { to: "/seller/orders", label: "Đơn hàng & Hóa đơn", icon: ShoppingBag },
       { to: "/seller/customers", label: "Khách hàng", icon: UserRound },
+      { to: "/seller/chat", label: "Tin nhắn", icon: MessageSquare },
+      { to: "/seller/vouchers", label: "Voucher", icon: Ticket },
+      { to: "/seller/installments", label: "Bán trả góp", icon: Landmark },
+      { to: "/seller/affiliate", label: "Affiliate", icon: Users },
+      { to: "/seller/trade-in", label: "Thu cũ đổi mới", icon: Recycle },
       { to: "/seller/returns", label: "Hoàn trả / Bảo hành", icon: RotateCcw },
       { to: "/seller/reviews", label: "Đánh giá & Theo dõi", icon: Star },
       { to: "/seller/inventory", label: "Kho hàng", icon: Boxes },

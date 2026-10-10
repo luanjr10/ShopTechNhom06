@@ -29,6 +29,7 @@ class OrderController extends Controller
             'items.*.product_id' => 'required|integer|exists:products,id',
             'items.*.sku' => 'nullable|string',
             'items.*.quantity' => 'required|integer|min:1',
+            'items.*.aff_code' => 'nullable|string|max:12',
             'receiver_name' => 'required|string|max:150',
             'receiver_phone' => ['required', 'string', new VietnamesePhone],
             'shipping_address' => 'required|string|max:255',
@@ -38,8 +39,10 @@ class OrderController extends Controller
             'district_name' => 'required|string|max:150',
             'ward_code' => 'required|string|max:20',
             'ward_name' => 'required|string|max:150',
-            'payment_method' => 'required|in:cod,momo,vnpay,onepay,sepay',
+            'payment_method' => 'required|in:cod,momo,vnpay,onepay,sepay,installment',
+            'installment_months' => 'required_if:payment_method,installment|nullable|integer|min:1|max:36',
             'coupon_code' => 'nullable|string|max:50',
+            'use_xu' => 'nullable|boolean',
         ]);
 
         try {
@@ -58,6 +61,8 @@ class OrderController extends Controller
                     'ward_name' => $validated['ward_name'],
                     'payment_method' => $validated['payment_method'],
                     'coupon_code' => $validated['coupon_code'] ?? null,
+                    'use_xu' => (bool) ($validated['use_xu'] ?? false),
+                    'installment_months' => $validated['installment_months'] ?? null,
                 ],
             );
         } catch (RuntimeException $e) {

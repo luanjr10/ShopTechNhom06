@@ -199,6 +199,7 @@ class CartController extends Controller
                     'name' => $product->name,
                     'slug' => $product->slug,
                     'thumbnail' => $images->get($product->id)?->images[0] ?? null,
+                    'store_id' => $product->store_id,
                 ],
                 'variant' => $sku ? ['sku' => $sku, 'attributes' => $variant['attributes'] ?? []] : null,
                 'quantity' => $item->quantity,

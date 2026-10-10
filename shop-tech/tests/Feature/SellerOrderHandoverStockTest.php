@@ -11,6 +11,8 @@ use App\Services\SellerOrderService;
 use Illuminate\Support\Facades\Schema;
 
 beforeEach(function () {
+    createInstallmentTables();
+
     foreach (['shipments', 'order_items', 'seller_orders', 'orders', 'wallet_transactions', 'seller_wallets', 'stores', 'seller_profiles', 'products', 'users'] as $table) {
         Schema::dropIfExists($table);
     }

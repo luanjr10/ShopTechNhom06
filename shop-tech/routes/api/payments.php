@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Admin\WithdrawalPaymentController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\Seller\AffiliateController as SellerAffiliateController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->prefix('payments')->group(function () {
@@ -26,6 +27,7 @@ Route::prefix('payments')->group(function () {
 });
 
 Route::prefix('payments')->group(function () {
+    Route::get('momo/affiliate-return', [SellerAffiliateController::class, 'momoReturn'])->name('payments.momo.affiliate-return');
     Route::get('momo/withdrawal-return', [WithdrawalPaymentController::class, 'momoReturn'])->name('payments.momo.withdrawal-return');
     Route::get('vnpay/withdrawal-return', [WithdrawalPaymentController::class, 'vnpayReturn'])->name('payments.vnpay.withdrawal-return');
     Route::get('onepay/withdrawal-return', [WithdrawalPaymentController::class, 'onepayReturn'])->name('payments.onepay.withdrawal-return');

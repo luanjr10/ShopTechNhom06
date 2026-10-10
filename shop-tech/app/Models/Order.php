@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Order extends Model
 {
@@ -18,6 +19,7 @@ class Order extends Model
         'discount_code',
         'discount_amount',
         'payment_ref',
+        'xu_used',
         'sepay_invoice_id',
         'sepay_transaction_id',
         'paid_at',
@@ -43,6 +45,11 @@ class Order extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function installmentPlan(): HasOne
+    {
+        return $this->hasOne(InstallmentPlan::class);
     }
 
     public function sellerOrders(): HasMany

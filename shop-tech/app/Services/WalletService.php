@@ -25,6 +25,18 @@ class WalletService
         $this->log($wallet, 'release', $amount, $refType, $refId, $desc ?? 'Đơn hoàn thành, tiền có thể rút');
     }
 
+    /**
+     * Cộng thẳng vào số dư có thể rút (ví dụ tiền trả góp khách đã thanh toán).
+     */
+    public function creditAvailable(SellerWallet $wallet, float $amount, string $refType, int $refId, string $desc): void
+    {
+        $wallet->balance += $amount;
+        $wallet->withdrawable_balance += $amount;
+        $wallet->save();
+
+        $this->log($wallet, 'credit', $amount, $refType, $refId, $desc);
+    }
+
     public function reverseHold(SellerWallet $wallet, float $amount, string $refType, int $refId, ?string $desc = null): void
     {
         $wallet->pending_balance = max(0, $wallet->pending_balance - $amount);

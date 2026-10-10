@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Coupon;
 use App\Models\SellerOrder;
 use App\Models\Shipment;
 use Illuminate\Support\Facades\DB;
@@ -22,6 +23,10 @@ class SellerOrderService
     public function __construct(
         private WalletService $walletService,
         private StockService $stockService,
+        private AffiliateService $affiliateService,
+        private XuService $xuService,
+        private InstallmentService $installmentService,
+        private TradeInService $tradeInService,
     ) {}
 
     public function updateStatus(SellerOrder $sellerOrder, string $newStatus): SellerOrder
@@ -31,6 +36,10 @@ class SellerOrderService
         }
 
         $this->assertTransition($sellerOrder->status, $newStatus);
+
+        if ($newStatus === 'confirmed' && $this->isInstallmentOrder($sellerOrder) && $sellerOrder->order->status !== 'paid') {
+            throw new RuntimeException('Đơn trả góp chỉ xác nhận được sau khi bạn duyệt khoản vay và khách đã thanh toán kỳ 1.');
+        }
 
         return DB::transaction(function () use ($sellerOrder, $newStatus) {
             if ($newStatus === 'cancelled') {
@@ -64,9 +73,8 @@ class SellerOrderService
             }
 
             $wallet = $sellerOrder->sellerProfile->wallet;
-            if ($wallet) {
-                $rate = (float) $sellerOrder->commission_rate;
-                $netAmount = round((float) $sellerOrder->subtotal * (1 - $rate / 100), 2);
+            if ($wallet && ! $this->isInstallmentOrder($sellerOrder)) {
+                $netAmount = $sellerOrder->sellerNet();
                 $this->walletService->hold($wallet, $netAmount, 'seller_order', $sellerOrder->id);
             }
 
@@ -87,6 +95,14 @@ class SellerOrderService
         });
     }
 
+    /**
+     * Đơn trả góp: tiền về ví người bán theo từng kỳ khách thanh toán (xem InstallmentService), không giữ/nhả một lần.
+     */
+    private function isInstallmentOrder(SellerOrder $sellerOrder): bool
+    {
+        return $sellerOrder->order->payment_method === 'installment';
+    }
+
     private function codAmountFor(SellerOrder $sellerOrder): int
     {
         $order = $sellerOrder->order;
@@ -94,12 +110,22 @@ class SellerOrderService
             return 0;
         }
 
-        $orderSubtotalTotal = (float) $order->total_amount - (float) $order->shipping_fee + (float) $order->discount_amount;
-        $discountShare = $orderSubtotalTotal > 0
-            ? round((float) $order->discount_amount * ((float) $sellerOrder->subtotal / $orderSubtotalTotal), 2)
-            : 0.0;
+        // Số tiền shipper thu = hàng (sau voucher/xu/giảm của gian hàng) + phí ship (sau voucher miễn ship).
+        $shippingDiscount = 0.0;
+        if ((float) $order->discount_amount > 0 && $order->discount_code
+            && Coupon::where('code', $order->discount_code)->value('is_free_ship')) {
+            $productsTotal = (float) $order->sellerOrders()->sum('subtotal');
+            $shippingDiscount = $productsTotal > 0
+                ? round((float) $order->discount_amount * ((float) $sellerOrder->subtotal / $productsTotal), 2)
+                : 0.0;
+        }
 
-        return max(0, (int) round((float) $sellerOrder->subtotal + (float) $sellerOrder->shipping_fee - $discountShare));
+        // Voucher miễn ship do gian hàng phát: giảm đúng phí ship của gian hàng đó.
+        $shippingDiscount = max($shippingDiscount, (float) $sellerOrder->store_shipping_subsidy);
+
+        return max(0, (int) round(
+            (float) $sellerOrder->subtotal - $sellerOrder->discountShare() + (float) $sellerOrder->shipping_fee - $shippingDiscount
+        ));
     }
 
     public function markDelivered(SellerOrder $sellerOrder): SellerOrder
@@ -120,9 +146,9 @@ class SellerOrderService
 
         return DB::transaction(function () use ($sellerOrder) {
             $rate = (float) $sellerOrder->commission_rate;
-            $subtotal = (float) $sellerOrder->subtotal;
-            $commission = round($subtotal * $rate / 100, 2);
-            $sellerAmount = round($subtotal - $commission, 2);
+            $base = $sellerOrder->storeBase();
+            $commission = round($base * $rate / 100, 2);
+            $sellerAmount = $sellerOrder->sellerNet();
 
             $sellerOrder->update([
                 'status' => 'completed',
@@ -132,9 +158,12 @@ class SellerOrderService
             ]);
 
             $wallet = $sellerOrder->sellerProfile->wallet;
-            if ($wallet) {
+            if ($wallet && ! $this->isInstallmentOrder($sellerOrder)) {
                 $this->walletService->release($wallet, $sellerAmount, 'seller_order', $sellerOrder->id);
             }
+
+            $this->affiliateService->recordForCompletedOrder($sellerOrder);
+            $this->xuService->earnForSellerOrder($sellerOrder);
 
             $this->syncParentOrderStatus($sellerOrder);
 
@@ -214,11 +243,10 @@ class SellerOrderService
                 $this->stockService->restore((int) $item->product_id, $item->sku, (int) $item->quantity);
             }
 
-            $rate = (float) $sellerOrder->commission_rate;
-            $held = round((float) $sellerOrder->subtotal * (1 - $rate / 100), 2);
+            $held = $sellerOrder->sellerNet();
 
             $wallet = $sellerOrder->sellerProfile->wallet;
-            if ($wallet) {
+            if ($wallet && ! $this->isInstallmentOrder($sellerOrder)) {
                 $this->walletService->reverseHold($wallet, $held, 'seller_order', $sellerOrder->id);
             }
         }
@@ -235,6 +263,9 @@ class SellerOrderService
             $order->update(['status' => 'completed']);
         } elseif ($statuses->every(fn ($s) => $s === 'cancelled')) {
             $order->update(['status' => 'cancelled']);
+            $this->xuService->refundOrder($order);
+            $this->installmentService->cancelForOrder($order);
+            $this->tradeInService->releaseForOrder($order);
         }
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Store extends Model
 {
@@ -35,6 +36,21 @@ class Store extends Model
     public function sellerProfile(): BelongsTo
     {
         return $this->belongsTo(SellerProfile::class);
+    }
+
+    public function installmentSetting(): HasOne
+    {
+        return $this->hasOne(StoreInstallmentSetting::class);
+    }
+
+    public function affiliateSetting(): HasOne
+    {
+        return $this->hasOne(StoreAffiliateSetting::class);
+    }
+
+    public function tradeInModels(): HasMany
+    {
+        return $this->hasMany(TradeInModel::class);
     }
 
     public function products(): HasMany

@@ -6,10 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\ReturnRequest;
 use App\Models\Store;
 use App\Notifications\ReturnRequestRespondedNotification;
+use App\Services\AffiliateService;
+use App\Services\XuService;
 use Illuminate\Http\Request;
 
 class ReturnController extends Controller
 {
+    public function __construct(
+        private AffiliateService $affiliateService,
+        private XuService $xuService,
+    ) {}
+
     public function index(Request $request, Store $store)
     {
         $query = ReturnRequest::whereHas('sellerOrder', fn ($q) => $q->where('store_id', $store->id))
@@ -54,6 +61,11 @@ class ReturnController extends Controller
             'seller_response' => $validated['seller_response'],
             'responded_at' => now(),
         ]);
+
+        if ($validated['status'] === 'approved') {
+            $this->affiliateService->cancelForSellerOrder($returnRequest->seller_order_id);
+            $this->xuService->reverseEarnForSellerOrder($returnRequest->seller_order_id);
+        }
 
         $returnRequest->user->notify(new ReturnRequestRespondedNotification($returnRequest));
 

@@ -11,7 +11,9 @@ use App\Services\SellerOrderService;
 use Illuminate\Support\Facades\Schema;
 
 beforeEach(function () {
-    foreach (['shipments', 'order_items', 'seller_orders', 'orders', 'wallet_transactions', 'seller_wallets', 'stores', 'seller_profiles', 'products', 'users'] as $table) {
+    createInstallmentTables();
+
+    foreach (['shipments', 'order_items', 'seller_orders', 'orders', 'xu_transactions', 'wallet_transactions', 'seller_wallets', 'stores', 'seller_profiles', 'products', 'users'] as $table) {
         Schema::dropIfExists($table);
     }
 
@@ -23,6 +25,7 @@ beforeEach(function () {
         $table->enum('role', ['customer', 'seller', 'admin'])->default('customer');
         $table->timestamp('email_verified_at')->nullable();
         $table->string('password');
+        $table->unsignedInteger('xu_balance')->default(0);
         $table->rememberToken();
         $table->timestamps();
     });
@@ -105,6 +108,7 @@ beforeEach(function () {
         $table->decimal('subtotal', 15, 2)->default(0);
         $table->decimal('shipping_fee', 15, 2)->default(0);
         $table->decimal('commission_rate', 5, 2)->default(0);
+        $table->decimal('store_discount', 15, 2)->default(0);
         $table->decimal('commission_amount', 15, 2)->default(0);
         $table->decimal('seller_amount', 15, 2)->default(0);
         $table->timestamp('completed_at')->nullable();
@@ -120,6 +124,18 @@ beforeEach(function () {
         $table->decimal('unit_price', 15, 2);
         $table->unsignedInteger('quantity');
         $table->decimal('line_total', 15, 2);
+        $table->timestamps();
+    });
+
+    Schema::create('xu_transactions', function ($table) {
+        $table->id();
+        $table->unsignedBigInteger('user_id');
+        $table->string('type', 30);
+        $table->integer('amount');
+        $table->unsignedInteger('balance_after');
+        $table->string('reference_type', 30)->nullable();
+        $table->unsignedBigInteger('reference_id')->nullable();
+        $table->string('description')->nullable();
         $table->timestamps();
     });
 
@@ -147,7 +163,7 @@ beforeEach(function () {
 });
 
 afterEach(function () {
-    foreach (['shipments', 'order_items', 'seller_orders', 'orders', 'wallet_transactions', 'seller_wallets', 'stores', 'seller_profiles', 'products', 'users'] as $table) {
+    foreach (['shipments', 'order_items', 'seller_orders', 'orders', 'xu_transactions', 'wallet_transactions', 'seller_wallets', 'stores', 'seller_profiles', 'products', 'users'] as $table) {
         Schema::dropIfExists($table);
     }
 });
@@ -225,4 +241,27 @@ test('cancelling a shipping order (delivery failed) reverses the held wallet amo
     expect($sellerOrder->refresh()->status)->toBe('cancelled');
     expect((float) $wallet->refresh()->pending_balance)->toBe(0.0);
     expect((float) $wallet->refresh()->withdrawable_balance)->toBe(0.0);
+});
+
+test('a store funded discount lowers commission and the seller payout but not the platform share', function () {
+    [$sellerOrder, $wallet] = makeShippingSellerOrder('cod');
+    $sellerOrder->update(['store_discount' => 100000]);
+    $wallet->update(['pending_balance' => 90000, 'balance' => 90000]);
+
+    app(SellerOrderService::class)->markDeliveredByDriver($sellerOrder);
+    app(SellerOrderService::class)->complete($sellerOrder->refresh());
+
+    $sellerOrder->refresh();
+    expect((float) $sellerOrder->commission_amount)->toBe(10000.0)
+        ->and((float) $sellerOrder->seller_amount)->toBe(90000.0)
+        ->and((float) $wallet->refresh()->withdrawable_balance)->toBe(90000.0);
+});
+
+test('COD collects the goods after the store discount plus shipping', function () {
+    [$sellerOrder] = makeShippingSellerOrder('cod');
+    $sellerOrder->update(['store_discount' => 100000, 'shipping_fee' => 30000, 'status' => 'confirmed']);
+
+    $updated = app(SellerOrderService::class)->handover($sellerOrder->refresh());
+
+    expect($updated->shipment->cod_amount)->toBe(130000);
 });

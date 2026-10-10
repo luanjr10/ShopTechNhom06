@@ -20,15 +20,42 @@ class CustomerVoucherController extends Controller
         $userTier = $this->tierService->resolve($totalSpent);
         $userRank = $this->tierService->rank($userTier);
 
+        $isNewCustomer = Coupon::userIsNewCustomer($user->id);
+        $today = Coupon::todayWeekday();
+
         $coupons = Coupon::query()
-            ->whereNotNull('target_tier')
+            ->with('store:id,name')
             ->where('is_active', true)
             ->where(function ($q) {
                 $q->whereNull('expires_at')->orWhere('expires_at', '>', now());
             })
+            ->where(function ($q) use ($user) {
+                $q->whereNull('user_id')->orWhere('user_id', $user->id);
+            })
             ->get()
-            ->filter(fn (Coupon $c) => $this->tierService->rank($c->target_tier) <= $userRank)
+            ->filter(function (Coupon $c) use ($userRank, $isNewCustomer, $today) {
+                if ($c->trade_in_request_id !== null) {
+                    return $c->usage_limit === null || $c->used_count < $c->usage_limit;
+                }
+                if ($c->target_tier === null && ! $c->new_customer_only && ! $c->isDaily()) {
+                    return $c->usage_limit === null || $c->used_count < $c->usage_limit;
+                }
+                if ($c->new_customer_only) {
+                    return $isNewCustomer;
+                }
+                if ($c->isDaily()) {
+                    return $c->weekday === $today;
+                }
+
+                return $this->tierService->rank($c->target_tier) <= $userRank;
+            })
             ->values();
+
+        $usedTodayIds = CouponRedemption::where('user_id', $user->id)
+            ->whereIn('coupon_id', $coupons->pluck('id'))
+            ->where('created_at', '>=', now('Asia/Ho_Chi_Minh')->startOfDay())
+            ->pluck('coupon_id')
+            ->all();
 
         $claimedIds = CouponClaim::where('user_id', $user->id)
             ->whereIn('coupon_id', $coupons->pluck('id'))
@@ -41,10 +68,23 @@ class CustomerVoucherController extends Controller
             ->groupBy('coupon_id')
             ->pluck('c', 'coupon_id');
 
-        $data = $coupons->map(function (Coupon $coupon) use ($claimedIds, $redeemedCounts) {
+        $data = $coupons->map(function (Coupon $coupon) use ($claimedIds, $redeemedCounts, $usedTodayIds) {
             $used = (int) ($redeemedCounts[$coupon->id] ?? 0);
+            $kind = $coupon->trade_in_request_id !== null
+                ? 'trade_in'
+                : ($coupon->new_customer_only ? 'new_customer' : ($coupon->isDaily() ? 'daily' : ($coupon->target_tier === null ? 'public' : 'tier')));
+            $remaining = $coupon->per_user_limit !== null ? max(0, $coupon->per_user_limit - $used) : null;
+
+            $soldOut = $kind === 'daily' && $coupon->isSoldOutToday();
+
+            if ($kind === 'daily' && in_array($coupon->id, $usedTodayIds, true)) {
+                $remaining = 0;
+            }
 
             return [
+                'kind' => $kind,
+                'requires_claim' => $kind === 'tier',
+                'sold_out' => $soldOut,
                 'id' => $coupon->id,
                 'code' => $coupon->code,
                 'title' => $coupon->title,
@@ -55,12 +95,14 @@ class CustomerVoucherController extends Controller
                 'max_discount' => $coupon->max_discount !== null ? (float) $coupon->max_discount : null,
                 'min_order_amount' => (float) $coupon->min_order_amount,
                 'target_tier' => $coupon->target_tier,
-                'target_tier_label' => $this->tierService->label($coupon->target_tier),
+                'store_id' => $coupon->store_id,
+                'store_name' => $coupon->store?->name,
+                'target_tier_label' => $coupon->target_tier ? $this->tierService->label($coupon->target_tier) : null,
                 'per_user_limit' => $coupon->per_user_limit,
                 'used_count_by_me' => $used,
-                'remaining_for_me' => $coupon->per_user_limit !== null ? max(0, $coupon->per_user_limit - $used) : null,
+                'remaining_for_me' => $remaining,
                 'expires_at' => $coupon->expires_at,
-                'claimed' => in_array($coupon->id, $claimedIds, true),
+                'claimed' => $kind !== 'tier' || in_array($coupon->id, $claimedIds, true),
             ];
         });
 

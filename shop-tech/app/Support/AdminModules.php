@@ -14,10 +14,10 @@ class AdminModules
         'orders' => ['label' => 'Đơn hàng & Hóa đơn', 'abilities' => ['view', 'edit']],
         'reviews' => ['label' => 'Đánh giá & Theo dõi', 'abilities' => ['view', 'delete']],
         'commissions' => ['label' => 'Hoa hồng', 'abilities' => ['view', 'create', 'delete']],
-        'vouchers' => ['label' => 'Voucher', 'abilities' => ['view', 'create', 'edit', 'delete']],
         'withdrawals' => ['label' => 'Rút tiền', 'abilities' => ['view', 'edit']],
         'platform_funds' => ['label' => 'Quỹ sàn', 'abilities' => ['view']],
         'home_highlights' => ['label' => 'Nổi bật trang chủ', 'abilities' => ['view', 'edit']],
+        'support_chat' => ['label' => 'Hỗ trợ khách (chat)', 'abilities' => ['view', 'edit']],
     ];
 
     public static function keys(): array

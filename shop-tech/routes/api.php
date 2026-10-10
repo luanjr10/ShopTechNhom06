@@ -4,6 +4,12 @@ require __DIR__.'/api/auth.php';
 require __DIR__.'/api/account.php';
 require __DIR__.'/api/customer.php';
 require __DIR__.'/api/cart.php';
+require __DIR__.'/api/wishlist.php';
+require __DIR__.'/api/xu.php';
+require __DIR__.'/api/installments.php';
+require __DIR__.'/api/compare.php';
+require __DIR__.'/api/chat.php';
+require __DIR__.'/api/trade-in.php';
 require __DIR__.'/api/seller.php';
 require __DIR__.'/api/admin.php';
 

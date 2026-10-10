@@ -12,7 +12,11 @@ import ManageSellersPage from "../pages/ManageSellers";
 import ManageStoresPage from "../pages/ManageStores";
 import ManageCommissionsPage from "../pages/ManageCommissions";
 import ManageWithdrawalsPage from "../pages/ManageWithdrawals";
-import ManageCouponsPage from "../pages/ManageCoupons";
+import AdminChatPage from "../pages/AdminChat";
+import SellerTradeIn from "../pages/seller/SellerTradeIn";
+import SellerVouchers from "../pages/seller/SellerVouchers";
+import SellerInstallments from "../pages/seller/SellerInstallments";
+import SellerAffiliate from "../pages/seller/SellerAffiliate";
 import ManageOrdersPage from "../pages/ManageOrders";
 import ManageReviewsPage from "../pages/ManageReviews";
 import PlatformFundsPage from "../pages/PlatformFunds";
@@ -30,6 +34,7 @@ import SellerWithdrawals from "../pages/seller/SellerWithdrawals";
 import SellerCustomers from "../pages/seller/SellerCustomers";
 import SellerReturns from "../pages/seller/SellerReturns";
 import SellerReviews from "../pages/seller/SellerReviews";
+import SellerChat from "../pages/seller/SellerChat";
 
 export const routes = [
   {
@@ -58,9 +63,9 @@ export const routes = [
       { path: "/sellers", element: <RequireRole roles={["admin", "employee"]} module="seller_applications"><ManageSellersPage /></RequireRole> },
       { path: "/stores", element: <RequireRole roles={["admin", "employee"]} module="stores"><ManageStoresPage /></RequireRole> },
       { path: "/commissions", element: <RequireRole roles={["admin", "employee"]} module="commissions"><ManageCommissionsPage /></RequireRole> },
+      { path: "/support-chat", element: <RequireRole roles={["admin", "employee"]} module="support_chat"><AdminChatPage /></RequireRole> },
       { path: "/withdrawals", element: <RequireRole roles={["admin", "employee"]} module="withdrawals"><ManageWithdrawalsPage /></RequireRole> },
       { path: "/platform-funds", element: <RequireRole roles={["admin", "employee"]} module="platform_funds"><PlatformFundsPage /></RequireRole> },
-      { path: "/vouchers", element: <RequireRole roles={["admin", "employee"]} module="vouchers"><ManageCouponsPage /></RequireRole> },
       { path: "/orders", element: <RequireRole roles={["admin", "employee"]} module="orders"><ManageOrdersPage /></RequireRole> },
       { path: "/reviews", element: <RequireRole roles={["admin", "employee"]} module="reviews"><ManageReviewsPage /></RequireRole> },
 
@@ -73,6 +78,11 @@ export const routes = [
       { path: "/seller/withdrawals", element: <RequireRole roles={["seller"]}><SellerWithdrawals /></RequireRole> },
       { path: "/seller/customers", element: <RequireRole roles={["seller"]}><SellerCustomers /></RequireRole> },
       { path: "/seller/returns", element: <RequireRole roles={["seller"]}><SellerReturns /></RequireRole> },
+      { path: "/seller/vouchers", element: <RequireRole roles={["seller"]}><SellerVouchers /></RequireRole> },
+      { path: "/seller/installments", element: <RequireRole roles={["seller"]}><SellerInstallments /></RequireRole> },
+      { path: "/seller/affiliate", element: <RequireRole roles={["seller"]}><SellerAffiliate /></RequireRole> },
+      { path: "/seller/trade-in", element: <RequireRole roles={["seller"]}><SellerTradeIn /></RequireRole> },
+      { path: "/seller/chat", element: <RequireRole roles={["seller"]}><SellerChat /></RequireRole> },
       { path: "/seller/reviews", element: <RequireRole roles={["seller"]}><SellerReviews /></RequireRole> },
       { path: "/seller/settings", element: <Navigate to="/settings" replace /> },
 

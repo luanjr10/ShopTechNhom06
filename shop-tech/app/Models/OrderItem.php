@@ -16,9 +16,12 @@ class OrderItem extends Model
         'unit_price',
         'quantity',
         'line_total',
+        'affiliate_referrer_id',
+        'affiliate_rate',
     ];
 
     protected $casts = [
+        'affiliate_rate' => 'decimal:2',
         'unit_price' => 'decimal:2',
         'line_total' => 'decimal:2',
         'quantity' => 'integer',

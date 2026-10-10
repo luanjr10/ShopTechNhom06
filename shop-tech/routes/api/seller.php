@@ -1,7 +1,11 @@
 <?php
 
+use App\Http\Controllers\Api\Seller\AffiliateController;
+use App\Http\Controllers\Api\Seller\ChatController;
+use App\Http\Controllers\Api\Seller\CouponController;
 use App\Http\Controllers\Api\Seller\CustomerController;
 use App\Http\Controllers\Api\Seller\DashboardController;
+use App\Http\Controllers\Api\Seller\InstallmentController;
 use App\Http\Controllers\Api\Seller\InventoryController;
 use App\Http\Controllers\Api\Seller\ReturnController;
 use App\Http\Controllers\Api\Seller\RevenueController;
@@ -10,6 +14,7 @@ use App\Http\Controllers\Api\Seller\SellerOrderController;
 use App\Http\Controllers\Api\Seller\SellerProductController;
 use App\Http\Controllers\Api\Seller\StoreController;
 use App\Http\Controllers\Api\Seller\StoreFollowerController;
+use App\Http\Controllers\Api\Seller\TradeInController;
 use App\Http\Controllers\Api\Seller\WalletController;
 use App\Http\Controllers\Api\Seller\WithdrawalController;
 use Illuminate\Support\Facades\Route;
@@ -62,5 +67,35 @@ Route::prefix('seller')->middleware(['auth:api', 'role:seller', 'seller.approved
         Route::get('reviews', [ReviewController::class, 'index']);
 
         Route::get('followers', [StoreFollowerController::class, 'index']);
+
+        Route::get('coupons', [CouponController::class, 'index']);
+        Route::post('coupons', [CouponController::class, 'store']);
+        Route::patch('coupons/{coupon}', [CouponController::class, 'update']);
+        Route::delete('coupons/{coupon}', [CouponController::class, 'destroy']);
+
+        Route::get('installments/settings', [InstallmentController::class, 'settings']);
+        Route::put('installments/settings', [InstallmentController::class, 'updateSettings']);
+        Route::get('installments', [InstallmentController::class, 'index']);
+        Route::post('installments/{plan}/decide', [InstallmentController::class, 'decide']);
+
+        Route::get('affiliate/settings', [AffiliateController::class, 'settings']);
+        Route::put('affiliate/settings', [AffiliateController::class, 'updateSettings']);
+        Route::get('affiliate/products', [AffiliateController::class, 'products']);
+        Route::put('affiliate/products', [AffiliateController::class, 'updateProducts']);
+        Route::get('affiliate/commissions', [AffiliateController::class, 'commissions']);
+        Route::get('affiliate/withdrawals', [AffiliateController::class, 'withdrawals']);
+        Route::post('affiliate/withdrawals/{withdrawal}/pay', [AffiliateController::class, 'pay']);
+        Route::post('affiliate/withdrawals/{withdrawal}/review', [AffiliateController::class, 'review']);
+
+        Route::get('trade-in/models', [TradeInController::class, 'models']);
+        Route::post('trade-in/models', [TradeInController::class, 'storeModel']);
+        Route::patch('trade-in/models/{model}', [TradeInController::class, 'updateModel']);
+        Route::delete('trade-in/models/{model}', [TradeInController::class, 'destroyModel']);
+        Route::get('trade-in/requests', [TradeInController::class, 'requests']);
+        Route::post('trade-in/requests/{tradeInRequest}/review', [TradeInController::class, 'review']);
+
+        Route::get('chat/conversations', [ChatController::class, 'index']);
+        Route::get('chat/conversations/{conversation}/messages', [ChatController::class, 'messages']);
+        Route::post('chat/conversations/{conversation}/messages', [ChatController::class, 'send'])->middleware('throttle:60,1');
     });
 });

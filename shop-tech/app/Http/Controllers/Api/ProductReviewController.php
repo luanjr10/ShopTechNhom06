@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\ProductReview;
 use App\Services\CloudinaryService;
 use App\Services\RatingService;
+use App\Services\XuService;
 use Illuminate\Http\Request;
 
 class ProductReviewController extends Controller
@@ -15,6 +16,7 @@ class ProductReviewController extends Controller
     public function __construct(
         private CloudinaryService $cloudinaryService,
         private RatingService $ratingService,
+        private XuService $xuService,
     ) {}
 
     public function index(Request $request, Product $product)
@@ -71,6 +73,8 @@ class ProductReviewController extends Controller
             ['product_id' => $product->id, 'user_id' => $user->id],
             $attributes,
         );
+
+        $this->xuService->earnForReview($review);
 
         return response()->json([
             'success' => true,

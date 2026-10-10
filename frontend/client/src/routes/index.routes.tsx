@@ -19,6 +19,14 @@ import SessionsTab from "../pages/account/SessionsTab";
 import OrdersTab from "../pages/account/OrdersTab";
 import OrderDetailTab from "../pages/account/OrderDetailTab";
 import VouchersTab from "../pages/account/VouchersTab";
+import AffiliateTab from "../pages/account/AffiliateTab";
+import AffiliatePage from "../pages/affiliate";
+import WishlistTab from "../pages/account/WishlistTab";
+import XuTab from "../pages/account/XuTab";
+import InstallmentsTab from "../pages/account/InstallmentsTab";
+import ComparePage from "../pages/compare";
+import TradeInPage from "../pages/trade-in";
+import MessagesTab from "../pages/account/MessagesTab";
 import CartPage from "../pages/cart";
 import CheckoutPage from "../pages/checkout";
 import OrderSuccessPage from "../pages/order-success";
@@ -46,6 +54,10 @@ export const allRoutes = [
         element: <SellerRegister />,
       },
       {
+        path: "/affiliate",
+        element: <AffiliatePage />,
+      },
+      {
         path: "/gian-hang",
         element: <StoresPage />,
       },
@@ -56,6 +68,14 @@ export const allRoutes = [
       {
         path: "/tim-kiem",
         element: <SearchPage />,
+      },
+      {
+        path: "/so-sanh",
+        element: <ComparePage />,
+      },
+      {
+        path: "/thu-cu-doi-moi",
+        element: <TradeInPage />,
       },
       {
         path: "/contact",
@@ -84,6 +104,11 @@ export const allRoutes = [
               { path: "don-hang", element: <OrdersTab /> },
               { path: "don-hang/:id", element: <OrderDetailTab /> },
               { path: "uu-dai", element: <VouchersTab /> },
+              { path: "gioi-thieu", element: <AffiliateTab /> },
+              { path: "yeu-thich", element: <WishlistTab /> },
+              { path: "xu", element: <XuTab /> },
+              { path: "tra-gop", element: <InstallmentsTab /> },
+              { path: "tin-nhan", element: <MessagesTab /> },
               { path: "dia-chi", element: <AddressesTab /> },
               { path: "doi-mat-khau", element: <ChangePasswordTab /> },
               { path: "phien-dang-nhap", element: <SessionsTab /> },
