@@ -53,8 +53,6 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 .idea/
-.codex/
-.cursor/
 .nova/
 .zed/
 
